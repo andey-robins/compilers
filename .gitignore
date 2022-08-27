@@ -35,3 +35,7 @@
 **/assignment
 .DS_Store
 docs/
+
+# Build Files
+**/build/
+**/*.dSYM/
