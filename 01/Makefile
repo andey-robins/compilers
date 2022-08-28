@@ -23,3 +23,6 @@ run: program1
 test: program1
 	cat tests/test1.txt | ./build/program1
 	cat tests/test2.txt | ./build/program1
+
+tar: program1
+	tar -zcf program1.tgz program1.cpp program1.hpp program1.lpp token.cpp token.hpp Makefile

@@ -77,7 +77,7 @@ ID [[:alpha:]_][[:alnum:]_]*
 }
 
  /* 12 C-STYLE COMMENTS */
-"/*"[\n]?[ \n\ta-zA-Z]*[\n]?"*/" {
+"/*"[^*/]*"*/" {
     type="12";
     return 1;
 }
