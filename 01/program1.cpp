@@ -1,7 +1,13 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <FlexLexer.h>
+#include "program1.hpp"
 
+using std::cout;
+using std::endl;
+using std::left;
+using std::setw;
 using std::string;
 
 string lineNumber;
@@ -12,20 +18,59 @@ string length;
 int main()
 {
     FlexLexer *scanner = new yyFlexLexer;
-    int rtn;
+    int rtn = scanner->yylex();
+    int col = 1;
 
-    std::cout << "Processing the input\n"
-              << std::endl;
-    while ((rtn = scanner->yylex()) != 0)
+    cout << "Processing the input\n"
+         << endl;
+
+    // table header
+    cout << "Line     Column   Type     Length   Value" << left << endl;
+
+    do
     {
-        std::cout << scanner->lineno() << "  " << std::setw(3) << lineNumber;
-        std::cout << scanner->columnno() << "  " << std::setw(3) << colNumber;
-        std::cout << scanner->type() << "  " << std::setw(3) << type;
-        std::cout << scanner->length() << "  " << std::setw(3) << length;
-        std::cout << scanner->YYText() << "  " << std::setw(3) << std::endl;
-    }
+        string token_str = scanner->YYText();
+        TOKEN token = stringToToken(token_str);
+        col = getNextColumn(token, token_str, col);
 
-    std::cout << "\nProgram1 done" << std::endl;
+        printTokenLine(scanner->lineno(), col, type, scanner->YYLeng(), token_str);
+
+    } while (((rtn = scanner->yylex()) != 0));
+
+    std::cout
+        << "\nProgram1 done" << std::endl;
 
     return 0;
+}
+
+void printTokenLine(int line_no, int col_no, string type, int length, string token)
+{
+    if (strcmp(token.c_str(), " ") == 0)
+    {
+        return;
+    }
+
+    cout << setw(8)
+         << line_no << " " << setw(8) << left
+         << col_no << " " << setw(8) << left
+         << type << " " << setw(8) << left
+         << length << " " << setw(8) << left
+         << token << " " << setw(8) << left
+         << endl;
+}
+
+int getNextColumn(TOKEN token, string tok_str, int col_no)
+{
+    if (token == TAB)
+    {
+        return col_no + ((col_no + 1) % 8);
+    }
+    else if (token == NEWLINE)
+    {
+        return 1;
+    }
+    else
+    {
+        return col_no + tok_str.length();
+    }
 }

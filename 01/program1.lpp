@@ -8,20 +8,86 @@ using std::cerr;
 %option noyywrap
 %option yylineno
 
+DIGIT [0-9]
+ID [[:alnum:]][[:alnum:]_]*
+
 %%
 [qQ][uU][iI][tT] { return 0; }
 
+ /* 1 COMPARE_OP */
+"=="|">"|"<"|">="|"<="|"!=" {
+    type="1";
+    return 1;
+}
 
+ /* 2 LOGICAL_OP */
+"||"|"&&" {
+    type="2";
+    return 1;
+}
 
-/* 7 IDENTIFIER */
-[_a-zA-Z][_a-zA-Z0-9]* { 
+ /* 3 MATH_OP */
+"+"|"-"|"*"|"/" {
+    type="3";
+    return 1;
+}
+
+ /* 4 ENCOLSING_OP */
+"{"|"}"|"["|"]"|"("|")" {
+    type="4";
+    return 1;
+}
+
+ /* 5 PUNCTUATION */
+"."|","|";" {
+    type="5";
+    return 1;
+}
+
+ /* 6 KEYWORD */
+this|if|else|while {
+    type="6";
+    return 1;
+}
+
+ /* 7 IDENTIFIER */
+{ID} { 
     type="7";
-    return 7;
+    return 1;
 }
 
-/* 8 NUMBER */
-[0-9]+ {
-
+ /* 8 NUMBER */
+{DIGIT}+ {
+    type="8";
+    return 1;
 }
 
+ /* 9 FLOAT */
+{DIGIT}+"."{DIGIT}+|{DIGIT}+"."{DIGIT}+[eE]["+""-"]?{DIGIT}+|{DIGIT}+[eE]["+""-"]?{DIGIT}+ {
+        type="9";
+        return 1;
+}
+
+ /* 11 NEWLINE */
+[\n] {
+    type="11";
+    return 1;
+}
+
+ /* 12 C-STYLE COMMENTS */
+"/*".*"*/" {
+    type="12";
+    return 1;
+}
+
+ /* GOBBLE WHITESPACE */
+[ \t] {
+    return 1;
+}
+
+ /* 10 UNKNOWN */
+. {
+    type="10";
+    return 1;
+}
 %%
