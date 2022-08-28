@@ -19,3 +19,7 @@ clean:
 
 run: program1
 	./build/program1
+
+test: program1
+	cat tests/test1.txt | ./build/program1
+	cat tests/test2.txt | ./build/program1

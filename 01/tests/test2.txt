@@ -1,0 +1,6 @@
+int main() {
+    /* comment */
+    if (true) {
+        return 1 + 2;
+    }
+}
