@@ -18,22 +18,32 @@ string length;
 int main()
 {
     FlexLexer *scanner = new yyFlexLexer;
-    int rtn = scanner->yylex();
-    int col = 1;
-
     cout << "Processing the input\n"
          << endl;
+
+    int rtn = scanner->yylex();
+    int col = 1;
 
     // table header
     cout << "Line     Column   Type     Length   Value" << left << endl;
 
     do
     {
-        string token_str = scanner->YYText();
-        TOKEN token = stringToToken(token_str);
-        col = getNextColumn(token, token_str, col);
+        string tokenStr = scanner->YYText();
+        int lineNum = scanner->lineno();
+        TOKEN token = stringToToken(tokenStr);
 
-        printTokenLine(scanner->lineno(), col, type, scanner->YYLeng(), token_str);
+        if (strcmp(tokenStr.c_str(), "\n") == 0)
+        {
+            lineNum--;
+            printTokenLine(lineNum, col, type, scanner->YYLeng(), "\\n");
+        }
+        else
+        {
+            printTokenLine(lineNum, col, type, scanner->YYLeng(), tokenStr);
+        }
+
+        col = getNextColumn(token, tokenStr, col);
 
     } while (((rtn = scanner->yylex()) != 0));
 
@@ -65,7 +75,7 @@ int getNextColumn(TOKEN token, string tok_str, int col_no)
     {
         return col_no + ((col_no + 1) % 8);
     }
-    else if (token == NEWLINE)
+    if (token == NEWLINE)
     {
         return 1;
     }

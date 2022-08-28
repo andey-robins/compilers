@@ -9,7 +9,9 @@ using std::cerr;
 %option yylineno
 
 DIGIT [0-9]
-ID [[:alnum:]][[:alnum:]_]*
+NUMBER {DIGIT}+
+KEYWORD this|else|if|while
+ID [[:alpha:]_][[:alnum:]_]*
 
 %%
 [qQ][uU][iI][tT] { return 0; }
@@ -45,7 +47,7 @@ ID [[:alnum:]][[:alnum:]_]*
 }
 
  /* 6 KEYWORD */
-this|if|else|while {
+{KEYWORD} {
     type="6";
     return 1;
 }
@@ -63,7 +65,7 @@ this|if|else|while {
 }
 
  /* 9 FLOAT */
-{DIGIT}+"."{DIGIT}+|{DIGIT}+"."{DIGIT}+[eE]["+""-"]?{DIGIT}+|{DIGIT}+[eE]["+""-"]?{DIGIT}+ {
+{NUMBER}"."{NUMBER}|{NUMBER}"."{NUMBER}[eE][+-]?{NUMBER}|{NUMBER}[eE][+-]?{NUMBER} {
         type="9";
         return 1;
 }
