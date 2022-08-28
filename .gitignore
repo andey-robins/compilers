@@ -35,6 +35,8 @@
 **/assignment
 .DS_Store
 docs/
+*.tgz
+*.tar
 
 # Build Files
 **/build/
