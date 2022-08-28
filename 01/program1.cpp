@@ -32,20 +32,40 @@ int main()
         string tokenStr = scanner->YYText();
         int lineNum = scanner->lineno();
         TOKEN token = stringToToken(tokenStr);
+        int tokenLen = scanner->YYLeng();
 
-        if (strcmp(tokenStr.c_str(), "\n") == 0)
+        if (token == NEWLINE)
         {
             lineNum--;
-            printTokenLine(lineNum, col, type, scanner->YYLeng(), "\\n");
+            printTokenLine(lineNum, col, type, tokenLen, "");
+            col = getNextColumn(token, tokenStr, col);
+        }
+        else if (token == COMMENT)
+        {
+            for (int i = 0; i < tokenLen; i++)
+            {
+                if (tokenStr[i] == '\n')
+                {
+                    col = 1;
+                    lineNum++;
+                }
+                else if (tokenStr[i] == '\t')
+                {
+                    col = col + ((col + 1) % 8);
+                }
+                else
+                {
+                    col++;
+                }
+            }
         }
         else
         {
-            printTokenLine(lineNum, col, type, scanner->YYLeng(), tokenStr);
+            printTokenLine(lineNum, col, type, tokenLen, tokenStr);
+            col = getNextColumn(token, tokenStr, col);
         }
 
-        col = getNextColumn(token, tokenStr, col);
-
-    } while (((rtn = scanner->yylex()) != 0));
+        } while (((rtn = scanner->yylex()) != 0));
 
     std::cout
         << "\nProgram1 done" << std::endl;

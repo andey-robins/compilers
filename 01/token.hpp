@@ -53,6 +53,7 @@ enum TOKEN
     TAB,
 
     // MISC TOKENS
+    COMMENT,
     VALUE,
     UNKNOWN,
     EOFTOKEN

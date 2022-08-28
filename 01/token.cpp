@@ -116,6 +116,10 @@ TOKEN stringToToken(std::string tString)
     {
         return TAB;
     }
+    else if (tString.c_str()[0] == '/' && tString.c_str()[1] == '*')
+    {
+        return COMMENT;
+    }
 
     return VALUE;
 }
