@@ -1,0 +1,20 @@
+%{
+using std::string;
+using std::cerr;
+
+#include "program2.hpp"
+%}
+%option outfile="program2_lex.cpp"
+%option noyywrap
+%option yylineno
+
+DIGIT [0-9]
+NUMBER {DIGIT}+
+KEYWORD this|else|if|while
+ID [[:alpha:]_][[:alnum:]_]*
+
+%%
+
+[qQ][uU][iI][tT] { return 0; }
+
+%%
