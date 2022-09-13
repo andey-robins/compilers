@@ -15,6 +15,6 @@ ID [[:alpha:]_][[:alnum:]_]*
 
 %%
 
-[qQ][uU][iI][tT] { return 0; }
+
 
 %%
