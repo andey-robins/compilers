@@ -3,10 +3,69 @@ using std::string;
 using std::cerr;
 
 #include "program2.hpp"
+
+enum TOKEN
+{
+    // COMPARISON OPS
+    EQUAL,
+    GREATER,
+    LESS,
+    GREATER_EQUAL,
+    LESS_EQUAL,
+    NOT_EQUAL,
+
+    // LOGICAL OPS
+    OR,
+    AND,
+
+    // MATH OPS
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+
+    // ENCLOSING OPS
+    LBRACE,
+    RBRACE,
+    LBRACKET,
+    RBRACKET,
+    LPAREN,
+    RPAREN,
+
+    // PUNCTUATION
+    PERIOD,
+    COMMA,
+    SEMICOLON,
+
+    // KEYWORDS
+    THIS,
+    IF,
+    ELSE,
+    WHILE,
+
+    // IDENTIFIER
+    ID,
+
+    // NUMBERS
+    INT,
+    FLOAT,
+
+    // WHITESPACE
+    NEWLINE,
+    SPACE,
+    TAB,
+
+    // MISC TOKENS
+    COMMENT,
+    VALUE,
+    UNKNOWN,
+    EOFTOKEN
+};
 %}
 %option outfile="program2_lex.cpp"
 %option noyywrap
 %option yylineno
+%option nodefault
 
 DIGIT [0-9]
 NUMBER {DIGIT}+
@@ -15,6 +74,30 @@ ID [[:alpha:]_][[:alnum:]_]*
 
 %%
 
+"=="|">"|"<"|">="|"<="|"!=" {
 
+    string text = string(yytext);
+    
+    if (text.compare(string("==")) == 0) {
+        type = EQUAL;
+        return 1;
+    } else if (text.compare(">") == 0) {
+        type= GREATER;
+        return 1;
+    } else if (text.compare("<") == 0) {
+        type=LESS;
+        return 1;
+    } else if (text.compare(">=") == 0) {
+        type=GREATER_EQUAL;
+        return 1;
+    } else if (text.compare("<=") == 0) {
+        type=LESS_EQUAL;
+        return 1;
+    } else {
+        type=NOT_EQUAL;
+        return 1;
+    }
+    
+}
 
 %%

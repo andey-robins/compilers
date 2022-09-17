@@ -343,9 +343,9 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[10] =
+static const flex_int16_t yy_accept[11] =
     {   0,
-        0,    0,    3,    2,    2,    0,    0,    1,    0
+        0,    0,    3,    2,    2,    1,    2,    1,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -353,16 +353,16 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
-        3,    1,    1,    4,    5,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    3,
+        4,    5,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 
-        1,    1,    1,    1,    2,    1,    1,    1,    1,    1,
-        1,    1,    3,    1,    1,    4,    5,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -382,31 +382,31 @@ static const YY_CHAR yy_ec[256] =
 
 static const YY_CHAR yy_meta[6] =
     {   0,
-        1,    2,    1,    3,    4
+        1,    1,    1,    2,    1
     } ;
 
-static const flex_int16_t yy_base[14] =
+static const flex_int16_t yy_base[12] =
     {   0,
-        7,    6,    8,   11,    0,    0,    0,   11,   11,    0,
-        3,    4,    2
+        0,    0,    7,    8,    0,    0,    0,    0,    8,    8,
+        4
     } ;
 
-static const flex_int16_t yy_def[14] =
+static const flex_int16_t yy_def[12] =
     {   0,
-       10,   10,    9,    9,   11,   12,   13,    9,    0,    9,
-        9,    9,    9
+       10,    1,   10,   10,   11,   11,   11,   11,   10,    0,
+       10
     } ;
 
-static const flex_int16_t yy_nxt[17] =
+static const flex_int16_t yy_nxt[14] =
     {   0,
-        4,    4,    4,    4,    8,    7,    6,    9,    5,    5,
-        3,    9,    9,    9,    9,    9
+        4,    5,    6,    7,    8,    9,   10,    3,   10,   10,
+       10,   10,   10
     } ;
 
-static const flex_int16_t yy_chk[17] =
+static const flex_int16_t yy_chk[14] =
     {   0,
-       10,   10,   10,   10,   13,   12,   11,    3,    2,    1,
-        9,    9,    9,    9,    9,    9
+        1,    1,    1,    1,    1,   11,    3,   10,   10,   10,
+       10,   10,   10
     } ;
 
 /* Table of booleans, true if rule could match eol. */
@@ -427,8 +427,66 @@ using std::string;
 using std::cerr;
 
 #include "program2.hpp"
-#line 430 "program2_lex.cpp"
-#line 431 "program2_lex.cpp"
+
+enum TOKEN
+{
+    // COMPARISON OPS
+    EQUAL,
+    GREATER,
+    LESS,
+    GREATER_EQUAL,
+    LESS_EQUAL,
+    NOT_EQUAL,
+
+    // LOGICAL OPS
+    OR,
+    AND,
+
+    // MATH OPS
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+
+    // ENCLOSING OPS
+    LBRACE,
+    RBRACE,
+    LBRACKET,
+    RBRACKET,
+    LPAREN,
+    RPAREN,
+
+    // PUNCTUATION
+    PERIOD,
+    COMMA,
+    SEMICOLON,
+
+    // KEYWORDS
+    THIS,
+    IF,
+    ELSE,
+    WHILE,
+
+    // IDENTIFIER
+    ID,
+
+    // NUMBERS
+    INT,
+    FLOAT,
+
+    // WHITESPACE
+    NEWLINE,
+    SPACE,
+    TAB,
+
+    // MISC TOKENS
+    COMMENT,
+    VALUE,
+    UNKNOWN,
+    EOFTOKEN
+};
+#line 488 "program2_lex.cpp"
+#line 489 "program2_lex.cpp"
 
 #define INITIAL 0
 
@@ -560,10 +618,10 @@ YY_DECL
 		}
 
 	{
-#line 16 "program2.lpp"
+#line 74 "program2.lpp"
 
 
-#line 566 "program2_lex.cpp"
+#line 624 "program2_lex.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -590,13 +648,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 10 )
+				if ( yy_current_state >= 11 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 11 );
+		while ( yy_base[yy_current_state] != 8 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -632,15 +690,39 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 18 "program2.lpp"
-{ return 0; }
+#line 76 "program2.lpp"
+{
+
+    string text = string(yytext);
+    
+    if (text.compare(string("==")) == 0) {
+        type = EQUAL;
+        return 1;
+    } else if (text.compare(">") == 0) {
+        type= GREATER;
+        return 1;
+    } else if (text.compare("<") == 0) {
+        type=LESS;
+        return 1;
+    } else if (text.compare(">=") == 0) {
+        type=GREATER_EQUAL;
+        return 1;
+    } else if (text.compare("<=") == 0) {
+        type=LESS_EQUAL;
+        return 1;
+    } else {
+        type=NOT_EQUAL;
+        return 1;
+    }
+    
+}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "program2.lpp"
+#line 102 "program2.lpp"
 ECHO;
 	YY_BREAK
-#line 643 "program2_lex.cpp"
+#line 725 "program2_lex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1057,7 +1139,7 @@ int yyFlexLexer::yy_get_next_buffer()
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 10 )
+			if ( yy_current_state >= 11 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1085,11 +1167,11 @@ int yyFlexLexer::yy_get_next_buffer()
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 10 )
+		if ( yy_current_state >= 11 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 9);
+	yy_is_jam = (yy_current_state == 10);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1612,5 +1694,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 20 "program2.lpp"
+#line 102 "program2.lpp"
 
