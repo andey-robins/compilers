@@ -76,7 +76,6 @@ enum TOKEN
 
     // NUMBERS
     VAL_INT,
-    FLOAT,
 
     // WHITESPACE
     NEWLINE,
@@ -86,7 +85,12 @@ enum TOKEN
     // MISC TOKENS
     COMMENT,
     VALUE,
-    UNKNOWN
+    UNKNOWN,
+
+    // ERROR TOKENS
+    ER_CH,
+    ER_WD,
+    ERRORS
 };
 
 void printTokenLine(int line_no, int col_no, std::string token, std::string value);

@@ -24,21 +24,38 @@ int main()
     FlexLexer *lexer = new yyFlexLexer;
     int rtn = lexer->yylex();
 
+    int errors = 0;
+
     cout << "Line     Column   Token    Value" << left << endl;
 
     do {
         string tokenStr = lexer->YYText();
         int lineNum = lexer->lineno();
 
-        // for newline, correct the line number output from flex to match expected
         if (rtn == TOKEN::NEWLINE) {
+            // for newline, correct the line number output from flex to match expected
             printTokenLine(lineNum-1, col, token, string(""));
         }
-        // skip over printing comment tokens
-        // comment tokens aren't returned in this version of the lexer, so this is redundant code
-        // so i've removed the if condition via comment
-        else /*if (type != 12)*/ {
+        else if (rtn == TOKEN::ID || rtn == TOKEN::VAL_INT) {
+            // these are the token types that also include important information in the value
             printTokenLine(lineNum, col, token, tokenStr);
+        }
+        else if (rtn == TOKEN::ER_CH) {
+            errors++;
+            printTokenLine(lineNum, col, token, tokenStr.substr(0, 1));
+        }
+        else if (rtn == TOKEN::ER_WD) {
+            errors++;
+            printTokenLine(lineNum, col, token, tokenStr);
+        }
+        else {
+            printTokenLine(lineNum, col, token, string(""));
+        }
+
+        // exit early if the lexer finds more than 20 errors
+        if (errors > 20) {
+            printTokenLine(lineNum, col, string("ERRORS"), string(""));
+            break;
         }
     } while ((rtn = lexer->yylex()) != 0);
 

@@ -4,4 +4,5 @@ if (i == 0) {
     */ if (i);
     // test comment
     int i /* text */ = 0;
+    #! 
 }

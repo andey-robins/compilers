@@ -27,11 +27,19 @@ string token = "";
 DIGIT [0-9]
 NUMBER {DIGIT}+
 KEYWORD int|void|class|new|print|read|return|this|else|if|while|null
-ID [[:alpha:]_][[:alnum:]_]*
+ID [a-zA-Z_][a-zA-Z0-9_]*
+RELATIONAL_OP "=="|">"|"<"|">="|"<="|"!="
+LOGIC_OP "&&"|"||"
+MATH_OP "+"|"-"|"*"|"/"|"%"
+ENCLOSING "{"|"}"|"["|"]"|"("|")"
+PUNCTUATION "."|","|";"|"!"|"="
+UNKNOWN [^a-zA-Z0-9_+*/%.,;!=<>]{-}[ \t\n\x28\x29\x5b\x5d\x7b\x7d\x20]
+/* KNOWN [^a-zA-Z_+* /%!.,!=<>\t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x3b\x21] */
+NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
 %%
  /* 1 COMPARE_OP */
-"=="|">"|"<"|">="|"<="|"!=" {
+{RELATIONAL_OP} {
 
     string text = string(yytext);
     col += lastTokenLen;
@@ -61,7 +69,7 @@ ID [[:alpha:]_][[:alnum:]_]*
 }
 
  /* 2 LOGICAL_OP */
-"||"|"&&" {
+{LOGIC_OP} {
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 2;
@@ -76,7 +84,7 @@ ID [[:alpha:]_][[:alnum:]_]*
 }
 
  /* 3 MATH_OP */
-"+"|"-"|"*"|"/"|"%" {
+{MATH_OP} {
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 1;
@@ -100,7 +108,7 @@ ID [[:alpha:]_][[:alnum:]_]*
 }
 
  /* 4 ENCLOSING_OP */
-"{"|"}"|"["|"]"|"("|")" {
+{ENCLOSING} {
     string text = string(yytext);
     type = 4;
     col += lastTokenLen;
@@ -128,7 +136,7 @@ ID [[:alpha:]_][[:alnum:]_]*
 }
 
  /* 5 PUNCTUATION */
-"."|","|";"|"!"|"=" {
+{PUNCTUATION} {
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 1;
@@ -228,7 +236,7 @@ ID [[:alpha:]_][[:alnum:]_]*
     col += lastTokenLen;
     lastTokenLen = 1 - col;
     token = "";
-    return TOKEN::NEWLINE;
+    // return TOKEN::NEWLINE;
 }
 
  /* 12 C-STYLE COMMENTS */
@@ -271,15 +279,22 @@ ID [[:alpha:]_][[:alnum:]_]*
    return TOKEN::TAB;
 }
 
-<<EOF>> {
-    return TOKEN::EOFTOKEN;
+{UNKNOWN}{1} {
+    col += lastTokenLen;
+    lastTokenLen = 1;
+    token = "ER_CH";
+    return TOKEN::ER_CH;
 }
 
- /* 10 UNKNOWN */
-. {
+{UNKNOWN}{1}{NON_ID}+ {
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
-    return TOKEN::UNKNOWN;
+    token = "ER_WD";
+    return TOKEN::ER_WD;
+}
+
+<<EOF>> {
+    return TOKEN::EOFTOKEN;
 }
 
 %%
