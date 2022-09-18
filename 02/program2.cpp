@@ -32,30 +32,30 @@ int main()
         string tokenStr = lexer->YYText();
         int lineNum = lexer->lineno();
 
-        if (rtn == TOKEN::NEWLINE) {
-            // for newline, correct the line number output from flex to match expected
-            printTokenLine(lineNum-1, col, token, string(""));
-        }
-        else if (rtn == TOKEN::ID || rtn == TOKEN::VAL_INT) {
+        if (rtn == TOKEN::ID || rtn == TOKEN::VAL_INT) {
             // these are the token types that also include important information in the value
             printTokenLine(lineNum, col, token, tokenStr);
         }
         else if (rtn == TOKEN::ER_CH) {
             errors++;
+            // exit early if the lexer finds more than 20 errors
+            if (errors > 20) {
+                printTokenLine(lineNum, col, string("ERRORS"), string(""));
+                break;
+            }
             printTokenLine(lineNum, col, token, tokenStr.substr(0, 1));
         }
         else if (rtn == TOKEN::ER_WD) {
             errors++;
+            // exit early if the lexer finds more than 20 errors
+            if (errors > 20) {
+                printTokenLine(lineNum, col, string("ERRORS"), string(""));
+                break;
+            }
             printTokenLine(lineNum, col, token, tokenStr);
         }
         else {
             printTokenLine(lineNum, col, token, string(""));
-        }
-
-        // exit early if the lexer finds more than 20 errors
-        if (errors > 20) {
-            printTokenLine(lineNum, col, string("ERRORS"), string(""));
-            break;
         }
     } while ((rtn = lexer->yylex()) != 0);
 
