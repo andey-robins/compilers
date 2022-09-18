@@ -79,6 +79,6 @@ enum TOKEN
     UNKNOWN
 };
 
-void printTokenLine(int line_no, int col_no, int type, int length, std::string token);
+void printTokenLine(int line_no, int col_no, int token, std::string tokenStr);
 
 #endif
