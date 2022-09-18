@@ -161,14 +161,6 @@ ID [[:alpha:]_][[:alnum:]_]*
     return TOKEN::INT;
 }
 
- /* 9 FLOAT */
-{NUMBER}"."{NUMBER}|{NUMBER}"."{NUMBER}[eE][+-]?{NUMBER}|{NUMBER}[eE][+-]?{NUMBER} {
-    type = 9;
-    col += lastTokenLen;
-    lastTokenLen = string(yytext).length();
-    return TOKEN::FLOAT;
-}
-
  /* 11 NEWLINE */
 [\n] {
     type = 11;
@@ -181,8 +173,27 @@ ID [[:alpha:]_][[:alnum:]_]*
 "/*"[^*/]*"*/" {
     type = 12;
     col += lastTokenLen;
-    lastTokenLen = string(yytext).length();
-    return TOKEN::COMMENT;
+    lastTokenLen = 0;
+    string text = string(yytext);
+    for (int i = 0; i < text.length(); i++) {
+        if (text[i] == '\n') {
+            col = 1;
+            lastTokenLen = 0;
+        } else {
+            lastTokenLen++;
+        }
+    }
+    // per program2 instructions, no token is returned
+    // return TOKEN::COMMENT;
+}
+
+ /* SLASH COMMENTS */
+"//"[^\n]*[\n] {
+    type = 12;
+    col = 0;
+    lastTokenLen = 1;
+    // per program2 instructions, no token is returned
+    // return TOKEN::COMMENT;
 }
 
  /* SPACE */
@@ -201,7 +212,7 @@ ID [[:alpha:]_][[:alnum:]_]*
 }
 
 <<EOF>> {
-    return TOKEN::EOFTOK;
+    return TOKEN::EOFTOKEN;
 }
 
  /* 10 UNKNOWN */

@@ -22,7 +22,7 @@ extern int type;
 
 enum TOKEN
 {
-    EOFTOK,
+    EOFTOKEN,
 
     // COMPARISON OPS
     EQUAL,

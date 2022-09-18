@@ -15,7 +15,10 @@ clean:
 	/bin/rm -rf *.dSYM
 
 run: program2
-	./program2
+	cat tests/test1.txt | ./program2
+
+test: program2
+	./test.sh
 
 tar: program2
-	tar -zcf program2.tgz program2.cpp program2.hpp program2.lpp Makefile
+	tar -zcf program2.tar program2.cpp program2.hpp program2.lpp Makefile
