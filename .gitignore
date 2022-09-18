@@ -41,3 +41,8 @@ docs/
 # Build Files
 **/build/
 **/*.dSYM/
+
+# Executables
+# since making a build directory is one of those new-fangled creations
+# and it makes things bad
+02/program2

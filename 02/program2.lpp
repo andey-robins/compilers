@@ -1,71 +1,27 @@
+/*
+ * program2.lpp
+ * Andey Robins
+ * 9/17/22
+ * Compilers Program 2
+ *
+ * This is the input file for flex to build the parser for program 2.
+ * It defines parser rules for each level of tokens
+ */
+
 %{
 using std::string;
 using std::cerr;
 
 #include "program2.hpp"
 
-enum TOKEN
-{
-    // COMPARISON OPS
-    EQUAL,
-    GREATER,
-    LESS,
-    GREATER_EQUAL,
-    LESS_EQUAL,
-    NOT_EQUAL,
+int col = 0;
+int lastTokenLen = 1;
+int type = 0;
 
-    // LOGICAL OPS
-    OR,
-    AND,
-
-    // MATH OPS
-    PLUS,
-    MINUS,
-    MULTIPLY,
-    DIVIDE,
-
-    // ENCLOSING OPS
-    LBRACE,
-    RBRACE,
-    LBRACKET,
-    RBRACKET,
-    LPAREN,
-    RPAREN,
-
-    // PUNCTUATION
-    PERIOD,
-    COMMA,
-    SEMICOLON,
-
-    // KEYWORDS
-    THIS,
-    IF,
-    ELSE,
-    WHILE,
-
-    // IDENTIFIER
-    ID,
-
-    // NUMBERS
-    INT,
-    FLOAT,
-
-    // WHITESPACE
-    NEWLINE,
-    SPACE,
-    TAB,
-
-    // MISC TOKENS
-    COMMENT,
-    VALUE,
-    UNKNOWN,
-    EOFTOKEN
-};
 %}
 %option outfile="program2_lex.cpp"
 %option noyywrap
 %option yylineno
-%option nodefault
 
 DIGIT [0-9]
 NUMBER {DIGIT}+
@@ -73,31 +29,187 @@ KEYWORD this|else|if|while
 ID [[:alpha:]_][[:alnum:]_]*
 
 %%
-
+ /* 1 COMPARE_OP */
 "=="|">"|"<"|">="|"<="|"!=" {
 
     string text = string(yytext);
-    
+    type = 1;
+    col += lastTokenLen;
+    lastTokenLen = 2;
+
     if (text.compare(string("==")) == 0) {
-        type = EQUAL;
-        return 1;
+        return TOKEN::EQUAL;
     } else if (text.compare(">") == 0) {
-        type= GREATER;
-        return 1;
+        lastTokenLen = 1;
+        return TOKEN::GREATER;
     } else if (text.compare("<") == 0) {
-        type=LESS;
-        return 1;
+        lastTokenLen = 1;
+        return TOKEN::LESS;
     } else if (text.compare(">=") == 0) {
-        type=GREATER_EQUAL;
-        return 1;
+        return TOKEN::GREATER_EQUAL;
     } else if (text.compare("<=") == 0) {
-        type=LESS_EQUAL;
-        return 1;
+        return TOKEN::LESS_EQUAL;
     } else {
-        type=NOT_EQUAL;
-        return 1;
+        return TOKEN::NOT_EQUAL;
     }
+}
+
+ /* 2 LOGICAL_OP */
+"||"|"&&" {
+    string text = string(yytext);
+    type = 2;
+    col += lastTokenLen;
+    lastTokenLen = 2;
+
+    if (text.compare(string("||")) == 0) {
+        return TOKEN::OR;
+    } else {
+        return TOKEN::AND;
+    }
+}
+
+ /* 3 MATH_OP */
+"+"|"-"|"*"|"/" {
+    string text = string(yytext);
+    type = 3;
+    col += lastTokenLen;
+    lastTokenLen = 1;
+
+    if (text.compare(string("+")) == 0) {
+        return TOKEN::PLUS;
+    } else if (text.compare(string("-")) == 0) {
+        return TOKEN::MINUS;
+    } else if (text.compare(string("*")) == 0) {
+        return TOKEN::MULTIPLY;
+    } else {
+        return TOKEN::DIVIDE;
+    }
+}
+
+ /* 4 ENCLOSING_OP */
+"{"|"}"|"["|"]"|"("|")" {
+    string text = string(yytext);
+    type = 4;
+    col += lastTokenLen;
+    lastTokenLen = 1;
+
+    if (text.compare(string("{")) == 0) {
+        return TOKEN::LBRACE;
+    } else if (text.compare(string("}")) == 0) {
+        return TOKEN::RBRACE;
+    } else if (text.compare(string("[")) == 0) {
+        return TOKEN::LBRACKET;
+    } else if (text.compare(string("]")) == 0) {
+        return TOKEN::RBRACKET;
+    } else if (text.compare(string("(")) == 0) {
+        return TOKEN::LPAREN;
+    } else {
+        return TOKEN::RPAREN;
+    }
+}
+
+ /* 5 PUNCTUATION */
+"."|","|";" {
+    string text = string(yytext);
+    type = 5;
+    col += lastTokenLen;
+    lastTokenLen = 1;
+
+    if (text.compare(string(".")) == 0) {
+        return TOKEN::PERIOD;
+    } else if (text.compare(string(",")) == 0) {
+        return TOKEN::COMMA;
+    } else {
+        return TOKEN::SEMICOLON;
+    }
+}
+
+ /* 6 KEYWORD */
+{KEYWORD} {
+    string text = string(yytext);
+    type = 6;
+    col += lastTokenLen;
     
+    if (text.compare(string("this")) == 0) {
+        lastTokenLen = 4;
+        return TOKEN::THIS;
+    } else if (text.compare(string("if")) == 0) {
+        lastTokenLen = 2;
+        return TOKEN::IF;
+    } else if (text.compare(string("else")) == 0) {
+        lastTokenLen = 4;
+        return TOKEN::ELSE;
+    } else {
+        lastTokenLen = 5;
+        return TOKEN::WHILE;
+    }
+}
+
+ /* 7 IDENTIFIER */
+{ID} {
+    type = 7;
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    return TOKEN::ID;
+}
+
+ /* 8 NUMBER */
+{DIGIT}+ {
+    type = 8;
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    return TOKEN::INT;
+}
+
+ /* 9 FLOAT */
+{NUMBER}"."{NUMBER}|{NUMBER}"."{NUMBER}[eE][+-]?{NUMBER}|{NUMBER}[eE][+-]?{NUMBER} {
+    type = 9;
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    return TOKEN::FLOAT;
+}
+
+ /* 11 NEWLINE */
+[\n] {
+    type = 11;
+    col += lastTokenLen;
+    lastTokenLen = 1 - col;
+    return TOKEN::NEWLINE;
+}
+
+ /* 12 C-STYLE COMMENTS */
+"/*"[^*/]*"*/" {
+    type = 12;
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    return TOKEN::COMMENT;
+}
+
+ /* SPACE */
+" " {
+    type = 13;
+    col++;
+    // we can add this return back in if we wish to consume space tokens in the future
+    // return TOKEN::SPACE;
+}
+
+"\t" {
+   type = 13;
+   col += lastTokenLen;
+   lastTokenLen = (col + 1) % 8;
+   return TOKEN::TAB;
+}
+
+<<EOF>> {
+    return TOKEN::EOFTOK;
+}
+
+ /* 10 UNKNOWN */
+. {
+    type = 10;
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    return TOKEN::UNKNOWN;
 }
 
 %%
