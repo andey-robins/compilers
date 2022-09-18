@@ -29,17 +29,16 @@ int main()
     do {
         string tokenStr = lexer->YYText();
         int lineNum = lexer->lineno();
-        int tokenLen = lexer->YYLeng();
 
         // for newline, correct the line number output from flex to match expected
-        if (type == 11) {
-            printTokenLine(lineNum-1, col, type, string(" "));
+        if (rtn == TOKEN::NEWLINE) {
+            printTokenLine(lineNum-1, col, token, string(""));
         }
         // skip over printing comment tokens
         // comment tokens aren't returned in this version of the lexer, so this is redundant code
         // so i've removed the if condition via comment
         else /*if (type != 12)*/ {
-            printTokenLine(lineNum, col, type, tokenStr);
+            printTokenLine(lineNum, col, token, tokenStr);
         }
     } while ((rtn = lexer->yylex()) != 0);
 
@@ -47,12 +46,12 @@ int main()
 }
 
 // a pretty printer which writes a line of information to the standard output
-void printTokenLine(int line_no, int col_no, int token, string tokenStr)
+void printTokenLine(int line_no, int col_no, string token, string value)
 {
     cout << setw(8)
          << line_no << " " << setw(8) << left
          << col_no << " " << setw(8) << left
          << token << " " << setw(8) << left
-         << tokenStr << " " << setw(8) << left
+         << value << " " << setw(8) << left
          << endl;
 }

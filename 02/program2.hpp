@@ -18,7 +18,6 @@
 extern std::string colStr;
 extern std::string token;
 extern int col;
-extern int type;
 
 enum TOKEN
 {
@@ -41,6 +40,7 @@ enum TOKEN
     MINUS,
     MULTIPLY,
     DIVIDE,
+    MOD,
 
     // ENCLOSING OPS
     LBRACE,
@@ -54,18 +54,28 @@ enum TOKEN
     PERIOD,
     COMMA,
     SEMICOLON,
+    NOT,
+    ASSIGN,
 
     // KEYWORDS
+    KEY_INT,
+    VOID,
+    CLASS,
+    NEW,
+    PRINT,
+    READ,
+    RETURN,
     THIS,
     IF,
     ELSE,
     WHILE,
+    NULLT,
 
     // IDENTIFIER
     ID,
 
     // NUMBERS
-    INT,
+    VAL_INT,
     FLOAT,
 
     // WHITESPACE
@@ -79,6 +89,6 @@ enum TOKEN
     UNKNOWN
 };
 
-void printTokenLine(int line_no, int col_no, int token, std::string tokenStr);
+void printTokenLine(int line_no, int col_no, std::string token, std::string value);
 
 #endif
