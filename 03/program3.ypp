@@ -1,0 +1,126 @@
+/*
+ * program3.ypp
+ * Andey Robins
+ * 10/5/22
+ * Compilers Program 3
+ *
+ * The bison input file for program3
+ */
+%{
+
+#include <FlexLexer.h>
+
+using std::cerr;
+using std::cout;
+using std::endl;
+
+extern yyFlexLexer lexer;
+
+#define yylex() lexer.yylex()
+
+void yyerror(const char* string) {
+    // TODO: Modify this to output the whole line and not just token text
+    cerr << "##: errorrrssss" << endl;
+}
+%}
+
+%token SEMI DOT
+%token ID NUMBER null READ NEW THIS
+%token LPAREN RPAREN LBRACKET RBRACKET
+%token PLUS MINUS NOT OR
+%token TIMES DIV MOD AND
+%token EQ NE GE LE GT LT
+%token INT
+
+// TODO: Remove these
+%token EOFTOKEN ER_WD ER_CH TAB WHILE NULLT RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE  
+
+%%
+
+program:  elements {
+
+       }
+       | program elements {
+
+       }
+;
+
+elements: vardec {
+
+        }
+        | exp SEMI {
+
+        }
+;
+
+vardec: type ID SEMI {
+
+      }
+      | ID ID SEMI {
+
+      }
+      | type multibrackets ID SEMI {
+
+      }
+      | ID multibrackets ID SEMI {
+
+      }
+;
+
+exp: name {}
+    | NUMBER {}
+    | null {}
+    | READ LPAREN RPAREN {}
+    | newexp {}
+    | LPAREN exp RPAREN {}
+    | name LPAREN RPAREN {}
+    | exp PLUS exp {}
+    | exp MINUS exp {}
+    | exp OR exp {}
+    | exp TIMES exp {}
+    | exp DIV exp {}
+    | exp MOD exp {}
+    | exp AND exp {}
+    | exp EQ exp {}
+    | exp NE exp {}
+    | exp GE exp {}
+    | exp LE exp {}
+    | exp GT exp {}
+    | exp LT exp {}
+    | MINUS exp {}
+    | PLUS exp {}
+    | NOT exp {}
+;
+
+newexp: NEW ID LPAREN RPAREN {}
+      | NEW simpletype {}
+      | NEW simpletype bracketexps {}
+      | NEW ID bracketexps {}
+      | NEW simpletype bracketexps multibrackets {}
+      | NEW ID bracketexps multibrackets {}
+;
+
+type: simpletype {}
+;
+
+simpletype: INT {}
+;
+
+bracketexps: bracketexp {}
+           | bracketexps bracketexp {}
+;
+
+bracketexp: LBRACKET exp RBRACKET {}
+;
+
+multibrackets: LBRACKET RBRACKET {}
+             | multibrackets LBRACKET RBRACKET {}
+;
+
+name: THIS {}
+    | ID {}
+    | name DOT ID {}
+    | name bracketexps
+;
+
+%%

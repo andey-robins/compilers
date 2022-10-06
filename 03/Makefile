@@ -13,19 +13,25 @@ CXXFLAGS=-ggdb -Wall
 LEX=flex++
 LEXFLAGS=--warn
 
-program3: program3.cpp program3_lex.cpp
-	$(CXX) $(CXXFLAGS) program3.cpp program3_lex.cpp -o program3
+BISON=bison
+BISONFLAGS=-d
 
-program3_lex.cpp: program3.lpp
+program3: program3.cpp program3_lex.cpp
+	$(CXX) $(CXXFLAGS) program3.cpp program3_lex.cpp program3.tab.cpp -o program3
+
+program3_lex.cpp: program3.lpp program3.tab.cpp
 	$(LEX) $(LEXFLAGS) program3.lpp
 
+program3.tab.cpp: program3.ypp
+	$(BISON) $(BISONFLAGS) program3.ypp
+
 clean:
-	/bin/rm -f program3 program3_lex.cpp core.*
+	/bin/rm -f program3 program3_lex.cpp core.* program3.tab.*
 	/bin/rm -rf *.dSYM
-	/bin/rm program3.tgz
+	/bin/rm -f program3.tgz
 
 run: program3
-	./program3
+	./program3 < test/test.dcaf
 
 tar: program3
 	tar -zcf program3.tgz program3.cpp program3.hpp program3.lpp program3.y

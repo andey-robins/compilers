@@ -10,8 +10,11 @@
 %{
 using std::string;
 using std::cerr;
-
+using std::cout;
+using std::endl;
+#include "program3.tab.hpp"
 #include "program3.hpp"
+
 
 int col = 0;
 int lastTokenLen = 1;
@@ -46,24 +49,24 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
     if (text.compare(string("==")) == 0) {
         token = "EQ";
-        return TOKEN::EQUAL;
+        return EQ;
     } else if (text.compare(">") == 0) {
         lastTokenLen = 1;
         token = "GT";
-        return TOKEN::GREATER;
+        return GT;
     } else if (text.compare("<") == 0) {
         lastTokenLen = 1;
         token = "LT";
-        return TOKEN::LESS;
+        return LT;
     } else if (text.compare(">=") == 0) {
         token = "GEQ";
-        return TOKEN::GREATER_EQUAL;
+        return GE;
     } else if (text.compare("<=") == 0) {
         token = "LEQ";
-        return TOKEN::LESS_EQUAL;
+        return LE;
     } else {
         token = "NEQ";
-        return TOKEN::NOT_EQUAL;
+        return NE;
     }
 }
 
@@ -75,10 +78,10 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
     if (text.compare(string("||")) == 0) {
         token = "OR";
-        return TOKEN::OR;
+        return OR;
     } else {
         token = "AND";
-        return TOKEN::AND;
+        return AND;
     }
 }
 
@@ -90,19 +93,19 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
     if (text.compare(string("+")) == 0) {
         token = "PLUS";
-        return TOKEN::PLUS;
+        return PLUS;
     } else if (text.compare(string("-")) == 0) {
         token = "MINUS";
-        return TOKEN::MINUS;
+        return MINUS;
     } else if (text.compare(string("*")) == 0) {
         token = "TIMES";
-        return TOKEN::MULTIPLY;
+        return TIMES;
     } else if (text.compare(string("/")) == 0) {
         token = "DIV";
-        return TOKEN::DIVIDE;
+        return DIV;
     } else {
         token = "MOD";
-        return TOKEN::MOD;
+        return MOD;
     }
 }
 
@@ -115,22 +118,22 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
     if (text.compare(string("{")) == 0) {
         token = "LBRACE";
-        return TOKEN::LBRACE;
+        return LBRACE;
     } else if (text.compare(string("}")) == 0) {
         token = "RBRACE";
-        return TOKEN::RBRACE;
+        return RBRACE;
     } else if (text.compare(string("[")) == 0) {
         token = "LBRACK";
-        return TOKEN::LBRACKET;
+        return LBRACKET;
     } else if (text.compare(string("]")) == 0) {
         token = "RBRACK";
-        return TOKEN::RBRACKET;
+        return RBRACKET;
     } else if (text.compare(string("(")) == 0) {
         token = "LPAREN";
-        return TOKEN::LPAREN;
+        return LPAREN;
     } else {
         token = "RPAREN";
-        return TOKEN::RPAREN;
+        return RPAREN;
     }
 }
 
@@ -142,19 +145,19 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
     if (text.compare(string(".")) == 0) {
         token = "DOT";
-        return TOKEN::PERIOD;
+        return DOT;
     } else if (text.compare(string(",")) == 0) {
         token = "COMMA";
-        return TOKEN::COMMA;
+        return COMMA;
     } else if (text.compare(string(";")) == 0) {
         token = "SEMI";
-        return TOKEN::SEMICOLON;
+        return SEMI;
     } else if (text.compare(string("!")) == 0) {
         token = "NOT";
-        return TOKEN::NOT;
+        return NOT;
     } else {
         token = "ASSIGN";
-        return TOKEN::ASSIGN;
+        return ASSIGN;
     }
 }
 
@@ -166,51 +169,51 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     if (text.compare(string("int")) == 0) {
         lastTokenLen = 3;
         token = "KEY_INT";
-        return TOKEN::KEY_INT;
+        return KEY_INT;
     } else if (text.compare(string("this")) == 0) {
         lastTokenLen = 4;
         token = "THIS";
-        return TOKEN::THIS;
+        return THIS;
     } else if (text.compare(string("if")) == 0) {
         lastTokenLen = 2;
         token = "IF";
-        return TOKEN::IF;
+        return IF;
     } else if (text.compare(string("else")) == 0) {
         lastTokenLen = 4;
         token = "ELSE";
-        return TOKEN::ELSE;
+        return ELSE;
     } else if (text.compare(string("void")) == 0) {
         lastTokenLen = 4;
         token = "VOID";
-        return TOKEN::VOID;
+        return VOID;
     } else if (text.compare(string("class")) == 0) {
         lastTokenLen = 5;
         token = "CLASS";
-        return TOKEN::CLASS;
+        return CLASS;
     } else if (text.compare(string("new")) == 0) {
         lastTokenLen = 3;
         token = "NEW";
-        return TOKEN::NEW;
+        return NEW;
     } else if (text.compare(string("print")) == 0) {
         lastTokenLen = 5;
         token = "PRINT";
-        return TOKEN::PRINT;
+        return PRINT;
     } else if (text.compare(string("read")) == 0) {
         lastTokenLen = 4;
         token = "READ";
-        return TOKEN::READ;
+        return READ;
     } else if (text.compare(string("return")) == 0) {
         lastTokenLen = 6;
         token = "RETURN";
-        return TOKEN::RETURN;
+        return RETURN;
     } else if (text.compare(string("null")) == 0) {
         lastTokenLen = 4;
         token = "NULLT";
-        return TOKEN::NULLT;
+        return NULLT;
     } else {
         lastTokenLen = 5;
         token = "WHILE";
-        return TOKEN::WHILE;
+        return WHILE;
     }
 }
 
@@ -219,7 +222,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "IDENT";
-    return TOKEN::ID;
+    return ID;
 }
 
  /* 8 NUMBER */
@@ -227,7 +230,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "NUMBER";
-    return TOKEN::VAL_INT;
+    return INT;
 }
 
  /* 11 NEWLINE */
@@ -235,7 +238,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = 1 - col;
     token = "";
-    // return TOKEN::NEWLINE;
+    // return NEWLINE;
 }
 
  /* 12 C-STYLE COMMENTS */
@@ -253,7 +256,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     }
     token = "COMMENT";
     // per program2 instructions, no token is returned
-    // return TOKEN::COMMENT;
+    // return COMMENT;
 }
 
  /* SLASH COMMENTS */
@@ -262,38 +265,38 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 1;
     token = "COMMENT";
     // per program2 instructions, no token is returned
-    // return TOKEN::COMMENT;
+    // return COMMENT;
 }
 
  /* SPACE */
 " " {
     col++;
     // we can add this return back in if we wish to consume space tokens in the future
-    // return TOKEN::SPACE;
+    // return SPACE;
 }
 
 "\t" {
    col += lastTokenLen;
    lastTokenLen = (col + 1) % 8;
-   return TOKEN::TAB;
+   return TAB;
 }
 
 {UNKNOWN}{1} {
     col += lastTokenLen;
     lastTokenLen = 1;
     token = "ER_CH";
-    return TOKEN::ER_CH;
+    return ER_CH;
 }
 
 {UNKNOWN}{1}{NON_ID}+ {
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "ER_WD";
-    return TOKEN::ER_WD;
+    return ER_WD;
 }
 
 <<EOF>> {
-    return TOKEN::EOFTOKEN;
+    return EOFTOKEN;
 }
 
 %%

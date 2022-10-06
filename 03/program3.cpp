@@ -11,7 +11,9 @@
 #include <iostream>
 #include <iomanip>
 #include <FlexLexer.h>
+#include "program3.tab.hpp"
 #include "program3.hpp"
+
 
 using std::cout;
 using std::endl;
@@ -19,6 +21,11 @@ using std::left;
 using std::string;
 using std::setw;
 
-void main() {
-    
+yyFlexLexer lexer;
+// Node* tree;
+
+int main() {
+    yyparse();
+
+    return 0;
 }
