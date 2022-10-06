@@ -1,0 +1,299 @@
+/*
+ * program3.lpp
+ * Andey Robins
+ * 10/5/22
+ * Compilers Program 3
+ *
+ * The flex input file for program3
+ */
+
+%{
+using std::string;
+using std::cerr;
+
+#include "program3.hpp"
+
+int col = 0;
+int lastTokenLen = 1;
+int type = 0;
+string token = "";
+
+%}
+%option outfile="program3_lex.cpp"
+%option noyywrap
+%option yylineno
+
+DIGIT [0-9]
+NUMBER [+-]?{DIGIT}+
+KEYWORD int|void|class|new|print|read|return|this|else|if|while|null
+ID [a-zA-Z_][a-zA-Z0-9_]*
+RELATIONAL_OP "=="|">"|"<"|">="|"<="|"!="
+LOGIC_OP "&&"|"||"
+MATH_OP "+"|"-"|"*"|"/"|"%"
+ENCLOSING "{"|"}"|"["|"]"|"("|")"
+PUNCTUATION "."|","|";"|"!"|"="
+UNKNOWN [^a-zA-Z0-9_+*/%.,;!=<>]{-}[ \t\n\x28\x29\x5b\x5d\x7b\x7d\x20]
+/* KNOWN [^a-zA-Z_+* /%!.,!=<>\t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x3b\x21] */
+NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
+
+%%
+ /* 1 COMPARE_OP */
+{RELATIONAL_OP} {
+
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 2;
+
+    if (text.compare(string("==")) == 0) {
+        token = "EQ";
+        return TOKEN::EQUAL;
+    } else if (text.compare(">") == 0) {
+        lastTokenLen = 1;
+        token = "GT";
+        return TOKEN::GREATER;
+    } else if (text.compare("<") == 0) {
+        lastTokenLen = 1;
+        token = "LT";
+        return TOKEN::LESS;
+    } else if (text.compare(">=") == 0) {
+        token = "GEQ";
+        return TOKEN::GREATER_EQUAL;
+    } else if (text.compare("<=") == 0) {
+        token = "LEQ";
+        return TOKEN::LESS_EQUAL;
+    } else {
+        token = "NEQ";
+        return TOKEN::NOT_EQUAL;
+    }
+}
+
+ /* 2 LOGICAL_OP */
+{LOGIC_OP} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 2;
+
+    if (text.compare(string("||")) == 0) {
+        token = "OR";
+        return TOKEN::OR;
+    } else {
+        token = "AND";
+        return TOKEN::AND;
+    }
+}
+
+ /* 3 MATH_OP */
+{MATH_OP} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 1;
+
+    if (text.compare(string("+")) == 0) {
+        token = "PLUS";
+        return TOKEN::PLUS;
+    } else if (text.compare(string("-")) == 0) {
+        token = "MINUS";
+        return TOKEN::MINUS;
+    } else if (text.compare(string("*")) == 0) {
+        token = "TIMES";
+        return TOKEN::MULTIPLY;
+    } else if (text.compare(string("/")) == 0) {
+        token = "DIV";
+        return TOKEN::DIVIDE;
+    } else {
+        token = "MOD";
+        return TOKEN::MOD;
+    }
+}
+
+ /* 4 ENCLOSING_OP */
+{ENCLOSING} {
+    string text = string(yytext);
+    type = 4;
+    col += lastTokenLen;
+    lastTokenLen = 1;
+
+    if (text.compare(string("{")) == 0) {
+        token = "LBRACE";
+        return TOKEN::LBRACE;
+    } else if (text.compare(string("}")) == 0) {
+        token = "RBRACE";
+        return TOKEN::RBRACE;
+    } else if (text.compare(string("[")) == 0) {
+        token = "LBRACK";
+        return TOKEN::LBRACKET;
+    } else if (text.compare(string("]")) == 0) {
+        token = "RBRACK";
+        return TOKEN::RBRACKET;
+    } else if (text.compare(string("(")) == 0) {
+        token = "LPAREN";
+        return TOKEN::LPAREN;
+    } else {
+        token = "RPAREN";
+        return TOKEN::RPAREN;
+    }
+}
+
+ /* 5 PUNCTUATION */
+{PUNCTUATION} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 1;
+
+    if (text.compare(string(".")) == 0) {
+        token = "DOT";
+        return TOKEN::PERIOD;
+    } else if (text.compare(string(",")) == 0) {
+        token = "COMMA";
+        return TOKEN::COMMA;
+    } else if (text.compare(string(";")) == 0) {
+        token = "SEMI";
+        return TOKEN::SEMICOLON;
+    } else if (text.compare(string("!")) == 0) {
+        token = "NOT";
+        return TOKEN::NOT;
+    } else {
+        token = "ASSIGN";
+        return TOKEN::ASSIGN;
+    }
+}
+
+ /* 6 KEYWORD */
+{KEYWORD} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    
+    if (text.compare(string("int")) == 0) {
+        lastTokenLen = 3;
+        token = "KEY_INT";
+        return TOKEN::KEY_INT;
+    } else if (text.compare(string("this")) == 0) {
+        lastTokenLen = 4;
+        token = "THIS";
+        return TOKEN::THIS;
+    } else if (text.compare(string("if")) == 0) {
+        lastTokenLen = 2;
+        token = "IF";
+        return TOKEN::IF;
+    } else if (text.compare(string("else")) == 0) {
+        lastTokenLen = 4;
+        token = "ELSE";
+        return TOKEN::ELSE;
+    } else if (text.compare(string("void")) == 0) {
+        lastTokenLen = 4;
+        token = "VOID";
+        return TOKEN::VOID;
+    } else if (text.compare(string("class")) == 0) {
+        lastTokenLen = 5;
+        token = "CLASS";
+        return TOKEN::CLASS;
+    } else if (text.compare(string("new")) == 0) {
+        lastTokenLen = 3;
+        token = "NEW";
+        return TOKEN::NEW;
+    } else if (text.compare(string("print")) == 0) {
+        lastTokenLen = 5;
+        token = "PRINT";
+        return TOKEN::PRINT;
+    } else if (text.compare(string("read")) == 0) {
+        lastTokenLen = 4;
+        token = "READ";
+        return TOKEN::READ;
+    } else if (text.compare(string("return")) == 0) {
+        lastTokenLen = 6;
+        token = "RETURN";
+        return TOKEN::RETURN;
+    } else if (text.compare(string("null")) == 0) {
+        lastTokenLen = 4;
+        token = "NULLT";
+        return TOKEN::NULLT;
+    } else {
+        lastTokenLen = 5;
+        token = "WHILE";
+        return TOKEN::WHILE;
+    }
+}
+
+ /* 7 IDENTIFIER */
+{ID} {
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    token = "IDENT";
+    return TOKEN::ID;
+}
+
+ /* 8 NUMBER */
+{NUMBER} {
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    token = "NUMBER";
+    return TOKEN::VAL_INT;
+}
+
+ /* 11 NEWLINE */
+[\n] {
+    col += lastTokenLen;
+    lastTokenLen = 1 - col;
+    token = "";
+    // return TOKEN::NEWLINE;
+}
+
+ /* 12 C-STYLE COMMENTS */
+"/*"[^*/]*"*/" {
+    col += lastTokenLen;
+    lastTokenLen = 0;
+    string text = string(yytext);
+    for (int i = 0; i < text.length(); i++) {
+        if (text[i] == '\n') {
+            col = 1;
+            lastTokenLen = 0;
+        } else {
+            lastTokenLen++;
+        }
+    }
+    token = "COMMENT";
+    // per program2 instructions, no token is returned
+    // return TOKEN::COMMENT;
+}
+
+ /* SLASH COMMENTS */
+"//"[^\n]*[\n] {
+    col = 0;
+    lastTokenLen = 1;
+    token = "COMMENT";
+    // per program2 instructions, no token is returned
+    // return TOKEN::COMMENT;
+}
+
+ /* SPACE */
+" " {
+    col++;
+    // we can add this return back in if we wish to consume space tokens in the future
+    // return TOKEN::SPACE;
+}
+
+"\t" {
+   col += lastTokenLen;
+   lastTokenLen = (col + 1) % 8;
+   return TOKEN::TAB;
+}
+
+{UNKNOWN}{1} {
+    col += lastTokenLen;
+    lastTokenLen = 1;
+    token = "ER_CH";
+    return TOKEN::ER_CH;
+}
+
+{UNKNOWN}{1}{NON_ID}+ {
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    token = "ER_WD";
+    return TOKEN::ER_WD;
+}
+
+<<EOF>> {
+    return TOKEN::EOFTOKEN;
+}
+
+%%
