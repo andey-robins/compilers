@@ -8,119 +8,162 @@
  */
 %{
 
+#include <iostream>
 #include <FlexLexer.h>
+#include <string>
+#include <typeinfo>
+#include "nodes/include/nodes.hpp"
+#define YYERROR_VERBOSE
 
 using std::cerr;
 using std::cout;
 using std::endl;
 
+class Node;
+extern Node *tree;
 extern yyFlexLexer lexer;
 
 #define yylex() lexer.yylex()
 
 void yyerror(const char* string) {
     // TODO: Modify this to output the whole line and not just token text
-    cerr << "##: errorrrssss" << endl;
+    cerr << "##: " << string << endl;
 }
 %}
 
-%token SEMI DOT
-%token ID NUMBER null READ NEW THIS
-%token LPAREN RPAREN LBRACKET RBRACKET
-%token PLUS MINUS NOT OR
-%token TIMES DIV MOD AND
-%token EQ NE GE LE GT LT
-%token INT
+%union {
+    Node *ttype;
+}
+
+%precedence "shift"
+%precedence "reduce"
+
+%type<ttype> program elements vardec exp type multibrackets name newexp simpletype optprogram
+
+%token<ttype> SEMI DOT
+%token<ttype> ID
+%token<ttype> NUMBER null READ NEW THIS
+%left<ttype> LPAREN RPAREN LBRACKET RBRACKET
+%left<ttype> PLUS MINUS NOT OR
+%left<ttype> TIMES DIV MOD AND
+%left<ttype> EQ NE GE LE GT LT
+%token<ttype> INT
 
 // TODO: Remove these
-%token EOFTOKEN ER_WD ER_CH TAB WHILE NULLT RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE  
+%token ER_WD ER_CH TAB WHILE NULLT RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE  
+
+%expect 0
 
 %%
 
-program:  elements {
-
-       }
-       | program elements {
-
-       }
+program:
+    elements optprogram { 
+        tree=$1;
+        tree->setNext($2);
+        $$=tree;
+    }
 ;
 
-elements: vardec {
-
-        }
-        | exp SEMI {
-
-        }
+optprogram:
+    elements optprogram {
+        $1->setNext($2);
+        $$ = $1;
+    }
+|   /* epsilon */ {
+        $$=0;
+    }
 ;
 
-vardec: type ID SEMI {
-
-      }
-      | ID ID SEMI {
-
-      }
-      | type multibrackets ID SEMI {
-
-      }
-      | ID multibrackets ID SEMI {
-
-      }
+elements:
+    vardec { $$=$1; }
+|   exp SEMI { 
+        $$=$1; 
+    }
 ;
 
-exp: name {}
-    | NUMBER {}
-    | null {}
-    | READ LPAREN RPAREN {}
-    | newexp {}
-    | LPAREN exp RPAREN {}
-    | name LPAREN RPAREN {}
-    | exp PLUS exp {}
-    | exp MINUS exp {}
-    | exp OR exp {}
-    | exp TIMES exp {}
-    | exp DIV exp {}
-    | exp MOD exp {}
-    | exp AND exp {}
-    | exp EQ exp {}
-    | exp NE exp {}
-    | exp GE exp {}
-    | exp LE exp {}
-    | exp GT exp {}
-    | exp LT exp {}
-    | MINUS exp {}
-    | PLUS exp {}
-    | NOT exp {}
+vardec:
+    type ID SEMI { $$=$1; }
+|   ID ID SEMI { $$=$1; }
+|   type multibrackets ID SEMI
+|   ID multibrackets ID SEMI
 ;
 
-newexp: NEW ID LPAREN RPAREN {}
-      | NEW simpletype {}
-      | NEW simpletype bracketexps {}
-      | NEW ID bracketexps {}
-      | NEW simpletype bracketexps multibrackets {}
-      | NEW ID bracketexps multibrackets {}
+exp:
+    name { $$ = new NodeExp(static_cast<NodeName*>($1)); }
+|   NUMBER { $$ = new LeafNumber($1->getInt()); }
+|   null { $$=new NodeName("null"); }
+|   READ LPAREN RPAREN { $$=new NodeName("read"); }
+|   newexp { 
+        $$ = new NodeExp(static_cast<NodeNewExp*>($1)); 
+    }
+|   LPAREN exp RPAREN
+|   name LPAREN RPAREN 
+|   exp PLUS exp
+|   exp MINUS exp
+|   exp OR exp
+|   exp TIMES exp
+|   exp DIV exp
+|   exp MOD exp
+|   exp AND exp
+|   exp EQ exp
+|   exp NE exp
+|   exp GE exp
+|   exp LE exp
+|   exp GT exp
+|   exp LT exp
+|   MINUS exp
+|   PLUS exp
+|   NOT exp
 ;
 
-type: simpletype {}
+newexp:
+    NEW ID LPAREN RPAREN { 
+        cout << "new id ()" << endl;
+        cout << $2->getString() << endl;
+        $$=new NodeNewExp($2->getString()); 
+    }
+|   NEW simpletype {
+        $$ = new NodeNewExp(static_cast<NodeType*>($2));
+    }
+|   NEW simpletype bracketexps
+|   NEW ID bracketexps
+|   NEW simpletype bracketexps multibrackets
+|   NEW ID bracketexps multibrackets
 ;
 
-simpletype: INT {}
+type:
+    simpletype { $$=new NodeType(static_cast<NodeSimpleType*>($1)); }
 ;
 
-bracketexps: bracketexp {}
-           | bracketexps bracketexp {}
+simpletype:
+    INT { 
+        $$=new NodeSimpleType("int"); 
+    }
 ;
 
-bracketexp: LBRACKET exp RBRACKET {}
+bracketexps:
+    bracketexp opt-bracketexps
 ;
 
-multibrackets: LBRACKET RBRACKET {}
-             | multibrackets LBRACKET RBRACKET {}
+opt-bracketexps:
+    bracketexp opt-bracketexps
+|   /* epsilon */  %prec "shift"
 ;
 
-name: THIS {}
-    | ID {}
-    | name DOT ID {}
-    | name bracketexps
+bracketexp:
+    LBRACKET exp RBRACKET 
+;
+
+multibrackets:
+    LBRACKET RBRACKET
+|   multibrackets LBRACKET RBRACKET
+;
+
+name:
+    THIS { $$=new LeafKeyword("this"); }
+|   ID %prec "shift" { $$=new LeafId($1->getString()); }
+|   name DOT ID 
+|   name bracketexps
 ;
 
 %%

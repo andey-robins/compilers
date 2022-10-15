@@ -12,9 +12,11 @@ using std::string;
 using std::cerr;
 using std::cout;
 using std::endl;
+#include "nodes/include/nodes.hpp"
 #include "program3.tab.hpp"
 #include "program3.hpp"
 
+class Node;
 
 int col = 0;
 int lastTokenLen = 1;
@@ -165,11 +167,13 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 {KEYWORD} {
     string text = string(yytext);
     col += lastTokenLen;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
     
     if (text.compare(string("int")) == 0) {
         lastTokenLen = 3;
         token = "KEY_INT";
-        return KEY_INT;
+        return INT;
     } else if (text.compare(string("this")) == 0) {
         lastTokenLen = 4;
         token = "THIS";
@@ -222,6 +226,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "IDENT";
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
     return ID;
 }
 
@@ -230,7 +236,9 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "NUMBER";
-    return INT;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(atoi(yytext));
+    return NUMBER;
 }
 
  /* 11 NEWLINE */
@@ -246,7 +254,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = 0;
     string text = string(yytext);
-    for (int i = 0; i < text.length(); i++) {
+    for (int i = 0; i < int(text.length()); i++) {
         if (text[i] == '\n') {
             col = 1;
             lastTokenLen = 0;
@@ -293,10 +301,6 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = string(yytext).length();
     token = "ER_WD";
     return ER_WD;
-}
-
-<<EOF>> {
-    return EOFTOKEN;
 }
 
 %%

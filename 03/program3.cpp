@@ -11,21 +11,30 @@
 #include <iostream>
 #include <iomanip>
 #include <FlexLexer.h>
+#include <typeinfo>
+#include "nodes/include/nodes.hpp"
 #include "program3.tab.hpp"
 #include "program3.hpp"
-
 
 using std::cout;
 using std::endl;
 using std::left;
-using std::string;
 using std::setw;
+using std::string;
 
 yyFlexLexer lexer;
-// Node* tree;
+Node *tree;
 
-int main() {
+int main()
+{
+    tree = 0;
+
     yyparse();
 
+    // TODO: remove this before submission
+    cout << "\n--------\n| TREE |\n--------\n\n"
+         << endl;
+    tree->print(&cout);
+    cout << endl;
     return 0;
 }
