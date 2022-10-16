@@ -1,0 +1,9 @@
+a. obj.b.c;
+45;
+null;
+read();
+func();
+a. b.func();
+a + ( b + c);
+a. b[5].c;
+X[2];
