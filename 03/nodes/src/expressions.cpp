@@ -3,6 +3,7 @@
 // Expressions
 NodeExp::NodeExp(Node *n)
 {
+    this->setType("exp");
     this->setNext(n);
 }
 
@@ -14,6 +15,7 @@ void NodeExp::print(ostream *out)
 
 NodeCallExp::NodeCallExp(NodeName *nn)
 {
+    this->setType("call exp");
     this->setNext(nn);
 }
 
@@ -31,12 +33,14 @@ void NodeCallExp::print(ostream *out)
 // NewExpressions
 NodeNewExp::NodeNewExp(string id)
 {
+    this->setType("newexp");
     this->setType("newesp-id");
     this->setVal(id);
 }
 
 NodeNewExp::NodeNewExp(NodeType *nt)
 {
+    this->setType("newexp");
     this->setType("newexp-nt");
     this->setNext(nt);
 }
@@ -104,6 +108,73 @@ void NodeNewExpTypeBrack::print(ostream *out)
     return;
 }
 
+NodeNewExpIdBrack::NodeNewExpIdBrack(string id, Node *nb)
+{
+    this->setType("newexp id brack");
+    this->setVal(id);
+    this->setNext(static_cast<NodeBracketExp *>(nb));
+}
+
+void NodeNewExpIdBrack::print(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<newexp> --> NEW ID <bracketexps>"
+         << endl;
+    indentation++;
+    *out << string(indentation * 2, ' ')
+         << "ID --> "
+         << sval
+         << endl;
+    Node::print(out);
+    indentation -= 2;
+    return;
+}
+
+NodeNewTypeBrackMult::NodeNewTypeBrackMult(NodeType *nt, Node *nb, Node *mb)
+{
+    this->setType("newexp type brack mult");
+    this->setLeft(static_cast<NodeType *>(nt));
+    this->setRight(static_cast<NodeBracketExp *>(nb));
+    this->setNext(static_cast<NodeMultiBrack *>(mb));
+}
+
+void NodeNewTypeBrackMult::print(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<newexp> --> NEW <type> <bracketexps> <multibrackets>"
+         << endl;
+    indentation++;
+    this->getLeft()->print(out);
+    this->getRight()->print(out);
+    *out << this->getNext()->getType();
+    this->getNext()->print(out);
+    indentation--;
+    return;
+}
+
+NodeNewIdBrackMult::NodeNewIdBrackMult(string id, Node *nb, Node *mb)
+{
+    this->setType("newexp brack mult");
+    this->setVal(id);
+    this->setLeft(static_cast<NodeBracketExp *>(nb));
+    this->setNext(static_cast<NodeMultiBrack *>(mb));
+}
+
+void NodeNewIdBrackMult::print(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<newexp> --> NEW <type> <bracketexps> <multibrackets>"
+         << endl;
+    indentation++;
+    *out << this->getString() << endl;
+    this->getLeft()->print(out);
+    *out << this->getNext()->getType();
+    this->getNext()->print(out);
+    indentation--;
+    return;
+}
+
+// Name Node
 NodeName::NodeName(NodeName *nn, string id)
 {
     this->setType("name");

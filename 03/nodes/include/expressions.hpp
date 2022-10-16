@@ -32,6 +32,27 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+class NodeNewExpIdBrack : public Node
+{
+public:
+    NodeNewExpIdBrack(string id, Node *nb);
+    virtual void print(ostream *out = 0);
+};
+
+class NodeNewTypeBrackMult : public Node
+{
+public:
+    NodeNewTypeBrackMult(NodeType *nt, Node *nb, Node *mb);
+    virtual void print(ostream *out = 0);
+};
+
+class NodeNewIdBrackMult : public Node
+{
+public:
+    NodeNewIdBrackMult(string id, Node *nb, Node *mb);
+    virtual void print(ostream *out = 0);
+};
+
 // Expressions
 class NodeExp : public Node
 {

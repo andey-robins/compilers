@@ -3,6 +3,14 @@
 class NodeBracketExp : public Node
 {
 public:
-    NodeBracketExp(NodeExp *nn);
-    virtual void print(ostream *out);
+    NodeBracketExp(NodeBracketExp *nn);
+    NodeBracketExp(NodeEpsilon *ne);
+    virtual void print(ostream *out = 0);
+};
+
+class NodeMultiBrack : public Node
+{
+public:
+    NodeMultiBrack();
+    virtual void print(ostream *out = 0);
 };
