@@ -1,5 +1,6 @@
 #include "node.hpp"
 
+// Include name here in expressions until it fits in a better area
 class NodeName : public Node
 {
 public:
@@ -8,6 +9,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// New Expressions
 class NodeNewExp : public Node
 {
 public:
@@ -23,6 +25,14 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+class NodeNewExpTypeBrack : public Node
+{
+public:
+    NodeNewExpTypeBrack(NodeType *nt, Node *nb);
+    virtual void print(ostream *out = 0);
+};
+
+// Expressions
 class NodeExp : public Node
 {
 public:

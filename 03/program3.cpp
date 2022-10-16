@@ -27,7 +27,7 @@ int main()
     yyparse();
 
     // TODO: remove this before submission
-    cout << "\n--------\n| TREE |\n--------\n\n"
+    cout << "\n--------\n"
          << endl;
     tree->print(&cout);
     cout << endl;

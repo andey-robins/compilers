@@ -24,6 +24,8 @@ public:
     void setLeft(Node *p);
     void setRight(Node *p);
     void setNext(Node *p);
+    void setType(string t);
+    string getType();
     Node *getLeft();
     Node *getRight();
     Node *getNext();
@@ -35,6 +37,7 @@ protected:
     int ival;
     double dval;
     string sval;
+    string type;
     Node *left, *right;
     Node *next;
 };

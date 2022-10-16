@@ -13,3 +13,10 @@ public:
     NodeType(NodeSimpleType *st = 0);
     virtual void print(ostream *out = 0);
 };
+
+class NodeEpsilon : public Node
+{
+public:
+    NodeEpsilon();
+    virtual void print(ostream *out = 0);
+};

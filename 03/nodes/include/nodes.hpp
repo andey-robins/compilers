@@ -4,6 +4,7 @@
 #include "types.hpp"
 #include "expressions.hpp"
 #include "struct.hpp"
+#include "wrapper.hpp"
 
 using std::cout;
 using std::endl;

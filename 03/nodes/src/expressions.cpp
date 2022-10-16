@@ -8,10 +8,7 @@ NodeExp::NodeExp(Node *n)
 
 void NodeExp::print(ostream *out)
 {
-    if (this->getNext())
-    {
-        this->getNext()->print(out);
-    }
+    Node::print(out);
     return;
 }
 
@@ -34,11 +31,13 @@ void NodeCallExp::print(ostream *out)
 // NewExpressions
 NodeNewExp::NodeNewExp(string id)
 {
+    this->setType("newesp-id");
     this->setVal(id);
 }
 
 NodeNewExp::NodeNewExp(NodeType *nt)
 {
+    this->setType("newexp-nt");
     this->setNext(nt);
 }
 
@@ -58,10 +57,7 @@ void NodeNewExp::print(ostream *out)
              << endl;
     }
 
-    if (this->getNext())
-    {
-        this->getNext()->print(out);
-    }
+    Node::print(out);
 
     indentation--;
     return;
@@ -69,6 +65,7 @@ void NodeNewExp::print(ostream *out)
 
 NodeNewExpType::NodeNewExpType(NodeType *nt)
 {
+    this->setType("newexp type");
     this->setNext(nt);
 }
 
@@ -83,8 +80,33 @@ void NodeNewExpType::print(ostream *out)
     return;
 }
 
+NodeNewExpTypeBrack::NodeNewExpTypeBrack(NodeType *nt, Node *nb)
+{
+    this->setType("newexp type brack");
+    this->setLeft(nt);
+    this->setRight(static_cast<NodeBracketExp *>(nb));
+}
+
+void NodeNewExpTypeBrack::print(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<newexp> --> NEW <type> <bracketexps>"
+         << endl;
+    indentation++;
+    this->getLeft()->print(out);
+    this->getRight()->print(out);
+    // this->getRight()->getNext()->print(out);
+    indentation--;
+    if (this->getNext() != 0)
+    {
+        this->getNext()->print(out);
+    }
+    return;
+}
+
 NodeName::NodeName(NodeName *nn, string id)
 {
+    this->setType("name");
     this->setNext(nn);
     this->setVal(id);
 }

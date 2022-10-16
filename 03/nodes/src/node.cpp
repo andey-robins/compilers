@@ -42,6 +42,14 @@ void Node::setVal(double d)
 {
   dval = d;
 }
+void Node::setType(string t)
+{
+  type = t;
+}
+string Node::getType()
+{
+  return type;
+}
 
 void Node::reset()
 {
@@ -90,15 +98,6 @@ void Node::print(ostream *out)
   if (left)
   {
     left->print(out);
-  }
-
-  if (sval != "")
-  {
-    *out << sval << endl;
-  }
-  else if (ival)
-  {
-    *out << ival << endl;
   }
 
   if (right)

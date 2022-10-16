@@ -7,6 +7,10 @@
  * The flex input file for program3
  */
 
+%option outfile="program3_lex.cpp"
+%option noyywrap
+%option yylineno
+
 %{
 using std::string;
 using std::cerr;
@@ -16,6 +20,8 @@ using std::endl;
 #include "program3.tab.hpp"
 #include "program3.hpp"
 
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
 class Node;
 
 int col = 0;
@@ -23,10 +29,16 @@ int lastTokenLen = 1;
 int type = 0;
 string token = "";
 
+void yyerror(const char* string) {
+    // TODO: Modify this to output the whole line and not just token text
+    cerr << yylloc.first_line 
+         << "." 
+         << col
+         << ": " 
+         << string 
+         << endl;
+}
 %}
-%option outfile="program3_lex.cpp"
-%option noyywrap
-%option yylineno
 
 DIGIT [0-9]
 NUMBER [+-]?{DIGIT}+

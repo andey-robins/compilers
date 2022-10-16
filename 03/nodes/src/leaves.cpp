@@ -25,11 +25,20 @@ LeafNumber::LeafNumber(int i)
 
 void LeafNumber::print(ostream *out)
 {
-    *out << this->getInt() << endl;
+    *out << string(indentation * 2, ' ')
+         << "<exp> --> NUMBER"
+         << endl;
+    indentation++;
+    *out << string(indentation * 2, ' ')
+         << "NUMBER --> "
+         << this->getInt()
+         << endl;
+    indentation -= 2;
     if (this->getNext())
     {
         this->getNext()->print(out);
     }
+    return;
 }
 
 LeafKeyword::LeafKeyword(string s)

@@ -24,12 +24,11 @@ extern Node *tree;
 extern yyFlexLexer lexer;
 
 #define yylex() lexer.yylex()
+void yyerror(const char* string);
 
-void yyerror(const char* string) {
-    // TODO: Modify this to output the whole line and not just token text
-    cerr << "##: " << string << endl;
-}
 %}
+
+%locations
 
 %union {
     Node *ttype;
@@ -38,7 +37,7 @@ void yyerror(const char* string) {
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program elements vardec exp type multibrackets name newexp simpletype optprogram
+%type<ttype> program elements vardec exp type multibrackets name newexp simpletype optprogram bracketexp bracketexps optbracketexps
 
 %token<ttype> SEMI DOT
 %token<ttype> ID
@@ -60,6 +59,7 @@ program:
     elements optprogram { 
         tree=new NodeProgram(static_cast<NodeElement*>($1));
         tree->setNext($2);
+        cout << $1->getType() << endl;
         $$=tree;
     }
 ;
@@ -67,20 +67,23 @@ program:
 optprogram:
     elements optprogram {
         $1->setNext($2);
+        cout << $1->getType() << endl;
         $$ = new NodeOptProgram(static_cast<NodeElement*>($1));
     }
 |   /* epsilon */ {
-        $$=0;
+        $$ = new NodeEpsilon();
     }
 ;
 
 elements:
     vardec { $$=$1; }
 |   exp SEMI { 
+        $1->setType("elements");
         $$=$1; 
     }
 ;
 
+// TODO: Vardecs
 vardec:
     type ID SEMI { $$ = $1; }
 |   ID ID SEMI { $$ = $1; }
@@ -94,7 +97,7 @@ exp:
 |   NULLT { $$=new LeafKeyword("null"); }
 |   READ LPAREN RPAREN { $$=new LeafKeyword("read"); }
 |   newexp { 
-        $$ = new NodeExp(static_cast<NodeNewExp*>($1)); 
+        $$ = $1; 
     }
 |   LPAREN exp RPAREN
 |   name LPAREN RPAREN { $$ = new NodeCallExp(static_cast<NodeName*>($1)); }
@@ -116,6 +119,7 @@ exp:
 |   NOT exp
 ;
 
+// TODO: finish these
 newexp:
     NEW ID LPAREN RPAREN { 
         $$=new NodeNewExp($2->getString()); 
@@ -123,10 +127,12 @@ newexp:
 |   NEW simpletype {
         $$ = new NodeNewExpType(static_cast<NodeType*>($2));
     }
-|   NEW simpletype bracketexps
-|   NEW ID bracketexps
-|   NEW simpletype bracketexps multibrackets
-|   NEW ID bracketexps multibrackets
+|   NEW simpletype bracketexps {
+        $$ = new NodeNewExpTypeBrack(static_cast<NodeType*>($2), static_cast<NodeBracketExp *>($3));
+    }
+|   NEW ID bracketexps {}
+|   NEW simpletype bracketexps multibrackets {}
+|   NEW ID bracketexps multibrackets {}
 ;
 
 type:
@@ -140,16 +146,25 @@ simpletype:
 ;
 
 bracketexps:
-    bracketexp opt-bracketexps
+    bracketexp optbracketexps { 
+        $1->setNext($2);
+        $$ = new NodeBracketExp(static_cast<NodeExp*>($1)); 
+    }
 ;
 
-opt-bracketexps:
-    bracketexp opt-bracketexps
-|   /* epsilon */  %prec "shift"
+optbracketexps:
+    bracketexp optbracketexps { 
+        $1->setNext($2);
+        $$ = new NodeBracketExp(static_cast<NodeExp*>($1));
+    }
+|   /* epsilon */  %prec "shift" { $$ = new NodeEpsilon(); }
 ;
 
 bracketexp:
-    LBRACKET exp RBRACKET 
+    LBRACKET exp RBRACKET { 
+        $$ = new NodeExp($2); 
+    }
+|   LBRACKET RBRACKET { $$ = new NodeEpsilon(); }
 ;
 
 multibrackets:

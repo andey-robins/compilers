@@ -32,7 +32,7 @@ clean:
 	/bin/rm -f program3.tgz
 
 run: program3
-	./program3 < test/test.dcaf
+	./program3 < test/new.dcaf
 
 tar: program3
 	tar -zcf program3.tgz program3.cpp program3.hpp program3.lpp program3.y

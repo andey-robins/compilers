@@ -490,7 +490,7 @@ static yyconst flex_int32_t yy_rule_can_match_eol[17] =
  *
  * The flex input file for program3
  */
-#line 11 "program3.lpp"
+#line 15 "program3.lpp"
 using std::string;
 using std::cerr;
 using std::cout;
@@ -499,6 +499,8 @@ using std::endl;
 #include "program3.tab.hpp"
 #include "program3.hpp"
 
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
 class Node;
 
 int col = 0;
@@ -506,8 +508,17 @@ int lastTokenLen = 1;
 int type = 0;
 string token = "";
 
+void yyerror(const char* string) {
+    // TODO: Modify this to output the whole line and not just token text
+    cerr << yylloc.first_line 
+         << "." 
+         << col
+         << ": " 
+         << string 
+         << endl;
+}
 /* KNOWN [^a-zA-Z_+* /%!.,!=<>\t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x3b\x21] */
-#line 511 "program3_lex.cpp"
+#line 522 "program3_lex.cpp"
 
 #define INITIAL 0
 
@@ -639,10 +650,10 @@ YY_DECL
 		}
 
 	{
-#line 44 "program3.lpp"
+#line 56 "program3.lpp"
 
  /* 1 COMPARE_OP */
-#line 646 "program3_lex.cpp"
+#line 657 "program3_lex.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -711,7 +722,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 46 "program3.lpp"
+#line 58 "program3.lpp"
 {
 
     string text = string(yytext);
@@ -744,7 +755,7 @@ YY_RULE_SETUP
 /* 2 LOGICAL_OP */
 case 2:
 YY_RULE_SETUP
-#line 76 "program3.lpp"
+#line 88 "program3.lpp"
 {
     string text = string(yytext);
     col += lastTokenLen;
@@ -762,7 +773,7 @@ YY_RULE_SETUP
 /* 3 MATH_OP */
 case 3:
 YY_RULE_SETUP
-#line 91 "program3.lpp"
+#line 103 "program3.lpp"
 {
     string text = string(yytext);
     col += lastTokenLen;
@@ -789,7 +800,7 @@ YY_RULE_SETUP
 /* 4 ENCLOSING_OP */
 case 4:
 YY_RULE_SETUP
-#line 115 "program3.lpp"
+#line 127 "program3.lpp"
 {
     string text = string(yytext);
     type = 4;
@@ -820,7 +831,7 @@ YY_RULE_SETUP
 /* 5 PUNCTUATION */
 case 5:
 YY_RULE_SETUP
-#line 143 "program3.lpp"
+#line 155 "program3.lpp"
 {
     string text = string(yytext);
     col += lastTokenLen;
@@ -847,7 +858,7 @@ YY_RULE_SETUP
 /* 6 KEYWORD */
 case 6:
 YY_RULE_SETUP
-#line 167 "program3.lpp"
+#line 179 "program3.lpp"
 {
     string text = string(yytext);
     col += lastTokenLen;
@@ -908,7 +919,7 @@ YY_RULE_SETUP
 /* 7 IDENTIFIER */
 case 7:
 YY_RULE_SETUP
-#line 225 "program3.lpp"
+#line 237 "program3.lpp"
 {
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
@@ -921,7 +932,7 @@ YY_RULE_SETUP
 /* 8 NUMBER */
 case 8:
 YY_RULE_SETUP
-#line 235 "program3.lpp"
+#line 247 "program3.lpp"
 {
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
@@ -935,7 +946,7 @@ YY_RULE_SETUP
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 245 "program3.lpp"
+#line 257 "program3.lpp"
 {
     col += lastTokenLen;
     lastTokenLen = 1 - col;
@@ -947,7 +958,7 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 253 "program3.lpp"
+#line 265 "program3.lpp"
 {
     col += lastTokenLen;
     lastTokenLen = 0;
@@ -969,7 +980,7 @@ YY_RULE_SETUP
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 271 "program3.lpp"
+#line 283 "program3.lpp"
 {
     col = 0;
     lastTokenLen = 1;
@@ -981,7 +992,7 @@ YY_RULE_SETUP
 /* SPACE */
 case 12:
 YY_RULE_SETUP
-#line 280 "program3.lpp"
+#line 292 "program3.lpp"
 {
     col++;
     // we can add this return back in if we wish to consume space tokens in the future
@@ -990,7 +1001,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 286 "program3.lpp"
+#line 298 "program3.lpp"
 {
    col += lastTokenLen;
    lastTokenLen = (col + 1) % 8;
@@ -999,7 +1010,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 292 "program3.lpp"
+#line 304 "program3.lpp"
 {
     col += lastTokenLen;
     lastTokenLen = 1;
@@ -1009,7 +1020,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 299 "program3.lpp"
+#line 311 "program3.lpp"
 {
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
@@ -1019,10 +1030,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 306 "program3.lpp"
+#line 318 "program3.lpp"
 ECHO;
 	YY_BREAK
-#line 1026 "program3_lex.cpp"
+#line 1037 "program3_lex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1986,7 +1997,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 306 "program3.lpp"
+#line 318 "program3.lpp"
 
 
 
