@@ -79,7 +79,9 @@ optprogram:
 elements:
     vardec 
 |   exp SEMI
-|   error SEMI { yyerror("err: unable to parse element"); }
+|   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
+|   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
+|   error SEMI { yyerror("err: syntax error"); }
 ;
 
 // Done
