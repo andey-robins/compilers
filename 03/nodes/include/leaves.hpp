@@ -1,3 +1,11 @@
+/*
+ * leaves.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Definitions for the AST of all leaf nodes
+ */
 #include "node.hpp"
 
 class LeafId : public Node

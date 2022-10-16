@@ -1,3 +1,11 @@
+/*
+ * expression.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Definitions for the AST of all expression nodes
+ */
 #include "node.hpp"
 
 // Include name here in expressions until it fits in a better area

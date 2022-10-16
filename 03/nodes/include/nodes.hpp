@@ -1,3 +1,11 @@
+/*
+ * nodes.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Primary include file for all AST nodes
+ */
 #include <iomanip>
 
 #include "leaves.hpp"

@@ -1,3 +1,11 @@
+/*
+ * leaves.cpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Implementations for the AST of all leaf nodes
+ */
 #include "../include/nodes.hpp"
 
 LeafId::LeafId(string id)

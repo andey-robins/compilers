@@ -1,3 +1,11 @@
+/*
+ * types.cpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Implementations for the AST of all type nodes
+ */
 #include "../include/nodes.hpp"
 
 NodeType::NodeType(NodeSimpleType *st)

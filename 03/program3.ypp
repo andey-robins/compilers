@@ -124,7 +124,7 @@ exp:
 |   NOT exp
 ;
 
-// TODO: finish these
+// Done
 newexp:
     NEW ID LPAREN RPAREN { 
         $$=new NodeNewExp($2->getString()); 
@@ -160,6 +160,7 @@ simpletype:
     }
 ;
 
+// Done
 bracketexps:
     bracketexp optbracketexps { 
         $1->setNext($2);
@@ -167,6 +168,7 @@ bracketexps:
     }
 ;
 
+// TODO: Figure out how to handle multibracks
 optbracketexps:
     bracketexp optbracketexps { 
         if ($1->getString() == "epsilon")
@@ -186,6 +188,7 @@ optbracketexps:
 |   /* epsilon */  %prec "shift" { $$ = new NodeEpsilon(); }
 ;
 
+// Done?
 bracketexp:
     LBRACKET exp RBRACKET { 
         $$ = new NodeExp($2); 
@@ -193,6 +196,7 @@ bracketexp:
 |   LBRACKET RBRACKET { $$ = new NodeEpsilon(); }
 ;
 
+// TODO: Figure out how to handle multibracks
 multibrackets:
     LBRACKET RBRACKET multibracketsopt { 
         if ($3->getString() != "epsilon")
@@ -208,6 +212,7 @@ multibrackets:
     }
 ;
 
+// TODO: Figure out how to handle multibracks
 multibracketsopt:
     LBRACKET RBRACKET multibracketsopt {
         if ($3->getString() != "epsilon")
@@ -224,6 +229,7 @@ multibracketsopt:
 |   /* epsilon */ { $$ = new NodeEpsilon(); }
 ;
 
+// TODO: Finish this one
 name:
     THIS { $$=new LeafKeyword("this"); }
 |   ID %prec "shift" { $$=new LeafId($1->getString()); }

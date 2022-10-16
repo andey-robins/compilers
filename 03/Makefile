@@ -27,7 +27,7 @@ program3.tab.cpp: program3.ypp
 
 clean:
 	/bin/rm -f program3 program3_lex.cpp core.* program3.tab.*
-	/bin/rm program3.output 
+	/bin/rm -f program3.output 
 	/bin/rm -rf *.dSYM
 	/bin/rm -f program3.tgz
 

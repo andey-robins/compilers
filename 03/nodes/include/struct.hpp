@@ -1,3 +1,12 @@
+/*
+ * struct.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Definitions for the AST of all struct nodes (statement adjacent nodes)
+ */
+
 #include "node.hpp"
 
 class NodeVarDec : public Node

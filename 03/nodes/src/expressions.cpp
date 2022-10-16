@@ -1,3 +1,11 @@
+/*
+ * expression.cpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Implementations for the AST of all expression nodes
+ */
 #include "../include/nodes.hpp"
 
 // Expressions

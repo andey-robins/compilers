@@ -1,3 +1,12 @@
+/*
+ * wrapper.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Definitions for the AST of all wrapper nodes
+ */
+
 #include "node.hpp"
 
 class NodeBracketExp : public Node

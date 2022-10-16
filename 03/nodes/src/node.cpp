@@ -1,3 +1,11 @@
+/*
+ * node.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Root class for nodes in the AST
+ */
 #include <typeinfo>
 #include "../include/nodes.hpp"
 

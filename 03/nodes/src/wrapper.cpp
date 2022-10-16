@@ -1,3 +1,11 @@
+/*
+ * wrapper.cpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Implementations for the AST of all wrapper nodes
+ */
 #include "../include/nodes.hpp"
 
 NodeBracketExp::NodeBracketExp(NodeBracketExp *nb)

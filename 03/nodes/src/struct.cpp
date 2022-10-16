@@ -1,3 +1,11 @@
+/*
+ * struct.cpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Implementations for the AST of all struct nodes
+ */
 #include "../include/nodes.hpp"
 
 NodeProgram::NodeProgram(NodeElement *e)

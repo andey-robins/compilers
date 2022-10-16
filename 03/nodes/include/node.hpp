@@ -1,3 +1,12 @@
+/*
+ * node.hpp
+ * Andey Robins
+ * 10/15/22
+ * Compilers Program 3
+ *
+ * Root class definitions for nodes in the AST
+ * Adapted from example provided
+ */
 #ifndef NODE_HPP
 #define NODE_HPP
 #include <iostream>
