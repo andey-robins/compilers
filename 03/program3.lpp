@@ -28,15 +28,19 @@ int col = 0;
 int lastTokenLen = 1;
 int type = 0;
 string token = "";
+string fullLine = "";
 
-void yyerror(const char* string) {
-    // TODO: Modify this to output the whole line and not just token text
-    cerr << yylloc.first_line 
-         << "." 
-         << col
-         << ": " 
-         << string 
-         << endl;
+void yyerror(const char* err) {
+    string errString = string(err);
+    if (errString[3] == ':')
+    {
+        cerr << yylloc.first_line 
+             << ": "
+             << fullLine
+             << endl
+             << errString 
+             << endl;
+    }    
 }
 %}
 
@@ -62,6 +66,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 2;
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
 
     if (text.compare(string("==")) == 0) {
         token = "EQ";
@@ -93,6 +98,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 2;
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
 
     if (text.compare(string("||")) == 0) {
         token = "OR";
@@ -110,6 +116,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 1;
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
 
     if (text.compare(string("+")) == 0) {
         token = "PLUS";
@@ -137,6 +144,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 1;
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
 
     if (text.compare(string("{")) == 0) {
         token = "LBRACE";
@@ -166,6 +174,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 1;
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
 
     if (text.compare(string(".")) == 0) {
         token = "DOT";
@@ -191,6 +200,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
     
     if (text.compare(string("int")) == 0) {
         lastTokenLen = 3;
@@ -250,6 +260,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     token = "IDENT";
     yylval.ttype = new Node;
     yylval.ttype->setVal(yytext);
+    fullLine += yytext;
     return ID;
 }
 
@@ -260,6 +271,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     token = "NUMBER";
     yylval.ttype = new Node;
     yylval.ttype->setVal(atoi(yytext));
+    fullLine += yytext;
     return NUMBER;
 }
 
@@ -268,6 +280,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = 1 - col;
     token = "";
+    fullLine = "";
     // return NEWLINE;
 }
 
@@ -301,6 +314,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
  /* SPACE */
 " " {
     col++;
+    fullLine += yytext;
     // we can add this return back in if we wish to consume space tokens in the future
     // return SPACE;
 }
@@ -308,6 +322,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 "\t" {
    col += lastTokenLen;
    lastTokenLen = (col + 1) % 8;
+   fullLine += yytext;
    return TAB;
 }
 

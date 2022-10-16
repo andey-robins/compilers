@@ -13,6 +13,7 @@
 #include "expressions.hpp"
 #include "struct.hpp"
 #include "wrapper.hpp"
+#include "vars.hpp"
 
 using std::cout;
 using std::endl;

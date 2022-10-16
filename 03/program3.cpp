@@ -26,8 +26,8 @@ int main()
 
     yyparse();
 
-    // TODO: remove this before submission
-    cout << "\n--------\n"
+    // Two spaces to separate errors from parse tree
+    cout << endl
          << endl;
     tree->print(&cout);
     cout << endl;

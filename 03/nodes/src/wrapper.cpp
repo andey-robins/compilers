@@ -39,15 +39,30 @@ void NodeBracketExp::print(ostream *out)
 
 NodeMultiBrack::NodeMultiBrack()
 {
+    this->setVal(1);
     this->setType("multibrack");
 }
 
-// TODO: get working for multiple sets of multi brackets
 void NodeMultiBrack::print(ostream *out)
 {
     indentation--;
     *out << string(indentation * 2, ' ')
-         << "<multibrackets> --> []"
-         << endl;
+         << "<multibrackets> --> []";
+
+    Node *next = this->getNext();
+    while (next->getType() == "multibrack" || next->getType() == "bracketexp -> epsilon")
+    {
+        if (next->getType() == "multibrack")
+        {
+            *out << "[]";
+        }
+        next = next->getNext();
+    }
+    *out << endl;
+
+    if (next)
+    {
+        next->print(out);
+    }
     return;
 }
