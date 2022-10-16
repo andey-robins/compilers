@@ -60,7 +60,6 @@ program:
     elements optprogram { 
         tree=new NodeProgram(static_cast<NodeElement*>($1));
         tree->setNext($2);
-        cout << $1->getType() << endl;
         $$=tree;
     }
 ;
@@ -69,7 +68,6 @@ program:
 optprogram:
     elements optprogram {
         $1->setNext($2);
-        cout << $1->getType() << endl;
         $$ = new NodeOptProgram(static_cast<NodeElement*>($1));
     }
 |   /* epsilon */ {
@@ -100,28 +98,25 @@ exp:
 |   NUMBER { $$ = new LeafNumber($1->getInt()); }
 |   NULLT { $$=new LeafKeyword("null"); }
 |   READ LPAREN RPAREN { $$=new LeafKeyword("read"); }
-|   newexp { 
-        cout << $1->getType() << endl;
-        $$ = $1; 
-    }
+|   newexp
 |   LPAREN exp RPAREN
 |   name LPAREN RPAREN { $$ = new NodeCallExp(static_cast<NodeName*>($1)); }
-|   exp PLUS exp
-|   exp MINUS exp
-|   exp OR exp
-|   exp TIMES exp
-|   exp DIV exp
-|   exp MOD exp
-|   exp AND exp
-|   exp EQ exp
-|   exp NE exp
-|   exp GE exp
-|   exp LE exp
-|   exp GT exp
-|   exp LT exp
-|   MINUS exp
-|   PLUS exp
-|   NOT exp
+|   exp PLUS exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp MINUS exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp OR exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp TIMES exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp DIV exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp MOD exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp AND exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp EQ exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp NE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp GE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp LE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp GT exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp LT exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   MINUS exp { $$ = new NodePrefixExp($1->getString(), $2); }
+|   PLUS exp { $$ = new NodePrefixExp($1->getString(), $2); }
+|   NOT exp { $$ = new NodePrefixExp($1->getString(), $2); }
 ;
 
 // Done

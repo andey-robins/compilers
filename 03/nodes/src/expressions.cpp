@@ -196,3 +196,50 @@ void NodeName::print(ostream *out)
     next->print(out);
     return;
 }
+
+NodeInfixExp::NodeInfixExp(Node *ln, Node *rn, string op)
+{
+    this->setType("exp infix");
+    this->setVal(op);
+    this->setLeft(ln);
+    this->setRight(rn);
+}
+
+void NodeInfixExp::print(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<exp> --> <exp> "
+         << this->getString()
+         << " <exp>"
+         << endl;
+    indentation++;
+    this->getLeft()->print(out);
+    this->getRight()->print(out);
+    indentation++;
+    if (this->getNext())
+    {
+        this->getNext()->print(out);
+    }
+    indentation--;
+    return;
+}
+
+NodePrefixExp::NodePrefixExp(string op, Node *n)
+{
+    this->setType("exp prefix");
+    this->setVal(op);
+    this->setNext(n);
+}
+
+void NodePrefixExp::print(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<exp> --> "
+         << this->getString()
+         << " <exp>"
+         << endl;
+    indentation++;
+    this->getNext()->print(out);
+    indentation--;
+    return;
+}

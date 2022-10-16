@@ -75,3 +75,17 @@ public:
     NodeCallExp(NodeName *nn = 0);
     virtual void print(ostream *out = 0);
 };
+
+class NodeInfixExp : public Node
+{
+public:
+    NodeInfixExp(Node *ln, Node *rn, string op);
+    virtual void print(ostream *out = 0);
+};
+
+class NodePrefixExp : public Node
+{
+public:
+    NodePrefixExp(string op, Node *n);
+    virtual void print(ostream *out = 0);
+};

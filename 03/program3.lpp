@@ -49,7 +49,7 @@ LOGIC_OP "&&"|"||"
 MATH_OP "+"|"-"|"*"|"/"|"%"
 ENCLOSING "{"|"}"|"["|"]"|"("|")"
 PUNCTUATION "."|","|";"|"!"|"="
-UNKNOWN [^a-zA-Z0-9_+*/%.,;!=<>]{-}[ \t\n\x28\x29\x5b\x5d\x7b\x7d\x20]
+UNKNOWN [^a-zA-Z0-9_+*/%.,;!=<>]{-}[ \t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x2d]
 /* KNOWN [^a-zA-Z_+* /%!.,!=<>\t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x3b\x21] */
 NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 
@@ -60,6 +60,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 2;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
 
     if (text.compare(string("==")) == 0) {
         token = "EQ";
@@ -89,6 +91,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 2;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
 
     if (text.compare(string("||")) == 0) {
         token = "OR";
@@ -104,6 +108,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 1;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
 
     if (text.compare(string("+")) == 0) {
         token = "PLUS";
@@ -129,6 +135,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     type = 4;
     col += lastTokenLen;
     lastTokenLen = 1;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
 
     if (text.compare(string("{")) == 0) {
         token = "LBRACE";
@@ -156,6 +164,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 1;
+    yylval.ttype = new Node;
+    yylval.ttype->setVal(yytext);
 
     if (text.compare(string(".")) == 0) {
         token = "DOT";
