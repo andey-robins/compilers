@@ -1,5 +1,5 @@
-#ifndef NODES_HPP
-#define NODES_HPP
+#ifndef NODE_HPP
+#define NODE_HPP
 #include <iostream>
 #include <string>
 
@@ -37,70 +37,6 @@ protected:
     string sval;
     Node *left, *right;
     Node *next;
-};
-
-// END NODE
-
-// BEGIN LEAF NODES
-
-// END LEAF NODES
-
-class NodeName : public Node
-{
-public:
-    NodeName(string s);
-    NodeName(NodeName *nn, string id);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeSimpleType : public Node
-{
-public:
-    NodeSimpleType(string s);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeType : public Node
-{
-public:
-    NodeType(NodeSimpleType *st = 0);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeNewExp : public Node
-{
-public:
-    NodeNewExp(string id);
-    NodeNewExp(NodeType *nt);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeExp : public Node
-{
-public:
-    NodeExp(Node *n = 0);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeVarDec : public Node
-{
-public:
-    NodeVarDec(string id1, string id2);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeElement : public Node
-{
-public:
-    NodeElement(NodeExp *e);
-    virtual void print(ostream *out = 0);
-};
-
-class NodeProgram : public Node
-{
-public:
-    NodeProgram(NodeElement *e);
-    virtual void print(ostream *out = 0);
 };
 
 #endif

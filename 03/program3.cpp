@@ -16,14 +16,9 @@
 #include "program3.tab.hpp"
 #include "program3.hpp"
 
-using std::cout;
-using std::endl;
-using std::left;
-using std::setw;
-using std::string;
-
 yyFlexLexer lexer;
 Node *tree;
+int indentation = 0;
 
 int main()
 {

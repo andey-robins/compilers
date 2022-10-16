@@ -1,4 +1,4 @@
-#include "../include/leaves.hpp"
+#include "../include/nodes.hpp"
 
 LeafId::LeafId(string id)
 {
@@ -7,7 +7,10 @@ LeafId::LeafId(string id)
 
 void LeafId::print(ostream *out)
 {
-    *out << this->getString() << endl;
+    *out << string(indentation * 2, ' ')
+         << "ID --> "
+         << this->getString()
+         << endl;
     if (this->getNext())
     {
         this->getNext()->print(out);

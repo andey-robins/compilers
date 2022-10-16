@@ -49,7 +49,7 @@ extern int yydebug;
     DOT = 261,
     ID = 262,
     NUMBER = 263,
-    null = 264,
+    NULLT = 264,
     READ = 265,
     NEW = 266,
     THIS = 267,
@@ -76,18 +76,17 @@ extern int yydebug;
     ER_CH = 288,
     TAB = 289,
     WHILE = 290,
-    NULLT = 291,
-    RETURN = 292,
-    CLASS = 293,
-    PRINT = 294,
-    VOID = 295,
-    ELSE = 296,
-    IF = 297,
-    COMMA = 298,
-    ASSIGN = 299,
-    KEY_INT = 300,
-    RBRACE = 301,
-    LBRACE = 302
+    RETURN = 291,
+    CLASS = 292,
+    PRINT = 293,
+    VOID = 294,
+    ELSE = 295,
+    IF = 296,
+    COMMA = 297,
+    ASSIGN = 298,
+    KEY_INT = 299,
+    RBRACE = 300,
+    LBRACE = 301
   };
 #endif
 
@@ -100,7 +99,7 @@ union YYSTYPE
 
     Node *ttype;
 
-#line 104 "program3.tab.hpp" /* yacc.c:1909  */
+#line 103 "program3.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

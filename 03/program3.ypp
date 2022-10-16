@@ -42,7 +42,7 @@ void yyerror(const char* string) {
 
 %token<ttype> SEMI DOT
 %token<ttype> ID
-%token<ttype> NUMBER null READ NEW THIS
+%token<ttype> NUMBER NULLT READ NEW THIS
 %left<ttype> LPAREN RPAREN LBRACKET RBRACKET
 %left<ttype> PLUS MINUS NOT OR
 %left<ttype> TIMES DIV MOD AND
@@ -50,7 +50,7 @@ void yyerror(const char* string) {
 %token<ttype> INT
 
 // TODO: Remove these
-%token ER_WD ER_CH TAB WHILE NULLT RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE  
+%token ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE  
 
 %expect 0
 
@@ -58,7 +58,7 @@ void yyerror(const char* string) {
 
 program:
     elements optprogram { 
-        tree=$1;
+        tree=new NodeProgram(static_cast<NodeElement*>($1));
         tree->setNext($2);
         $$=tree;
     }
@@ -67,7 +67,7 @@ program:
 optprogram:
     elements optprogram {
         $1->setNext($2);
-        $$ = $1;
+        $$ = new NodeOptProgram(static_cast<NodeElement*>($1));
     }
 |   /* epsilon */ {
         $$=0;
@@ -82,22 +82,22 @@ elements:
 ;
 
 vardec:
-    type ID SEMI { $$=$1; }
-|   ID ID SEMI { $$=$1; }
-|   type multibrackets ID SEMI
-|   ID multibrackets ID SEMI
+    type ID SEMI { $$ = $1; }
+|   ID ID SEMI { $$ = $1; }
+|   type multibrackets ID SEMI { $$ = $1; }
+|   ID multibrackets ID SEMI { $$ = $1; }
 ;
 
 exp:
     name { $$ = new NodeExp(static_cast<NodeName*>($1)); }
 |   NUMBER { $$ = new LeafNumber($1->getInt()); }
-|   null { $$=new NodeName("null"); }
-|   READ LPAREN RPAREN { $$=new NodeName("read"); }
+|   NULLT { $$=new LeafKeyword("null"); }
+|   READ LPAREN RPAREN { $$=new LeafKeyword("read"); }
 |   newexp { 
         $$ = new NodeExp(static_cast<NodeNewExp*>($1)); 
     }
 |   LPAREN exp RPAREN
-|   name LPAREN RPAREN 
+|   name LPAREN RPAREN { $$ = new NodeCallExp(static_cast<NodeName*>($1)); }
 |   exp PLUS exp
 |   exp MINUS exp
 |   exp OR exp
@@ -118,12 +118,10 @@ exp:
 
 newexp:
     NEW ID LPAREN RPAREN { 
-        cout << "new id ()" << endl;
-        cout << $2->getString() << endl;
         $$=new NodeNewExp($2->getString()); 
     }
 |   NEW simpletype {
-        $$ = new NodeNewExp(static_cast<NodeType*>($2));
+        $$ = new NodeNewExpType(static_cast<NodeType*>($2));
     }
 |   NEW simpletype bracketexps
 |   NEW ID bracketexps
