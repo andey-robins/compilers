@@ -35,6 +35,8 @@ void yyerror(const char* err) {
     if (errString[3] == ':')
     {
         cerr << yylloc.first_line 
+             << "."
+             << col
              << ": "
              << fullLine
              << endl
