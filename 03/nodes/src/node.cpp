@@ -4,7 +4,8 @@
  * 10/15/22
  * Compilers Program 3
  *
- * Root class for nodes in the AST
+ * Root class for nodes in the AST.
+ * Trivially extended from provided code
  */
 #include <typeinfo>
 #include "../include/nodes.hpp"
@@ -54,6 +55,8 @@ void Node::setType(string t)
 {
   type = t;
 }
+// a string representation of the node type
+// to assist in debugging
 string Node::getType()
 {
   return type;

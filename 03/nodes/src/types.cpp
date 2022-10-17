@@ -8,6 +8,7 @@
  */
 #include "../include/nodes.hpp"
 
+// NodeType is the root node for all type based productions
 NodeType::NodeType(NodeSimpleType *st)
 {
     this->setType("type");
@@ -24,6 +25,8 @@ void NodeType::print(ostream *out)
     return;
 }
 
+// NodeSimpleType is the only type used in this version of the program
+// Always holds the "int" type
 NodeSimpleType::NodeSimpleType(string s)
 {
     this->setType("simpletype");
@@ -42,6 +45,8 @@ void NodeSimpleType::print(ostream *out)
     return;
 }
 
+// Epsilon is an empty node used to provide left refactoring for
+// grammar
 NodeEpsilon::NodeEpsilon()
 {
     this->setType("epsilon");

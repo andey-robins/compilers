@@ -1,7 +1,7 @@
 /*
  * program3.ypp
  * Andey Robins
- * 10/5/22
+ * 10/1/22
  * Compilers Program 3
  *
  * The bison input file for program3
@@ -48,8 +48,8 @@ void yyerror(const char* string);
 %left<ttype> EQ NE GE LE GT LT
 %token<ttype> INT
 
-// TODO: Remove these
-%token ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE  
+// To be made use of in the future
+%token ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE
 
 %expect 0
 
@@ -81,7 +81,7 @@ elements:
 |   exp SEMI
 |   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
 |   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
-|   error SEMI { yyerror("err: syntax error"); }
+|   error SEMI { yyerror("err: syntax error in line"); }
 ;
 
 vardec:
@@ -206,8 +206,8 @@ multibracketsopt:
 name:
     THIS { $$=new LeafId("this"); }
 |   ID %prec "shift" { $$=new LeafId($1->getString()); }
-|   name bracketexps %prec "shift" {
-
+|   name bracketexp %prec "shift" {
+    // TODO still can't get this production working properly
     $$ = new NodeName(static_cast<NodeName *>($1), static_cast<NodeBracketExp *>($2));
 }
 |   name DOT ID { 

@@ -8,6 +8,7 @@
  */
 #include "../include/nodes.hpp"
 
+// NodeVarTypeId is the class for the production vardec -> type ID
 NodeVarTypeId::NodeVarTypeId(Node *nt, string id)
 {
     this->setType("vardec type id");
@@ -34,6 +35,7 @@ void NodeVarTypeId::print(ostream *out)
     return;
 }
 
+// NodeVarIdId is the class for the production vardec -> ID ID
 NodeVarIdId::NodeVarIdId(string id1, string id2)
 {
     this->setType("vardec id id");
@@ -57,6 +59,7 @@ void NodeVarIdId::print(ostream *out)
     return;
 }
 
+// NodeVarTypeMult is the node associated with the production vardec -> type multibrackets ID
 NodeVarTypeMult::NodeVarTypeMult(Node *nt, Node *mb, string id)
 {
     this->setType("vardec type multibrack");
@@ -87,6 +90,7 @@ void NodeVarTypeMult::print(ostream *out)
     return;
 }
 
+// NodeVarIdMult is the node for the production vardec -> ID multibrackets ID
 NodeVarIdMult::NodeVarIdMult(string id1, Node *mb, string id2)
 {
     this->setType("vardec id multibrack id");

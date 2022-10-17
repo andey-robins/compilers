@@ -1,7 +1,7 @@
 #
 # Makefile
 # Andey Robins
-# 10/5/22
+# 10/1/22
 # Compilers Program 3
 #
 # This is the makefile for program 3
@@ -47,4 +47,4 @@ testdec: program3
 	./program3 < test/vdec.dcaf
 
 tar: program3
-	tar -zcf program3.tgz program3.cpp program3.hpp program3.lpp program3.y
+	tar -zcf program3.tgz Makefile program3.cpp program3.hpp program3.lpp program3.ypp expressions.* leaves.* node.* nodes.hpp struct.* types.* vars.* wrapper.*

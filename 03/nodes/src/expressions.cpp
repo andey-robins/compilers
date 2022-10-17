@@ -40,7 +40,10 @@ void NodeCallExp::print(ostream *out)
     return;
 }
 
-// NewExpressions
+// New Expressions
+// NodeNewExp houses a generic new expression. It's constructor is overloaded
+// to allow for whatever new expression layout is appropriate
+// perhaps that should be refactored to the many (many) class style of expressions?
 NodeNewExp::NodeNewExp(string id)
 {
     this->setType("newexp");
@@ -77,6 +80,7 @@ void NodeNewExp::print(ostream *out)
     return;
 }
 
+// The node associated with the production newexp -> NEW simpletype
 NodeNewExpType::NodeNewExpType(NodeType *nt)
 {
     this->setType("newexp type");
@@ -94,6 +98,7 @@ void NodeNewExpType::print(ostream *out)
     return;
 }
 
+// The node associated with the production newexp -> NEW simpletype bracketexps
 NodeNewExpTypeBrack::NodeNewExpTypeBrack(NodeType *nt, Node *nb)
 {
     this->setType("newexp type brack");
@@ -118,6 +123,7 @@ void NodeNewExpTypeBrack::print(ostream *out)
     return;
 }
 
+// The node associated with the production newexp -> NEW ID bracketexps
 NodeNewExpIdBrack::NodeNewExpIdBrack(string id, Node *nb)
 {
     this->setType("newexp id brack");
@@ -140,6 +146,7 @@ void NodeNewExpIdBrack::print(ostream *out)
     return;
 }
 
+// The node associated with the production newexp -> NEW simpletype bracketexps multibrackets
 NodeNewTypeBrackMult::NodeNewTypeBrackMult(NodeType *nt, Node *nb, Node *mb)
 {
     this->setType("newexp type brack mult");
@@ -162,6 +169,7 @@ void NodeNewTypeBrackMult::print(ostream *out)
     return;
 }
 
+// The node associated with the production newexp -> NEW ID bracketexps multibrackets
 NodeNewIdBrackMult::NodeNewIdBrackMult(string id, Node *nb, Node *mb)
 {
     this->setType("newexp brack mult");
@@ -184,7 +192,8 @@ void NodeNewIdBrackMult::print(ostream *out)
     return;
 }
 
-// Name Node
+// Name corresponds to the name productions. The constructor is overloaded
+// (maybe refactor to not use overloaded constructors?)
 NodeName::NodeName(NodeName *nn, string id)
 {
     this->setType("name");
@@ -211,6 +220,8 @@ void NodeName::print(ostream *out)
     return;
 }
 
+// NodeInfixExp keeps track of any infix notation expression
+// The operator is stored in the string value of the Node
 NodeInfixExp::NodeInfixExp(Node *ln, Node *rn, string op)
 {
     this->setType("exp infix");
@@ -238,6 +249,8 @@ void NodeInfixExp::print(ostream *out)
     return;
 }
 
+// NodePrefixExp keeps track of all prefix expressions
+// The operator is stored in the node's string
 NodePrefixExp::NodePrefixExp(string op, Node *n)
 {
     this->setType("exp prefix");

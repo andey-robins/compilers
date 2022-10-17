@@ -8,6 +8,7 @@
  */
 #include "node.hpp"
 
+// NodeVarTypeId is the class for the production vardec -> type ID
 class NodeVarTypeId : public Node
 {
 public:
@@ -15,6 +16,7 @@ public:
     virtual void print(ostream *out);
 };
 
+// NodeVarIdId is the class for the production vardec -> ID ID
 class NodeVarIdId : public Node
 {
 public:
@@ -22,6 +24,7 @@ public:
     virtual void print(ostream *out);
 };
 
+// NodeVarTypeMult is the node associated with the production vardec -> type multibrackets ID
 class NodeVarTypeMult : public Node
 {
 public:
@@ -29,6 +32,7 @@ public:
     virtual void print(ostream *out);
 };
 
+// NodeVarIdMult is the node for the production vardec -> ID multibrackets ID
 class NodeVarIdMult : public Node
 {
 public:

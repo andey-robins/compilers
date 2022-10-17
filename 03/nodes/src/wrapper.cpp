@@ -8,6 +8,7 @@
  */
 #include "../include/nodes.hpp"
 
+// NodeBracketExp is the most generic version of a bracketed expression
 NodeBracketExp::NodeBracketExp(NodeBracketExp *nb)
 {
     this->setType("bracketexp");
@@ -37,6 +38,7 @@ void NodeBracketExp::print(ostream *out)
     return;
 }
 
+// NodeMultiBrack is a class for holding a sequence of empty brackets
 NodeMultiBrack::NodeMultiBrack()
 {
     this->setVal(1);

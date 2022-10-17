@@ -8,6 +8,7 @@
  */
 #include "../include/nodes.hpp"
 
+// LeafId holds the ID value of a leaf in the node's string
 LeafId::LeafId(string id)
 {
     this->setVal(id);
@@ -26,6 +27,7 @@ void LeafId::print(ostream *out)
     return;
 }
 
+// LeafNumber holds the number of the leaf in the node's int
 LeafNumber::LeafNumber(int i)
 {
     this->setVal(i);
@@ -49,6 +51,9 @@ void LeafNumber::print(ostream *out)
     return;
 }
 
+// LeafKeyword is currently unused.
+// Potentially of value when keywords need to be distinguished from IDs?
+// Maybe pre-define them in the symbol table instead? TBD
 LeafKeyword::LeafKeyword(string s)
 {
     this->setVal(s);

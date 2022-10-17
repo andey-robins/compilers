@@ -8,6 +8,8 @@
  */
 #include "../include/nodes.hpp"
 
+// NodeProgram is the highest level node
+// Contains the node for the
 NodeProgram::NodeProgram(NodeElement *e)
 {
     this->setType("program");
@@ -26,11 +28,11 @@ void NodeProgram::print(ostream *out)
     return;
 }
 
+// NodeOptProgram allows for sequential versions of a program
 NodeOptProgram::NodeOptProgram(NodeElement *e)
 {
     this->setType("optprogram");
     this->setNext(e);
-    // cout << "opt" << endl;
 }
 
 void NodeOptProgram::print(ostream *out)
@@ -45,6 +47,7 @@ void NodeOptProgram::print(ostream *out)
     return;
 }
 
+// NodeElement is the element sub-production of program
 NodeElement::NodeElement(NodeExp *e)
 {
     this->setType("element");

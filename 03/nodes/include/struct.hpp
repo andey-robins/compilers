@@ -9,13 +9,7 @@
 
 #include "node.hpp"
 
-class NodeVarDec : public Node
-{
-public:
-    NodeVarDec(string id1, string id2);
-    virtual void print(ostream *out = 0);
-};
-
+// NodeElement is the element sub-production of program
 class NodeElement : public Node
 {
 public:
@@ -23,6 +17,8 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// NodeProgram is the highest level node
+// Contains the node for the
 class NodeProgram : public Node
 {
 public:
@@ -30,6 +26,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// NodeOptProgram allows for sequential versions of a program
 class NodeOptProgram : public Node
 {
 public:

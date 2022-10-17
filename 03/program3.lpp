@@ -1,7 +1,7 @@
 /*
  * program3.lpp
  * Andey Robins
- * 10/5/22
+ * 10/1/22
  * Compilers Program 3
  *
  * The flex input file for program3
@@ -330,6 +330,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = 1;
     token = "ER_CH";
+    fullLine += yytext;
     return ER_CH;
 }
 
@@ -337,6 +338,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "ER_WD";
+    fullLine += yytext;
     return ER_WD;
 }
 

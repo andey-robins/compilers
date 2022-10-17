@@ -9,6 +9,7 @@
 
 #include "node.hpp"
 
+// NodeBracketExp is the most generic version of a bracketed expression
 class NodeBracketExp : public Node
 {
 public:
@@ -17,6 +18,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// NodeMultiBrack is a class for holding a sequence of empty brackets
 class NodeMultiBrack : public Node
 {
 public:

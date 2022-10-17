@@ -8,6 +8,8 @@
  */
 #include "node.hpp"
 
+// Name corresponds to the name productions. The constructor is overloaded
+// (maybe refactor to not use overloaded constructors?)
 // Include name here in expressions until it fits in a better area
 class NodeName : public Node
 {
@@ -19,6 +21,9 @@ public:
 };
 
 // New Expressions
+// NodeNewExp houses a generic new expression. It's constructor is overloaded
+// to allow for whatever new expression layout is appropriate
+// perhaps that should be refactored to the many (many) class style of expressions?
 class NodeNewExp : public Node
 {
 public:
@@ -27,6 +32,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// The node associated with the production newexp -> NEW simpletype
 class NodeNewExpType : public Node
 {
 public:
@@ -34,6 +40,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// The node associated with the production newexp -> NEW simpletype bracketexps
 class NodeNewExpTypeBrack : public Node
 {
 public:
@@ -41,6 +48,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// The node associated with the production newexp -> NEW ID bracketexps
 class NodeNewExpIdBrack : public Node
 {
 public:
@@ -48,6 +56,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// The node associated with the production newexp -> NEW simpletype bracketexps multibrackets
 class NodeNewTypeBrackMult : public Node
 {
 public:
@@ -55,6 +64,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// The node associated with the production newexp -> NEW ID bracketexps multibrackets
 class NodeNewIdBrackMult : public Node
 {
 public:
@@ -63,6 +73,7 @@ public:
 };
 
 // Expressions
+// NodeExp is a root node created whenever a generic expression is needed
 class NodeExp : public Node
 {
 public:
@@ -70,6 +81,7 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// NodeCallExp is the node for call expressions like ID()
 class NodeCallExp : public Node
 {
 public:
@@ -77,6 +89,8 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// NodeInfixExp keeps track of any infix notation expression
+// The operator is stored in the string value of the Node
 class NodeInfixExp : public Node
 {
 public:
@@ -84,6 +98,8 @@ public:
     virtual void print(ostream *out = 0);
 };
 
+// NodePrefixExp keeps track of all prefix expressions
+// The operator is stored in the node's string
 class NodePrefixExp : public Node
 {
 public:
