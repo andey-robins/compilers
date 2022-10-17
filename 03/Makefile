@@ -16,8 +16,8 @@ LEXFLAGS=--warn
 BISON=bison
 BISONFLAGS=-d
 
-program3: program3.cpp program3_lex.cpp nodes/src/*.cpp
-	$(CXX) $(CXXFLAGS) program3.cpp program3_lex.cpp program3.tab.cpp nodes/src/*.cpp -o program3
+program3: program3.cpp program3_lex.cpp *.cpp
+	$(CXX) $(CXXFLAGS) *.cpp -o program3
 
 program3_lex.cpp: program3.lpp program3.tab.cpp
 	$(LEX) $(LEXFLAGS) program3.lpp

@@ -6,7 +6,7 @@
  *
  * Implementations for the AST of all expression nodes
  */
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 // Expressions
 

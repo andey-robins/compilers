@@ -6,7 +6,7 @@
  *
  * Implementations for the AST of all leaf nodes
  */
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 // LeafId holds the ID value of a leaf in the node's string
 LeafId::LeafId(string id)

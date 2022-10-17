@@ -6,7 +6,7 @@
  *
  * Implementations for the AST of all type nodes
  */
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 // NodeType is the root node for all type based productions
 NodeType::NodeType(NodeSimpleType *st)

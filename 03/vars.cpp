@@ -6,7 +6,7 @@
  *
  * Implementations for the AST of all vardec nodes
  */
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 // NodeVarTypeId is the class for the production vardec -> type ID
 NodeVarTypeId::NodeVarTypeId(Node *nt, string id)

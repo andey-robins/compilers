@@ -6,7 +6,7 @@
  *
  * Implementations for the AST of all wrapper nodes
  */
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 // NodeBracketExp is the most generic version of a bracketed expression
 NodeBracketExp::NodeBracketExp(NodeBracketExp *nb)

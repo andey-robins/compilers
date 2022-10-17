@@ -6,7 +6,7 @@
  *
  * Implementations for the AST of all struct nodes
  */
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 // NodeProgram is the highest level node
 // Contains the node for the

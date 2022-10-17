@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <FlexLexer.h>
 #include <typeinfo>
-#include "nodes/include/nodes.hpp"
+#include "nodes.hpp"
 #include "program3.tab.hpp"
 #include "program3.hpp"
 

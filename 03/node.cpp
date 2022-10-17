@@ -8,7 +8,7 @@
  * Trivially extended from provided code
  */
 #include <typeinfo>
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 Node::Node(Node *lt, Node *rt) : ival(0), dval(0.0), left(lt), right(rt), next(0)
 {

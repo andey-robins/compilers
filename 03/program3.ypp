@@ -12,7 +12,7 @@
 #include <FlexLexer.h>
 #include <string>
 #include <typeinfo>
-#include "nodes/include/nodes.hpp"
+#include "nodes.hpp"
 #define YYERROR_VERBOSE
 
 using std::cerr;

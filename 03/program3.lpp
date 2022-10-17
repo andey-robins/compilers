@@ -16,7 +16,7 @@ using std::string;
 using std::cerr;
 using std::cout;
 using std::endl;
-#include "nodes/include/nodes.hpp"
+#include "nodes.hpp"
 #include "program3.tab.hpp"
 #include "program3.hpp"
 
