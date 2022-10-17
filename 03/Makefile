@@ -47,4 +47,4 @@ testdec: program3
 	./program3 < test/vdec.dcaf
 
 tar: program3
-	tar -zcf program3.tgz Makefile program3.cpp program3.hpp program3.lpp program3.ypp expressions.* leaves.* node.* nodes.hpp struct.* types.* vars.* wrapper.*
+	tar -zcf program3.tgz Makefile program3.pdf program3.cpp program3.hpp program3.lpp program3.ypp expressions.* leaves.* node.* nodes.hpp struct.* types.* vars.* wrapper.*
