@@ -56,7 +56,10 @@ LeafKeyword::LeafKeyword(string s)
 
 void LeafKeyword::print(ostream *out)
 {
-    *out << this->getString() << endl;
+    *out << string(indentation * 2, ' ')
+         << "Keyword --> "
+         << this->getString()
+         << endl;
     if (this->getNext())
     {
         this->getNext()->print(out);

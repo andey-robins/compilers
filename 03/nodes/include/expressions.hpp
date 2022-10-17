@@ -14,6 +14,7 @@ class NodeName : public Node
 public:
     NodeName(string s);
     NodeName(NodeName *nn, string id);
+    NodeName(NodeName *nn, Node *nb);
     virtual void print(ostream *out = 0);
 };
 

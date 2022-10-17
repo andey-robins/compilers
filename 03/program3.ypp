@@ -84,7 +84,6 @@ elements:
 |   error SEMI { yyerror("err: syntax error"); }
 ;
 
-// Done
 vardec:
     type ID SEMI { $$ = new NodeVarTypeId(static_cast<NodeSimpleType *>($1->getNext()), $2->getString()); }
 |   ID ID SEMI { $$ = new NodeVarIdId($1->getString(), $2->getString()); }
@@ -92,7 +91,6 @@ vardec:
 |   ID multibrackets ID SEMI { $$ = new NodeVarIdMult($1->getString(), static_cast<NodeMultiBrack *>($2), $3->getString()); }
 ;
 
-// TODO: exps
 exp:
     name { $$ = new NodeExp(static_cast<NodeName*>($1)); }
 |   NUMBER { $$ = new LeafNumber($1->getInt()); }
@@ -206,10 +204,15 @@ multibracketsopt:
 
 // TODO Finish this one
 name:
-    THIS { $$=new LeafKeyword("this"); }
+    THIS { $$=new LeafId("this"); }
 |   ID %prec "shift" { $$=new LeafId($1->getString()); }
-|   name DOT ID 
-|   name bracketexps
+|   name bracketexps %prec "shift" {
+
+    $$ = new NodeName(static_cast<NodeName *>($1), static_cast<NodeBracketExp *>($2));
+}
+|   name DOT ID { 
+        $$ = new NodeName(static_cast<NodeName *>($1), $3->getString());
+    }
 ;
 
 %%

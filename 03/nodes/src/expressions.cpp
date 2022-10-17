@@ -9,6 +9,8 @@
 #include "../include/nodes.hpp"
 
 // Expressions
+
+// NodeExp is a root node created whenever a generic expression is needed
 NodeExp::NodeExp(Node *n)
 {
     this->setType("exp");
@@ -21,6 +23,7 @@ void NodeExp::print(ostream *out)
     return;
 }
 
+// NodeCallExp is the node for call expressions like ID()
 NodeCallExp::NodeCallExp(NodeName *nn)
 {
     this->setType("call exp");
@@ -34,7 +37,6 @@ void NodeCallExp::print(ostream *out)
     {
         this->getNext()->print(out);
     }
-    *out << "( )" << endl;
     return;
 }
 
@@ -190,10 +192,22 @@ NodeName::NodeName(NodeName *nn, string id)
     this->setVal(id);
 }
 
+NodeName::NodeName(NodeName *nn, Node *nb)
+{
+    this->setLeft(nn);
+    this->setNext(static_cast<NodeBracketExp *>(nb));
+}
+
 void NodeName::print(ostream *out)
 {
-    *out << "<name> ";
-    next->print(out);
+    if (this->getLeft())
+    {
+        this->getLeft()->print(out);
+    }
+    if (this->getNext())
+    {
+        this->getNext()->print(out);
+    }
     return;
 }
 
