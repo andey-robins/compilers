@@ -1,0 +1,218 @@
+/*
+ * program4.ypp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ * The bison input file for program4
+ */
+%{
+
+#include <iostream>
+#include <FlexLexer.h>
+#include <string>
+#include <typeinfo>
+#include "nodes.hpp"
+#define YYERROR_VERBOSE
+
+using std::cerr;
+using std::cout;
+using std::endl;
+
+class Node;
+extern Node *tree;
+extern yyFlexLexer lexer;
+
+#define yylex() lexer.yylex()
+void yyerror(const char* string);
+
+%}
+
+%locations
+
+%union {
+    Node *ttype;
+}
+
+%precedence "shift"
+%precedence "reduce"
+
+%type<ttype> program elements vardec exp type multibrackets name newexp simpletype optprogram bracketexp bracketexps optbracketexps multibracketsopt error
+
+%token<ttype> SEMI DOT
+%token<ttype> ID
+%token<ttype> NUMBER NULLT READ NEW THIS
+%left<ttype> LPAREN RPAREN LBRACKET RBRACKET
+%left<ttype> PLUS MINUS NOT OR
+%left<ttype> TIMES DIV MOD AND
+%left<ttype> EQ NE GE LE GT LT
+%token<ttype> INT
+
+// To be made use of in the future
+%token ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE
+
+%expect 0
+
+%%
+
+// DONE
+program:
+    elements optprogram { 
+        tree=new NodeProgram(static_cast<NodeElement*>($1));
+        tree->setNext($2);
+        $$=tree;
+    }
+;
+
+// DONE
+optprogram:
+    elements optprogram {
+        $1->setNext($2);
+        $$ = new NodeOptProgram(static_cast<NodeElement*>($1));
+    }
+|   /* epsilon */ {
+        $$ = new NodeEpsilon();
+    }
+;
+
+// Done
+elements:
+    vardec 
+|   exp SEMI
+|   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
+|   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
+|   error SEMI { yyerror("err: syntax error in line"); }
+;
+
+vardec:
+    type ID SEMI { $$ = new NodeVarTypeId(static_cast<NodeSimpleType *>($1->getNext()), $2->getString()); }
+|   ID ID SEMI { $$ = new NodeVarIdId($1->getString(), $2->getString()); }
+|   type multibrackets ID SEMI { $$ = new NodeVarTypeMult(static_cast<NodeSimpleType *>($1->getNext()), $2, $3->getString()); }
+|   ID multibrackets ID SEMI { $$ = new NodeVarIdMult($1->getString(), static_cast<NodeMultiBrack *>($2), $3->getString()); }
+;
+
+exp:
+    name { $$ = new NodeExp(static_cast<NodeName*>($1)); }
+|   NUMBER { $$ = new LeafNumber($1->getInt()); }
+|   NULLT { $$=new LeafKeyword("null"); }
+|   READ LPAREN RPAREN { $$ = new LeafKeyword("read"); }
+|   newexp
+|   LPAREN exp RPAREN { $$ = new NodeExp($2); }
+|   name LPAREN RPAREN { $$ = new NodeCallExp(static_cast<NodeName*>($1)); }
+|   exp PLUS exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp MINUS exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp OR exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp TIMES exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp DIV exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp MOD exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp AND exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp EQ exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp NE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp GE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp LE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp GT exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   exp LT exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
+|   MINUS exp { $$ = new NodePrefixExp($1->getString(), $2); }
+|   PLUS exp { $$ = new NodePrefixExp($1->getString(), $2); }
+|   NOT exp { $$ = new NodePrefixExp($1->getString(), $2); }
+;
+
+// Done
+newexp:
+    NEW ID LPAREN RPAREN { 
+        $$ = new NodeNewExp($2->getString()); 
+    }
+|   NEW simpletype {
+        $$ = new NodeNewExpType(static_cast<NodeType*>($2));
+    }
+|   NEW simpletype bracketexps {
+        $$ = new NodeNewExpTypeBrack(static_cast<NodeType*>($2), static_cast<NodeBracketExp *>($3));
+    }
+|   NEW ID bracketexps {
+        $$ = new NodeNewExpIdBrack($2->getString(), static_cast<NodeBracketExp *>($3));
+    }
+|   NEW simpletype bracketexps multibrackets {
+        $$ = new NodeNewTypeBrackMult(static_cast<NodeType *>($1), $2, $3);
+    }
+|   NEW ID bracketexps multibrackets {
+        $$ = new NodeNewIdBrackMult($2->getString(), $3, $4);
+    }
+;
+
+// Done
+type:
+    simpletype { $$ = new NodeType(static_cast<NodeSimpleType*>($1)); }
+;
+
+// Done
+simpletype: INT { $$ = new NodeSimpleType("int"); } ;
+
+// Done
+bracketexps:
+    bracketexp optbracketexps { 
+        if ($2->getString() == "multibrack")
+        {
+            $1->setNext(static_cast<NodeMultiBrack *>($2));
+        }
+        else
+        {
+            $1->setNext($2);
+        }
+
+        $$ = new NodeBracketExp(static_cast<NodeBracketExp*>($1)); 
+    }
+;
+
+optbracketexps:
+    bracketexp optbracketexps { 
+        // work around to support multibrackets after bracketexps
+        if ($2->getType() == "multibrack")
+        {
+            $1->setNext(static_cast<NodeMultiBrack *>($2));
+            $$ = new NodeBracketExp(static_cast<NodeBracketExp*>($1));
+        }
+        else
+        {
+            $1->setNext($2);
+            $$ = new NodeBracketExp(static_cast<NodeEpsilon*>($1));
+        }
+    }
+|   /* epsilon */  %prec "shift" { $$ = new NodeEpsilon(); }
+;
+
+bracketexp:
+    LBRACKET exp RBRACKET { $$ = new NodeExp($2); }
+|   LBRACKET RBRACKET { $$ = new NodeMultiBrack(); }
+;
+
+multibrackets:
+    LBRACKET RBRACKET multibracketsopt { 
+        NodeMultiBrack *mb = new NodeMultiBrack();
+        mb->setNext($3);
+        $$ = mb;
+    }
+;
+
+multibracketsopt:
+    LBRACKET RBRACKET multibracketsopt {
+        NodeMultiBrack *mb = new NodeMultiBrack();
+        mb->setNext($3);
+        $$ = mb;
+    }
+|   /* epsilon */ { $$ = new NodeEpsilon(); }
+;
+
+// TODO Finish this one
+name:
+    THIS { $$=new LeafId("this"); }
+|   ID %prec "shift" { $$=new LeafId($1->getString()); }
+|   name bracketexp %prec "shift" {
+    // TODO still can't get this production working properly
+    $$ = new NodeName(static_cast<NodeName *>($1), static_cast<NodeBracketExp *>($2));
+}
+|   name DOT ID { 
+        $$ = new NodeName(static_cast<NodeName *>($1), $3->getString());
+    }
+;
+
+%%
