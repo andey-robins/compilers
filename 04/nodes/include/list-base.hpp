@@ -1,3 +1,12 @@
+/*
+ * list-base.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef LIST_BASE_HPP
 #define LIST_BASE_HPP
 
@@ -5,8 +14,8 @@
 #include <vector>
 #include "nodes.hpp"
 
-using std::vector;
 using std::ostream;
+using std::vector;
 
 // BaseList is a wrapper around std::vector for use in an AST
 class BaseList
@@ -16,11 +25,11 @@ public:
     virtual ~BaseList();
     virtual void print(ostream *out);
     void push(BaseNode *);
-    BaseNode* pop();
-    vector<BaseNode*>* getList();
+    BaseNode *pop();
+    vector<BaseNode *> *getList();
 
 private:
-    vector<BaseNode*> vect;
+    vector<BaseNode *> vect;
 };
 
 #endif

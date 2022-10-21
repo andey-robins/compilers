@@ -1,8 +1,17 @@
+/*
+ * node-base.cpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #include "../include/nodes.hpp"
 
-BaseNode::BaseNode() { }
+BaseNode::BaseNode() {}
 
-BaseNode::~BaseNode() 
+BaseNode::~BaseNode()
 {
     if (next)
     {
@@ -16,13 +25,13 @@ void BaseNode::setNext(BaseNode *n)
     {
         next = n;
     }
-    else 
+    else
     {
         next = 0;
     }
 }
 
-BaseNode* BaseNode::getNext()
+BaseNode *BaseNode::getNext()
 {
     if (next)
     {

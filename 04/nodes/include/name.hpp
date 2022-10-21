@@ -1,9 +1,20 @@
+/*
+ * name.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef NAME_HPP
 #define NAME_HPP
 
 #include "nodes.hpp"
 
-class NName : public BaseNode { };
+class NName : public BaseNode
+{
+};
 
 class NNameThis : public NName
 {

@@ -1,3 +1,12 @@
+/*
+ * type.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef TYPES_HPP
 #define TYPES_HPP
 

@@ -1,5 +1,5 @@
 /*
- * program3.lpp
+ * program4.lpp
  * Andey Robins
  * 10/20/22
  * Compilers Program 4
@@ -7,7 +7,7 @@
  * The flex input file for program4
  */
 
-%option outfile="program3_lex.cpp"
+%option outfile="program4_lex.cpp"
 %option noyywrap
 %option yylineno
 
@@ -16,9 +16,9 @@ using std::string;
 using std::cerr;
 using std::cout;
 using std::endl;
-#include "nodes.hpp"
-#include "program3.tab.hpp"
-#include "program3.hpp"
+#include "nodes/include/nodes.hpp"
+#include "program4.tab.hpp"
+#include "program4.hpp"
 
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 

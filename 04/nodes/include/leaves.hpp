@@ -1,3 +1,12 @@
+/*
+ * leaves.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef LEAVES_HPP
 #define LEAVES_HPP
 

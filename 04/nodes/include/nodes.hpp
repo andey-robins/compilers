@@ -1,3 +1,12 @@
+/*
+ * nodes.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef NODES_HPP
 #define NODES_HPP
 

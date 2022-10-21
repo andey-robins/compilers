@@ -1,3 +1,12 @@
+/*
+ * statement.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef STATEMENTS_HPP
 #define STATEMENTS_HPP
 
@@ -8,7 +17,9 @@ public:
     virtual void print(ostream *out = 0);
 };
 
-class NStatement : public BaseNode { };
+class NStatement : public BaseNode
+{
+};
 
 class NStateAssign : public NStatement
 {
@@ -52,8 +63,8 @@ public:
     virtual void print(ostream *out);
 };
 
-class NCondition : public NStatement 
-{ 
+class NCondition : public NStatement
+{
 public:
     NCondition(NExp *e, NStatement *s);
     NCondition(NExp *e, NStatement *trueStmt, NStatement *falseStmt);

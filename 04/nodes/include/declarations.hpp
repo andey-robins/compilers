@@ -1,3 +1,12 @@
+/*
+ * declarations.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef DECLARATIONS_HPP
 #define DECLARATIONS_HPP
 
@@ -17,7 +26,9 @@ public:
     virtual void print(ostream *out = 0);
 };
 
-class LLocalVarDecl : public LVarDecl {};
+class LLocalVarDecl : public LVarDecl
+{
+};
 
 class NVarDecl : public BaseNode
 {

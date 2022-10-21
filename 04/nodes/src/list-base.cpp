@@ -1,8 +1,17 @@
+/*
+ * list-base.cpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #include "../include/list-base.hpp"
 
 BaseList::BaseList()
 {
-    vector<BaseNode*> n;
+    vector<BaseNode *> n;
     this->vect = n;
 }
 
@@ -25,11 +34,11 @@ void BaseList::push(BaseNode *n)
     }
 }
 
-BaseNode* BaseList::pop()
+BaseNode *BaseList::pop()
 {
     if (this->vect.size() != 0)
     {
-        BaseNode* last = this->vect.back();
+        BaseNode *last = this->vect.back();
         this->vect.pop_back();
         return last;
     }
@@ -39,7 +48,7 @@ BaseNode* BaseList::pop()
     }
 }
 
-vector<BaseNode*>* BaseList::getList()
+vector<BaseNode *> *BaseList::getList()
 {
     if (this->vect.size() != 0)
     {

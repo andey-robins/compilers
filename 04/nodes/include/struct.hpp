@@ -1,3 +1,12 @@
+/*
+ * struct.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ *
+ */
+
 #ifndef STRUCT_HPP
 #define STRUCT_HPP
 
