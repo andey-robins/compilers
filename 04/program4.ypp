@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclarationList type simpleType constructorDeclarationList methodDeclarationList resultType parameterList parameterListStar parameter localVarDeclarationStar localVarDeclaration statementStar statement name argList argListStar conditionalStatement maybeElse optionalExpression expression newExpression unaryOp relationOp sumOp productOp
+%type<ttype> program classDeclarations classBody varDeclarationList type simpleType constructorDeclarationList methodDeclarationList resultType parameterList parameterListStar parameter localVarDeclarationStar localVarDeclaration statementStar statement name argList conditionalStatement maybeElse optionalExpression expression newExpression brackExp bracks unaryOp relationOp sumOp productOp
 
 %token<ttype> SEMI DOT
 %token<ttype> ID
@@ -227,16 +227,7 @@ name:
 ;
 
 argList:
-    expression argListStar {
-        // TODO
-    }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
-    }
-;
-
-argListStar:
-    expression argListStar {
+    expression argList {
         // TODO
     }
 |   /* epsilon */ {
@@ -269,22 +260,136 @@ optionalExpression:
 ;
 
 expression:
-
+    name {
+        // TODO
+    }
+|   NUMBER {
+        // TODO
+    }
+|   NULLT {
+        // TODO
+    }
+|   name LPAREN argList RPAREN {
+        // TODO
+    }
+|   READ LPAREN RPAREN {
+        // TODO
+    }
+|   newExpression {
+        // TODO
+    }
+|   prefixOp expression {
+        // TODO
+    }
+|   expression infixOp expression {
+        // TODO
+    }
+|   LPAREN expression RPAREN {
+        // TODO
+    }
 ;
 
 newExpression:
+    NEW ID LPAREN argList RPAREN {
+        // TODO
+    }
+|   NEW simpleType brackExp bracks {
+        // TODO
+    }
+;
+
+brackExp:
+    LBRACKET expression RBRACKET brackExp {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+bracks:
+    LBRACKET RBRACKET bracks {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+prefixOp:
+    unaryOp
 ;
 
 unaryOp:
+    PLUS {
+        // TODO
+    }
+|   MINUS {
+        // TODO
+    }
+|   NOT {
+        // TODO define this token
+    }
+;
+
+infixOp:
+    relationOp {
+        // TODO
+    }
+|   sumOp {
+        // TODO
+    }
+|   productOp {
+        // TODO
+    }
 ;
 
 relationOp:
+    EQ {
+        // TODO
+    }
+|   NE {
+        // TODO
+    }
+|   LT {
+        // TODO
+    }
+|   GT {
+        // TODO
+    }
+|   LE {
+        // TODO
+    }
+|   GE {
+        // TODO
+    }
 ;
 
 sumOp:
+    PLUS {
+        // TODO
+    }
+|   MINUS {
+        // TODO
+    }
+|   OR {
+        // TODO
+    }
 ;
 
 productOp:
+    TIMES {
+        // TODO
+    }
+|   DIV {
+        // TODO
+    }
+|   MOD {
+        // TODO
+    }
+|   AND {
+        // TODO
+    }
 ;
 
 
