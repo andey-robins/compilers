@@ -23,4 +23,14 @@ class NKeyword : public NId
     // TODO
 };
 
+class NNumber : public BaseNode
+{
+    // TODO
+};
+
+class NOperator : public BaseNode
+{
+    // TODO
+};
+
 #endif

@@ -23,7 +23,7 @@ class BaseList
 public:
     BaseList();
     virtual ~BaseList();
-    virtual void print(ostream *out);
+    virtual void print();
     void push(BaseNode *);
     BaseNode *pop();
     vector<BaseNode *> *getList();

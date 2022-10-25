@@ -34,14 +34,14 @@ class NNameDotId : public NName
 {
 public:
     NNameDotId(NName *n, NId *id);
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class NNameExp : public NName
 {
 public:
     NNameExp(NName *n, NExp *e);
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 #endif

@@ -7,25 +7,18 @@
  *
  */
 
-#ifndef TYPES_HPP
-#define TYPES_HPP
-
 #include "nodes.hpp"
 #include "list-base.hpp"
 
-class LType : public BaseList
-{
-public:
-    LType();
-    virtual void print(ostream *out);
-};
+#ifndef TYPES_HPP
+#define TYPES_HPP
 
 class NType : public BaseNode
 {
 public:
     NType(NSimpleType *st);
-    NType(LType *t);
-    virtual void print(ostream *out);
+    NType(NType *t);
+    virtual void print();
 };
 
 class NSimpleType : public BaseNode
@@ -33,7 +26,7 @@ class NSimpleType : public BaseNode
 public:
     NSimpleType(NKeyword *k); // int keyword
     NSimpleType(NId *id);
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class NResultType : public BaseNode
@@ -41,14 +34,14 @@ class NResultType : public BaseNode
 public:
     NResultType(NType *t);
     NResultType(NKeyword *k);
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class NEpsilon : public BaseNode
 {
 public:
     NEpsilon();
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 #endif

@@ -7,9 +7,10 @@
  *
  */
 
+#include <iostream>
+
 #ifndef NODE_BASE_HPP
 #define NODE_BASE_HPP
-#include <iostream>
 
 using std::endl;
 using std::ostream;
@@ -21,7 +22,7 @@ public:
     virtual ~BaseNode();
     void setNext(BaseNode *n);
     BaseNode *getNext();
-    virtual void print(ostream *out = 0);
+    virtual void print();
 
 protected:
     BaseNode *next;

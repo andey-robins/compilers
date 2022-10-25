@@ -16,21 +16,35 @@ class LParams : public BaseList
 {
 public:
     LParams();
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class NParam : public BaseNode
 {
 public:
     NParam(NType *t, NId *id);
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class LArgs : public BaseList
 {
 public:
     LArgs();
-    virtual void print(ostream *out);
+    virtual void print();
+};
+
+class LBracks : public BaseList
+{
+public:
+    LBracks();
+    virtual void print();
+};
+
+class LBrackExps : public LBracks
+{
+public:
+    LBrackExps();
+    virtual void print();
 };
 
 #endif
