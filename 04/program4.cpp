@@ -12,24 +12,23 @@
 #include <iomanip>
 #include <FlexLexer.h>
 #include <typeinfo>
-#include "nodes.hpp"
+#include "nodes/include/nodes.hpp"
 #include "program4.tab.hpp"
 #include "program4.hpp"
 
 yyFlexLexer lexer;
-Node *tree;
+BaseNode *ast;
 int indentation = 0;
 
 int main()
 {
-    tree = 0;
-
+    ast = 0;
     yyparse();
 
     // Two spaces to separate errors from parse tree
     cout << endl
          << endl;
-    tree->print(&cout);
+    ast->print(&cout);
     cout << endl;
     return 0;
 }

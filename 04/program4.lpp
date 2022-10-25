@@ -22,7 +22,7 @@ using std::endl;
 
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 
-class Node;
+class BaseNode;
 
 int col = 0;
 int lastTokenLen = 1;

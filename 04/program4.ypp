@@ -12,15 +12,15 @@
 #include <FlexLexer.h>
 #include <string>
 #include <typeinfo>
-#include "nodes.hpp"
+#include "nodes/include/nodes.hpp"
 #define YYERROR_VERBOSE
 
 using std::cerr;
 using std::cout;
 using std::endl;
 
-class Node;
-extern Node *tree;
+class BaseNode;
+extern BaseNode *ast;
 extern yyFlexLexer lexer;
 
 #define yylex() lexer.yylex()
@@ -31,13 +31,13 @@ void yyerror(const char* string);
 %locations
 
 %union {
-    Node *ttype;
+    BaseNode *ttype;
 }
 
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program elements vardec exp type multibrackets name newexp simpletype optprogram bracketexp bracketexps optbracketexps multibracketsopt error
+%type<ttype> program classDeclarations classBody varDeclarationList type simpleType constructorDeclarationList methodDeclarationList resultType parameterList parameterListStar parameter localVarDeclarationStar localVarDeclaration statementStar statement name argList argListStar conditionalStatement maybeElse optionalExpression expression newExpression unaryOp relationOp sumOp productOp
 
 %token<ttype> SEMI DOT
 %token<ttype> ID
@@ -55,164 +55,237 @@ void yyerror(const char* string);
 
 %%
 
-// DONE
 program:
-    elements optprogram { 
-        tree=new NodeProgram(static_cast<NodeElement*>($1));
-        tree->setNext($2);
-        $$=tree;
+    classDeclarations { 
+        tree = new NProgram(static_cast<NClassDecl*>($1));
+        $$ = tree;
     }
 ;
 
-// DONE
-optprogram:
-    elements optprogram {
-        $1->setNext($2);
-        $$ = new NodeOptProgram(static_cast<NodeElement*>($1));
+classDeclarations:
+    CLASS ID classBody {
+        NKeyword *cls = new NKeyword($1);
+        $$ = new NClassDecl(cls, $2, $3);
+    }
+;
+
+classBody:
+    varDeclarationList constructorDeclarationList methodDeclarationList {
+        $$ = new NClassBody($1, $2, $3);
+    }
+;
+
+varDeclarationList:
+    type ID SEMI varDeclarationList {
+        // TODO
     }
 |   /* epsilon */ {
-        $$ = new NodeEpsilon();
+        $$ = new NEpsilon();
     }
 ;
 
-// Done
-elements:
-    vardec 
-|   exp SEMI
-|   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
-|   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
-|   error SEMI { yyerror("err: syntax error in line"); }
-;
-
-vardec:
-    type ID SEMI { $$ = new NodeVarTypeId(static_cast<NodeSimpleType *>($1->getNext()), $2->getString()); }
-|   ID ID SEMI { $$ = new NodeVarIdId($1->getString(), $2->getString()); }
-|   type multibrackets ID SEMI { $$ = new NodeVarTypeMult(static_cast<NodeSimpleType *>($1->getNext()), $2, $3->getString()); }
-|   ID multibrackets ID SEMI { $$ = new NodeVarIdMult($1->getString(), static_cast<NodeMultiBrack *>($2), $3->getString()); }
-;
-
-exp:
-    name { $$ = new NodeExp(static_cast<NodeName*>($1)); }
-|   NUMBER { $$ = new LeafNumber($1->getInt()); }
-|   NULLT { $$=new LeafKeyword("null"); }
-|   READ LPAREN RPAREN { $$ = new LeafKeyword("read"); }
-|   newexp
-|   LPAREN exp RPAREN { $$ = new NodeExp($2); }
-|   name LPAREN RPAREN { $$ = new NodeCallExp(static_cast<NodeName*>($1)); }
-|   exp PLUS exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp MINUS exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp OR exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp TIMES exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp DIV exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp MOD exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp AND exp %prec "reduce" { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp EQ exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp NE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp GE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp LE exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp GT exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   exp LT exp { $$ = new NodeInfixExp($1, $3, $2->getString()); }
-|   MINUS exp { $$ = new NodePrefixExp($1->getString(), $2); }
-|   PLUS exp { $$ = new NodePrefixExp($1->getString(), $2); }
-|   NOT exp { $$ = new NodePrefixExp($1->getString(), $2); }
-;
-
-// Done
-newexp:
-    NEW ID LPAREN RPAREN { 
-        $$ = new NodeNewExp($2->getString()); 
-    }
-|   NEW simpletype {
-        $$ = new NodeNewExpType(static_cast<NodeType*>($2));
-    }
-|   NEW simpletype bracketexps {
-        $$ = new NodeNewExpTypeBrack(static_cast<NodeType*>($2), static_cast<NodeBracketExp *>($3));
-    }
-|   NEW ID bracketexps {
-        $$ = new NodeNewExpIdBrack($2->getString(), static_cast<NodeBracketExp *>($3));
-    }
-|   NEW simpletype bracketexps multibrackets {
-        $$ = new NodeNewTypeBrackMult(static_cast<NodeType *>($1), $2, $3);
-    }
-|   NEW ID bracketexps multibrackets {
-        $$ = new NodeNewIdBrackMult($2->getString(), $3, $4);
-    }
-;
-
-// Done
 type:
-    simpletype { $$ = new NodeType(static_cast<NodeSimpleType*>($1)); }
-;
-
-// Done
-simpletype: INT { $$ = new NodeSimpleType("int"); } ;
-
-// Done
-bracketexps:
-    bracketexp optbracketexps { 
-        if ($2->getString() == "multibrack")
-        {
-            $1->setNext(static_cast<NodeMultiBrack *>($2));
-        }
-        else
-        {
-            $1->setNext($2);
-        }
-
-        $$ = new NodeBracketExp(static_cast<NodeBracketExp*>($1)); 
+    simpleType {
+        $$ = new NType($1)
+    }
+|   type LBRACKET RBRACKET {
+        // Todo remove left recursion
     }
 ;
 
-optbracketexps:
-    bracketexp optbracketexps { 
-        // work around to support multibrackets after bracketexps
-        if ($2->getType() == "multibrack")
-        {
-            $1->setNext(static_cast<NodeMultiBrack *>($2));
-            $$ = new NodeBracketExp(static_cast<NodeBracketExp*>($1));
-        }
-        else
-        {
-            $1->setNext($2);
-            $$ = new NodeBracketExp(static_cast<NodeEpsilon*>($1));
-        }
+simpleType:
+    INT {
+        NKeyword *intKword = new NKeyword("int");
+        $$ = new NSimpleType(static_cast<NKeyword *>(intKword));
     }
-|   /* epsilon */  %prec "shift" { $$ = new NodeEpsilon(); }
-;
-
-bracketexp:
-    LBRACKET exp RBRACKET { $$ = new NodeExp($2); }
-|   LBRACKET RBRACKET { $$ = new NodeMultiBrack(); }
-;
-
-multibrackets:
-    LBRACKET RBRACKET multibracketsopt { 
-        NodeMultiBrack *mb = new NodeMultiBrack();
-        mb->setNext($3);
-        $$ = mb;
+|   ID {
+        $$ = new NSimpleType($1);
     }
 ;
 
-multibracketsopt:
-    LBRACKET RBRACKET multibracketsopt {
-        NodeMultiBrack *mb = new NodeMultiBrack();
-        mb->setNext($3);
-        $$ = mb;
+constructorDeclarationList:
+    ID LPAREN parameterList RPAREN block {
+        // TODO
     }
-|   /* epsilon */ { $$ = new NodeEpsilon(); }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
 ;
 
-// TODO Finish this one
+methodDeclarationList:
+    resultType ID LPAREN parameterList RPAREN block {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+resultType:
+    type {
+        $$ = new NResultType(static_cast<NType *>($1));
+    }
+|   VOID {
+        $$ = new NKeyword("void");
+    }
+;
+
+parameterList:
+    parameter parameterListStar {
+        // TODO properly build this list
+        $$ = new LParams();
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+parameterListStar:
+    parameter parameterListStar {
+        // TODO properly build this list
+        // similar to the production for parameterList
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+parameter:
+    type ID {
+        $$ = new NParam(static_cast<NType *>($1), static_cast<NId *>($2));
+    }
+;
+
+block:
+    LBRACE localVarDeclarationStar statementStar RBRACKET {
+        // TODO
+    }
+;
+
+localVarDeclarationStar:
+    localVarDeclaration localVarDeclarationStar {
+
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+localVarDeclaration:
+    type ID SEMI {
+        $$ = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
+    }
+;
+
+statementStar:
+    statement statementStar {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+statement:
+    SEMI {}
+|   name EQ expression SEMI {
+        // TODO
+    }
+|   name LPAREN argList RPAREN SEMI {
+        // TODO
+    }
+|   PRINT LPAREN argList RPAREN SEMI {
+        // TODO
+    }
+|   conditionalStatement {
+        // TODO
+    }
+|   WHILE LPAREN expression RPAREN statement {
+        // TODO
+    }
+|   RETURN optionalExpression {
+        // TODO
+    }
+|   block {
+        // TODO
+    }
+;
+
 name:
-    THIS { $$=new LeafId("this"); }
-|   ID %prec "shift" { $$=new LeafId($1->getString()); }
-|   name bracketexp %prec "shift" {
-    // TODO still can't get this production working properly
-    $$ = new NodeName(static_cast<NodeName *>($1), static_cast<NodeBracketExp *>($2));
-}
-|   name DOT ID { 
-        $$ = new NodeName(static_cast<NodeName *>($1), $3->getString());
+    THIS {
+        // TODO
+    }
+|   ID {
+        // TODO
+    }
+|   name DOT ID {
+        // TODO
+    }
+|   name LBRACKET expression RBRACKET {
+        // TODO
     }
 ;
+
+argList:
+    expression argListStar {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+argListStar:
+    expression argListStar {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+conditionalStatement:
+    IF LPAREN expression RPAREN statement maybeElse {
+        // TODO
+    }
+;
+
+maybeElse:
+    ELSE statement {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+optionalExpression:
+    expression {
+        // TODO
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+expression:
+
+;
+
+newExpression:
+;
+
+unaryOp:
+;
+
+relationOp:
+;
+
+sumOp:
+;
+
+productOp:
+;
+
 
 %%

@@ -17,4 +17,6 @@ extern std::string colStr;
 extern std::string token;
 extern int col;
 
+using std::cout;
+
 #endif

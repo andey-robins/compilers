@@ -20,14 +20,14 @@ class NNameThis : public NName
 {
 public:
     NNameThis();
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class NNameId : public NName
 {
 public:
     NNameId(NId *id);
-    virtual void print(ostream *out);
+    virtual void print();
 };
 
 class NNameDotId : public NName
