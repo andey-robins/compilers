@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclarationList type simpleType constructorDeclarationList methodDeclarationList resultType parameterList parameterListStar parameter localVarDeclarationStar localVarDeclaration statementStar statement name argList conditionalStatement maybeElse optionalExpression expression newExpression brackExp bracks unaryOp relationOp sumOp productOp
+%type<ttype> program classDeclarations classBody varDeclarationList type simpleType constructorDeclarationList methodDeclarationList resultType parameterList parameterListStar parameter localVarDeclarationStar localVarDeclaration statementStar statement name argList conditionalStatement maybeElse optionalExpression expression newExpression brackExp bracks
 
 %token<ttype> SEMI DOT
 %token<ttype> ID
@@ -49,7 +49,7 @@ void yyerror(const char* string);
 %token<ttype> INT
 
 // To be made use of in the future
-%token ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN KEY_INT RBRACE LBRACE
+%token<ttype> ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN RBRACE LBRACE
 
 %expect 0
 
@@ -70,7 +70,7 @@ classDeclarations:
 ;
 
 classBody:
-    varDeclarationList constructorDeclarationList methodDeclarationList {
+    LBRACE varDeclarationList constructorDeclarationList methodDeclarationList RBRACE {
         $$ = new NClassBody($1, $2, $3);
     }
 ;
@@ -85,11 +85,8 @@ varDeclarationList:
 ;
 
 type:
-    simpleType {
+    simpleType bracks %prec "reduce" {
         $$ = new NType($1)
-    }
-|   type LBRACKET RBRACKET {
-        // Todo remove left recursion
     }
 ;
 
@@ -141,14 +138,12 @@ parameterList:
 ;
 
 parameterListStar:
-    parameter parameterListStar {
-        // TODO properly build this list
-        // similar to the production for parameterList
+    COMMA parameter parameterListStar {
+
     }
 |   /* epsilon */ {
         $$ = new NEpsilon();
     }
-;
 
 parameter:
     type ID {
@@ -157,7 +152,7 @@ parameter:
 ;
 
 block:
-    LBRACE localVarDeclarationStar statementStar RBRACKET {
+    LBRACE localVarDeclarationStar statementStar RBRACE {
         // TODO
     }
 ;
@@ -188,7 +183,7 @@ statementStar:
 
 statement:
     SEMI {}
-|   name EQ expression SEMI {
+|   name ASSIGN expression SEMI {
         // TODO
     }
 |   name LPAREN argList RPAREN SEMI {
@@ -263,6 +258,9 @@ expression:
     name {
         // TODO
     }
+|   LPAREN expression RPAREN {
+        // TODO
+    }
 |   NUMBER {
         // TODO
     }
@@ -278,13 +276,27 @@ expression:
 |   newExpression {
         // TODO
     }
-|   prefixOp expression {
+
+|   expression PLUS expression { }
+|   expression MINUS expression { }
+|   expression OR expression { }
+|   expression AND expression %prec "reduce" { }
+|   expression TIMES expression %prec "reduce" { }
+|   expression DIV expression %prec "reduce" { }
+|   expression MOD expression %prec "reduce" { }
+|   expression EQ expression { }
+|   expression NE expression { }
+|   expression LT expression { }
+|   expression GT expression { }
+|   expression LE expression { }
+|   expression GE expression { }
+|   PLUS expression {
         // TODO
     }
-|   expression infixOp expression {
+|   MINUS expression {
         // TODO
     }
-|   LPAREN expression RPAREN {
+|   NOT expression {
         // TODO
     }
 ;
@@ -313,82 +325,6 @@ bracks:
     }
 |   /* epsilon */ {
         $$ = new NEpsilon();
-    }
-;
-
-prefixOp:
-    unaryOp
-;
-
-unaryOp:
-    PLUS {
-        // TODO
-    }
-|   MINUS {
-        // TODO
-    }
-|   NOT {
-        // TODO define this token
-    }
-;
-
-infixOp:
-    relationOp {
-        // TODO
-    }
-|   sumOp {
-        // TODO
-    }
-|   productOp {
-        // TODO
-    }
-;
-
-relationOp:
-    EQ {
-        // TODO
-    }
-|   NE {
-        // TODO
-    }
-|   LT {
-        // TODO
-    }
-|   GT {
-        // TODO
-    }
-|   LE {
-        // TODO
-    }
-|   GE {
-        // TODO
-    }
-;
-
-sumOp:
-    PLUS {
-        // TODO
-    }
-|   MINUS {
-        // TODO
-    }
-|   OR {
-        // TODO
-    }
-;
-
-productOp:
-    TIMES {
-        // TODO
-    }
-|   DIV {
-        // TODO
-    }
-|   MOD {
-        // TODO
-    }
-|   AND {
-        // TODO
     }
 ;
 
