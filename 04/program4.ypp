@@ -50,7 +50,7 @@ void yyerror(const char* string);
 %token<ttype> INT
 
 // To be made use of in the future
-%token<ttype> ER_WD ER_CH TAB
+%token<ttype> ER_WD ER_CH
 
 %expect 0
 

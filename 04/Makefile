@@ -19,6 +19,10 @@ LEXFLAGS=--warn
 BISON=bison
 BISONFLAGS=-d
 
+#########
+# BUILD #
+#########
+
 program4: program4.cpp program4_lex.cpp nodes/src/*.cpp
 	$(CXX) $(CXXFLAGS) *.cpp nodes/src/*.cpp -o program4
 
@@ -27,6 +31,13 @@ program4_lex.cpp: program4.lpp program4.tab.cpp
 
 program4.tab.cpp: program4.ypp
 	$(BISON) $(BISONFLAGS) program4.ypp
+
+############
+# COMMANDS #
+############
+
+bison:
+	$(BISON) $(BISONFLAGS) -v program4.ypp
 
 clean:
 	/bin/rm -f program4 program4_lex.cpp program4.tab.*
@@ -38,5 +49,5 @@ clean:
 run: program4
 	./program4
 
-tar: program4
+tar: clean
 	tar -zcf program4.tgz Makefile program4.cpp program4.hpp program4.lpp program4.ypp nodes/*
