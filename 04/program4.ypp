@@ -41,11 +41,11 @@ void yyerror(const char* string);
 
 %token<ttype> SEMI DOT COMMA
 %token<ttype> ID
-%token<ttype> NUMBER NULLT READ NEW THIS
 %left<ttype> LPAREN RPAREN LBRACKET RBRACKET RBRACE LBRACE
+%token<ttype> NUMBER NULLT READ NEW THIS
 %left<ttype> IF ELSE WHILE RETURN CLASS PRINT VOID
-%left<ttype> PLUS MINUS NOT OR
 %left<ttype> TIMES DIV MOD AND
+%left<ttype> PLUS MINUS NOT OR
 %left<ttype> EQ NE GE LE GT LT ASSIGN
 %token<ttype> INT
 
@@ -105,10 +105,10 @@ varDeclHeaderChoice:
 ;
 
 type:
-    INT bracks %prec "reduce" {
+    INT bracks {
         // TODO
     }
-|   ID bracks %prec "reduce" {
+|   ID bracks {
         // TODO
     }
 ;
@@ -200,7 +200,7 @@ name:
 |   ID DOT name {
         // TODO
     }
-|   ID brackExpNoEmpty {
+|   ID brackExp {
         // TODO
     }
 ;
@@ -215,10 +215,10 @@ argList:
 ;
 
 conditionalStatement:
-    IF LPAREN expression RPAREN statement %prec "reduce" {
+    IF LPAREN expression RPAREN statement {
         // TODO
     }
-|   IF LPAREN expression RPAREN statement ELSE statement %prec "shift" {
+|   IF LPAREN expression RPAREN statement ELSE statement {
         // TODO
     }
 ;
@@ -249,10 +249,10 @@ expression:
 |   expression PLUS expression { }
 |   expression MINUS expression { }
 |   expression OR expression { }
-|   expression AND expression %prec "reduce" { }
-|   expression TIMES expression %prec "reduce" { }
-|   expression DIV expression %prec "reduce" { }
-|   expression MOD expression %prec "reduce" { }
+|   expression AND expression { }
+|   expression TIMES expression { }
+|   expression DIV expression { }
+|   expression MOD expression { }
 |   expression EQ expression { }
 |   expression NE expression { }
 |   expression LT expression { }
@@ -271,19 +271,19 @@ expression:
 ;
 
 newExpression:
-    NEW ID LPAREN argList RPAREN %prec "shift" {
+    NEW ID LPAREN argList RPAREN {
         // TODO
     }
-|   NEW newExpTypes %prec "shift" {
+|   NEW newExpTypes {
         // TODO
     }
-|   NEW newExpTypes bracks %prec "shift" {
+|   NEW newExpTypes bracks {
         // TODO
     }
-|   NEW newExpTypes brackExpNoEmpty %prec "shift" {
+|   NEW newExpTypes brackExp {
         // TODO
     }
-|   NEW newExpTypes brackExpNoEmpty bracks %prec "shift" {
+|   NEW newExpTypes brackExp bracks {
         // TODO
     }
 ;
@@ -292,13 +292,13 @@ newExpTypes:
     ID %prec "reduce" {
         // TODO
     }
-|   INT %prec "reduce" {
+|   INT {
         // TODO
     }
 ;
 
-brackExpNoEmpty:
-    LBRACKET expression RBRACKET brackExpNoEmpty {
+brackExp:
+    LBRACKET expression RBRACKET brackExp {
 
     }
 |   LBRACKET expression RBRACKET {
