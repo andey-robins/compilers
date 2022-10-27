@@ -37,19 +37,20 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclarationList type simpleType constructorDeclarationList methodDeclarationList resultType parameterList parameterListStar parameter localVarDeclarationStar localVarDeclaration statementStar statement name argList conditionalStatement maybeElse optionalExpression expression newExpression brackExp bracks
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks
 
-%token<ttype> SEMI DOT
+%token<ttype> SEMI DOT COMMA
 %token<ttype> ID
 %token<ttype> NUMBER NULLT READ NEW THIS
-%left<ttype> LPAREN RPAREN LBRACKET RBRACKET
+%left<ttype> LPAREN RPAREN LBRACKET RBRACKET RBRACE LBRACE
+%left<ttype> IF ELSE WHILE RETURN CLASS PRINT VOID
 %left<ttype> PLUS MINUS NOT OR
 %left<ttype> TIMES DIV MOD AND
-%left<ttype> EQ NE GE LE GT LT
+%left<ttype> EQ NE GE LE GT LT ASSIGN
 %token<ttype> INT
 
 // To be made use of in the future
-%token<ttype> ER_WD ER_CH TAB WHILE RETURN CLASS PRINT VOID ELSE IF COMMA ASSIGN RBRACE LBRACE
+%token<ttype> ER_WD ER_CH TAB
 
 %expect 0
 
@@ -70,60 +71,45 @@ classDeclarations:
 ;
 
 classBody:
-    LBRACE varDeclarationList constructorDeclarationList methodDeclarationList RBRACE {
-        $$ = new NClassBody($1, $2, $3);
+    // TODO we must process these one by one
+    // some of the problems that need solving:
+    //  - determining which type of construction we see first
+    //  - preventing interleaving of orders, i.e. varDecl constructorDecl then varDecl again
+    LBRACE varDeclHeaderChoice {
+        
     }
 ;
 
-varDeclarationList:
-    type ID SEMI varDeclarationList {
-        // TODO
+varDeclHeaderChoice:
+    // This snippet here should parse things without the ambiguities
+    // but it does allow interleaving of methods variables and constructors
+    INT bracks ID SEMI varDeclHeaderChoice {
+
     }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
+|   ID bracks ID SEMI varDeclHeaderChoice {
+
     }
+|   ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+
+    }
+|   VOID ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+
+    }
+|   INT bracks ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+
+    }
+|   ID bracks ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+
+    }
+|   RBRACE { }
 ;
 
 type:
-    simpleType bracks %prec "reduce" {
-        $$ = new NType($1)
-    }
-;
-
-simpleType:
-    INT {
-        NKeyword *intKword = new NKeyword("int");
-        $$ = new NSimpleType(static_cast<NKeyword *>(intKword));
-    }
-|   ID {
-        $$ = new NSimpleType($1);
-    }
-;
-
-constructorDeclarationList:
-    ID LPAREN parameterList RPAREN block {
+    INT bracks %prec "reduce" {
         // TODO
     }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
-    }
-;
-
-methodDeclarationList:
-    resultType ID LPAREN parameterList RPAREN block {
+|   ID bracks %prec "reduce" {
         // TODO
-    }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
-    }
-;
-
-resultType:
-    type {
-        $$ = new NResultType(static_cast<NType *>($1));
-    }
-|   VOID {
-        $$ = new NKeyword("void");
     }
 ;
 
@@ -152,19 +138,20 @@ parameter:
 ;
 
 block:
-    LBRACE localVarDeclarationStar statementStar RBRACE {
+    LBRACE blockHeadChoice {
         // TODO
     }
 ;
 
-localVarDeclarationStar:
-    localVarDeclaration localVarDeclarationStar {
+blockHeadChoice:
+    // TODO, split to avoid vardecls after statement decls
+    localVarDeclaration blockHeadChoice {
 
     }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
+|   statement blockHeadChoice {
+        // done w/ local var decls
     }
-;
+|   RBRACE {}
 
 localVarDeclaration:
     type ID SEMI {
@@ -172,21 +159,12 @@ localVarDeclaration:
     }
 ;
 
-statementStar:
-    statement statementStar {
-        // TODO
-    }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
-    }
-;
-
 statement:
     SEMI {}
-|   name ASSIGN expression SEMI {
+|   thisName ASSIGN expression SEMI {
         // TODO
     }
-|   name LPAREN argList RPAREN SEMI {
+|   thisName LPAREN argList RPAREN SEMI {
         // TODO
     }
 |   PRINT LPAREN argList RPAREN SEMI {
@@ -198,7 +176,10 @@ statement:
 |   WHILE LPAREN expression RPAREN statement {
         // TODO
     }
-|   RETURN optionalExpression {
+|   RETURN statement SEMI {
+        // TODO
+    }
+|   RETURN SEMI {
         // TODO
     }
 |   block {
@@ -206,17 +187,20 @@ statement:
     }
 ;
 
+thisName:
+    THIS name {
+
+    }
+|   name
+
 name:
-    THIS {
+    ID {
         // TODO
     }
-|   ID {
+|   ID DOT name {
         // TODO
     }
-|   name DOT ID {
-        // TODO
-    }
-|   name LBRACKET expression RBRACKET {
+|   ID brackExpNoEmpty {
         // TODO
     }
 ;
@@ -231,31 +215,16 @@ argList:
 ;
 
 conditionalStatement:
-    IF LPAREN expression RPAREN statement maybeElse {
+    IF LPAREN expression RPAREN statement %prec "reduce" {
         // TODO
     }
-;
-
-maybeElse:
-    ELSE statement {
+|   IF LPAREN expression RPAREN statement ELSE statement %prec "shift" {
         // TODO
-    }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
-    }
-;
-
-optionalExpression:
-    expression {
-        // TODO
-    }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
     }
 ;
 
 expression:
-    name {
+    thisName %prec "shift" {
         // TODO
     }
 |   LPAREN expression RPAREN {
@@ -267,7 +236,7 @@ expression:
 |   NULLT {
         // TODO
     }
-|   name LPAREN argList RPAREN {
+|   thisName LPAREN argList RPAREN {
         // TODO
     }
 |   READ LPAREN RPAREN {
@@ -302,20 +271,38 @@ expression:
 ;
 
 newExpression:
-    NEW ID LPAREN argList RPAREN {
+    NEW ID LPAREN argList RPAREN %prec "shift" {
         // TODO
     }
-|   NEW simpleType brackExp bracks {
+|   NEW newExpTypes %prec "shift" {
+        // TODO
+    }
+|   NEW newExpTypes bracks %prec "shift" {
+        // TODO
+    }
+|   NEW newExpTypes brackExpNoEmpty %prec "shift" {
+        // TODO
+    }
+|   NEW newExpTypes brackExpNoEmpty bracks %prec "shift" {
         // TODO
     }
 ;
 
-brackExp:
-    LBRACKET expression RBRACKET brackExp {
+newExpTypes:
+    ID %prec "reduce" {
         // TODO
     }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
+|   INT %prec "reduce" {
+        // TODO
+    }
+;
+
+brackExpNoEmpty:
+    LBRACKET expression RBRACKET brackExpNoEmpty {
+
+    }
+|   LBRACKET expression RBRACKET {
+
     }
 ;
 

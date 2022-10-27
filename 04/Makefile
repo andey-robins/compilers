@@ -30,7 +30,7 @@ program4.tab.cpp: program4.ypp
 
 clean:
 	/bin/rm -f program4 program4_lex.cpp program4.tab.*
-	/bin/rm -f program4.output
+	/bin/rm -f *.output
 	/bin/rm -rf *.dSYM
 	/bin/rm core.*
 	/bin/rm -f program4.tgz
