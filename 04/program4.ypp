@@ -44,8 +44,8 @@ void yyerror(const char* string);
 %left<ttype> LPAREN RPAREN LBRACKET RBRACKET RBRACE LBRACE
 %token<ttype> NUMBER NULLT READ NEW THIS
 %left<ttype> IF ELSE WHILE RETURN CLASS PRINT VOID
-%left<ttype> TIMES DIV MOD AND
 %left<ttype> PLUS MINUS NOT OR
+%left<ttype> TIMES DIV MOD AND
 %left<ttype> EQ NE GE LE GT LT ASSIGN
 %token<ttype> INT
 
@@ -176,7 +176,7 @@ statement:
 |   WHILE LPAREN expression RPAREN statement {
         // TODO
     }
-|   RETURN statement SEMI {
+|   RETURN expression SEMI {
         // TODO
     }
 |   RETURN SEMI {
@@ -246,23 +246,23 @@ expression:
         // TODO
     }
 
-|   expression PLUS expression { }
-|   expression MINUS expression { }
-|   expression OR expression { }
-|   expression AND expression { }
-|   expression TIMES expression { }
-|   expression DIV expression { }
-|   expression MOD expression { }
+|   expression PLUS expression %prec "reduce" { }
+|   expression MINUS expression %prec "reduce" { }
+|   expression OR expression %prec "reduce" { }
+|   expression AND expression %prec "shift" { }
+|   expression TIMES expression %prec "shift" { }
+|   expression DIV expression %prec "shift" { }
+|   expression MOD expression %prec "shift" { }
 |   expression EQ expression { }
 |   expression NE expression { }
 |   expression LT expression { }
 |   expression GT expression { }
 |   expression LE expression { }
 |   expression GE expression { }
-|   PLUS expression {
+|   PLUS expression %prec "shift" {
         // TODO
     }
-|   MINUS expression {
+|   MINUS expression %prec "shift" {
         // TODO
     }
 |   NOT expression {
@@ -310,9 +310,7 @@ bracks:
     LBRACKET RBRACKET bracks {
         // TODO
     }
-|   /* epsilon */ {
-        $$ = new NEpsilon();
-    }
+|   LBRACKET RBRACKET
 ;
 
 
