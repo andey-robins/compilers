@@ -37,14 +37,14 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor
 
+%left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
 %token<ttype> ID
 %left<ttype> LPAREN RPAREN LBRACKET RBRACKET RBRACE LBRACE
 %token<ttype> NUMBER NULLT READ NEW THIS
 %left<ttype> IF ELSE WHILE RETURN CLASS PRINT VOID
-%left<ttype> PLUS MINUS NOT OR
 %left<ttype> TIMES DIV MOD AND
 %left<ttype> EQ NE GE LE GT LT ASSIGN
 %token<ttype> INT
@@ -71,34 +71,36 @@ classDeclarations:
 ;
 
 classBody:
-    // TODO we must process these one by one
-    // some of the problems that need solving:
-    //  - determining which type of construction we see first
-    //  - preventing interleaving of orders, i.e. varDecl constructorDecl then varDecl again
     LBRACE varDeclHeaderChoice {
         
     }
 ;
 
 varDeclHeaderChoice:
-    // This snippet here should parse things without the ambiguities
-    // but it does allow interleaving of methods variables and constructors
     INT bracks ID SEMI varDeclHeaderChoice {
 
     }
 |   ID bracks ID SEMI varDeclHeaderChoice {
 
     }
-|   ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+|   constDeclHeaderChoice
+;
+
+constDeclHeaderChoice:
+    ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
 
     }
-|   VOID ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+|   VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
 
     }
-|   INT bracks ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+|   methDeclHeaderChoice
+;
+
+methDeclHeaderChoice:
+    INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
 
     }
-|   ID bracks ID LPAREN parameterList RPAREN block varDeclHeaderChoice {
+|   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
 
     }
 |   RBRACE { }
@@ -224,7 +226,35 @@ conditionalStatement:
 ;
 
 expression:
-    thisName %prec "shift" {
+    expression EQ expression { }
+|   expression NE expression { }
+|   expression LT expression { }
+|   expression GT expression { }
+|   expression LE expression { }
+|   expression GE expression { }
+|   expression PLUS term
+|   expression MINUS term
+|   expression OR rterm
+|   term
+
+;
+
+rterm:
+    term TIMES term
+|   term DIV term
+|   term MOD term
+|   term AND term
+;
+
+term:
+    rterm
+|   factor
+;
+
+factor:
+    // currently no unary ops, but otherwise all correct
+    NOT factor
+|   thisName %prec "shift" {
         // TODO
     }
 |   LPAREN expression RPAREN {
@@ -243,29 +273,6 @@ expression:
         // TODO
     }
 |   newExpression {
-        // TODO
-    }
-
-|   expression PLUS expression %prec "reduce" { }
-|   expression MINUS expression %prec "reduce" { }
-|   expression OR expression %prec "reduce" { }
-|   expression AND expression %prec "shift" { }
-|   expression TIMES expression %prec "shift" { }
-|   expression DIV expression %prec "shift" { }
-|   expression MOD expression %prec "shift" { }
-|   expression EQ expression { }
-|   expression NE expression { }
-|   expression LT expression { }
-|   expression GT expression { }
-|   expression LE expression { }
-|   expression GE expression { }
-|   PLUS expression %prec "shift" {
-        // TODO
-    }
-|   MINUS expression %prec "shift" {
-        // TODO
-    }
-|   NOT expression {
         // TODO
     }
 ;
