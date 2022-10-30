@@ -49,5 +49,8 @@ clean:
 run: program4
 	./program4
 
+test: program4
+	./program4 < testing/1_class.dcaf
+
 tar: clean
 	tar -zcf program4.tgz Makefile program4.cpp program4.hpp program4.lpp program4.ypp nodes/*

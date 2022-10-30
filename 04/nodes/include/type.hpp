@@ -13,19 +13,19 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
-class NType : public BaseNode
-{
-public:
-    NType(NSimpleType *st);
-    NType(NType *t);
-    virtual void print();
-};
-
 class NSimpleType : public BaseNode
 {
 public:
     NSimpleType(NKeyword *k); // int keyword
     NSimpleType(NId *id);
+    virtual void print();
+};
+
+class NType : public BaseNode
+{
+public:
+    NType(NSimpleType *st);
+    NType(NType *t);
     virtual void print();
 };
 

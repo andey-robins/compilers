@@ -20,10 +20,10 @@ BaseList::~BaseList()
     delete &this->vect;
 }
 
-void BaseList::print(ostream *out)
+void BaseList::print()
 {
     // TODO
-    *out << "TODO print for BaseList" << endl;
+    cout << "TODO print for BaseList" << endl;
 }
 
 void BaseList::push(BaseNode *n)

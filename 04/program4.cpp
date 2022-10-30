@@ -28,7 +28,7 @@ int main()
     // Two spaces to separate errors from parse tree
     cout << endl
          << endl;
-    ast->print(&cout);
+    ast->print();
     cout << endl;
     return 0;
 }

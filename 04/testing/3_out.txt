@@ -1,0 +1,305 @@
+<program> -> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> foo
+    <classbody> --> { <vardecs> <consdecs> <methdecs> }
+      <vardecs> --> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> a
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> b
+      <constructors> --> <constdec>
+        <constdec> --> ID <block> 
+          ID --> foo
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                <type> -> INT
+                ID --> a
+            <statements> --> <statement>
+              <statement> --> <name> = <exp> ;
+                <name> --> THIS 
+                <name> --> <name> DOT ID
+                  ID --> a
+                <exp> --> NUMBER
+                  NUMBER --> 5
+      <constructors> --> <constructors> <constdec>
+        <constdec> --> ID <block> 
+          ID --> foo
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> x
+          <block> --> { <statements> }
+            <statements> --> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> a
+                <exp> --> <name>
+                  ID --> x
+      <methods> --> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> boo
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> a
+          <block> --> { <statements> }
+            <statements> --> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> b
+                <exp> --> <name>
+                  ID --> a
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> NUMBER
+                  NUMBER --> 1
+      <methods> --> <methods> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> doo
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> b
+          <paramlist> --> <paramlist> , <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> c
+          <paramlist> --> <paramlist> , <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> d
+          <block> --> { <statements> }
+            <statements> --> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> b
+                <exp> --> <name>
+                  ID --> b
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> <name>
+                  ID --> a
+<program> -> <program> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> goo
+    <classbody> --> { <vardecs> <methdecs> }
+      <vardecs> --> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> x
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID ID SEMI
+          ID --> foo
+          ID --> c
+      <methods> --> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> main
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                ID --> foo
+                ID --> f
+            <statements> --> <statement>
+              <statement> --> IF ( <exp> ) <statement>
+              IF ( true )
+                <exp> --> <exp> > <exp>
+                  <exp> --> <name>
+                    ID --> x
+                  <exp> --> NUMBER
+                    NUMBER --> 5
+                <statement> --> PRINT ( <arglist> )
+                  <arglist> --> <exp>
+                    <exp> --> <name>
+                      ID --> x
+              IF ( false ) ELSE
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> NUMBER
+                  NUMBER --> 0
+<program> -> <program> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> boo
+    <classbody> --> { <vardecs> <consdecs> <methdecs> }
+      <vardecs> --> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> a
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID ID SEMI
+          ID --> foo
+          ID --> b
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID <multibrackets> ID SEMI
+          ID --> goo
+          <multibrackets> --> [][]
+          ID --> c
+      <constructors> --> <constdec>
+        <constdec> --> ID <block> 
+          ID --> boo
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> a
+          <paramlist> --> <paramlist> , <param>
+            <param> --> ID ID
+              ID --> goo
+              ID --> b
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                <type> -> INT
+                ID --> a
+            <vardecs> --> <vardecs> <vardec>
+              <vardec> --> ID ID SEMI
+                ID --> goo
+                ID --> b
+            <statements> --> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> a
+                <exp> --> <name>
+                  ID --> b
+            <statements> --> <statements> <statement>
+              <statement> --> <block> ;
+                <block> --> { <local vardecs> <statements> }
+                  <vardecs> --> <vardec>
+                    <vardec> --> ID ID SEMI
+                      ID --> more
+                      ID --> less
+                  <statements> --> <statement>
+                    <statement> --> ID = <exp> ;
+                      ID --> more
+                      <exp> --> <name>
+                        ID --> less
+            <statements> --> <statements> <statement>
+              <statement> --> WHILE ( <exp> ) <statement>
+                <exp> --> <exp> < <exp>
+                  <exp> --> <name>
+                    ID --> a
+                  <exp> --> NUMBER
+                    NUMBER --> 10
+                <statement> --> <block> ;
+                  <block> --> { <statements> }
+                    <statements> --> <statement>
+                      <statement> --> ID = <exp> ;
+                        ID --> a
+                        <exp> --> <exp> + <exp>
+                          <exp> --> <name>
+                            ID --> a
+                          <exp> --> NUMBER
+                            NUMBER --> 1
+                    <statements> --> <statements> <statement>
+                      <statement> --> ID = <exp> ;
+                        ID --> b
+                        <exp> --> <exp> + <exp>
+                          <exp> --> <name>
+                            ID --> a
+                          <exp> --> NUMBER
+                            NUMBER --> 1
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN 
+      <methods> --> <methdec>
+        <methdec> --> type ID <block> 
+          ID --> goo
+          ID --> f
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> a
+          <paramlist> --> <paramlist> , <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> b
+          <paramlist> --> <paramlist> , <param>
+            <param> --> ID ID
+              ID --> boo
+              ID --> c
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID <multibrackets> ID SEMI
+                <type> -> INT
+                <multibrackets> --> [][]
+                ID --> d
+            <statements> --> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> d
+                <exp> --> <newexp>
+                  <newexp> --> NEW <type> <bracketexps>
+                    <type> -> INT
+                    <bracketexp> --> [ <exp> ]
+                      <exp> --> NUMBER
+                        NUMBER --> 10
+                    <bracketexp> --> [ <exp> ]
+                      <exp> --> NUMBER
+                        NUMBER --> 10
+                      <multibrackets> --> [][][]
+            <statements> --> <statements> <statement>
+              <statement> --> ID = <exp> ;
+                <name> --> ID <bracketexps>
+                  ID --> d
+                  <bracketexp> --> [ <exp> ]
+                    <exp> --> NUMBER
+                      NUMBER --> 1
+                <exp> --> <name>
+                  ID --> a
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> <name>
+                  ID --> c
+      <methods> --> <methods> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> moo
+          <block> --> { }
+      <methods> --> <methods> <methdec>
+        <methdec> --> void ID <block> 
+          ID --> fb
+          <block> --> { }
+      <methods> --> <methods> <methdec>
+        <methdec> --> void ID <block> 
+          ID --> names
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                ID --> goo
+                ID --> a
+            <statements> --> <statement>
+              <statement> --> <method_call> ;
+                <exp> --> <name> LPAREN RPAREN
+                  <name> --> ID . ID
+                    ID --> a
+                    ID --> main
+            <statements> --> <statements> <statement>
+              <statement> --> <name> = <exp> ;
+                <name> --> ID . ID
+                  ID --> a
+                  ID --> c
+                <name> --> <name> DOT ID
+                  ID --> b
+                <exp> --> <method_call>
+                  <exp> --> <name> LPAREN <arglist> RPAREN
+                    <name> --> ID . ID
+                      ID --> a
+                      ID --> boo
+                    <arglist> --> <exp>
+                      <exp> --> NUMBER
+                        NUMBER --> 5
+            <statements> --> <statements> <statement>
+              <statement> --> WHILE ( <exp> ) <statement>
+                <exp> --> <exp> > <exp>
+                  <exp> --> <name>
+                    ID --> x
+                  <exp> --> NUMBER
+                    NUMBER --> 5
+                <statement> --> ID = <exp> ;
+                  ID --> x
+                  <exp> --> <exp> - <exp>
+                    <exp> --> <name>
+                      ID --> x
+                    <exp> --> NUMBER
+                      NUMBER --> 1
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN 

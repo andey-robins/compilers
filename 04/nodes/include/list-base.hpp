@@ -12,8 +12,9 @@
 
 #include <iostream>
 #include <vector>
-#include "nodes.hpp"
+#include "node-base.hpp"
 
+using std::cout;
 using std::ostream;
 using std::vector;
 

@@ -13,9 +13,9 @@ BaseNode::BaseNode() {}
 
 BaseNode::~BaseNode()
 {
-    if (next)
+    if (this->next)
     {
-        delete next;
+        delete this->next;
     }
 }
 
@@ -23,19 +23,24 @@ void BaseNode::setNext(BaseNode *n)
 {
     if (n)
     {
-        next = n;
+        this->next = n;
     }
     else
     {
-        next = 0;
+        this->next = 0;
     }
+}
+
+void BaseNode::setVal(string s)
+{
+    this->text = s;
 }
 
 BaseNode *BaseNode::getNext()
 {
-    if (next)
+    if (this->next)
     {
-        return next;
+        return this->next;
     }
     else
     {
@@ -43,9 +48,14 @@ BaseNode *BaseNode::getNext()
     }
 }
 
-void BaseNode::print(ostream *out)
+string BaseNode::getText()
 {
-    *out << "BaseNode" << endl;
-    *out << "Next" << endl;
-    *out << "print not extended" << endl;
+    return this->text;
+}
+
+void BaseNode::print()
+{
+    cout << "BaseNode" << endl;
+    cout << "Next" << endl;
+    cout << "print not extended" << endl;
 }

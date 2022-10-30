@@ -1,0 +1,71 @@
+<program> -> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> foo
+    <classbody> --> { <vardecs> <consdecs> <methdecs> }
+      <vardecs> --> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> a
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> b
+      <constructors> --> <constdec>
+        <constdec> --> ID <block> 
+          ID --> foo
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                <type> -> INT
+                ID --> a
+            <statements> --> <statement>
+              <statement> --> <name> = <exp> ;
+                <name> --> THIS 
+                <name> --> <name> DOT ID
+                  ID --> a
+                <exp> --> NUMBER
+                  NUMBER --> 5
+      <methods> --> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> boo
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> a
+          <block> --> { <statements> }
+            <statements> --> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> b
+                <exp> --> <name>
+                  ID --> a
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> NUMBER
+                  NUMBER --> 1
+<program> -> <program> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> goo
+    <classbody> --> { <vardecs> <methdecs> }
+      <vardecs> --> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> x
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID ID SEMI
+          ID --> foo
+          ID --> c
+      <methods> --> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> main
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                ID --> foo
+                ID --> f
+            <statements> --> <statement>
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> NUMBER
+                  NUMBER --> 0

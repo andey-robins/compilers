@@ -66,7 +66,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 2;
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
 
@@ -98,7 +98,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 2;
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
 
@@ -116,7 +116,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 1;
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
 
@@ -144,7 +144,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     type = 4;
     col += lastTokenLen;
     lastTokenLen = 1;
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
 
@@ -174,7 +174,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     string text = string(yytext);
     col += lastTokenLen;
     lastTokenLen = 1;
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
 
@@ -200,7 +200,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 {KEYWORD} {
     string text = string(yytext);
     col += lastTokenLen;
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
     
@@ -260,7 +260,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "IDENT";
-    yylval.ttype = new Node;
+    yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
     return ID;
@@ -271,8 +271,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     col += lastTokenLen;
     lastTokenLen = string(yytext).length();
     token = "NUMBER";
-    yylval.ttype = new Node;
-    yylval.ttype->setVal(atoi(yytext));
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
     fullLine += yytext;
     return NUMBER;
 }
@@ -325,7 +325,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
    col += lastTokenLen;
    lastTokenLen = (col + 1) % 8;
    fullLine += yytext;
-   return TAB;
+//    return TAB;
 }
 
 {UNKNOWN}{1} {

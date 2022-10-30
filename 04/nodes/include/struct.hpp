@@ -18,21 +18,11 @@ class NProgram : public BaseNode
 {
 public:
     NProgram(NClassDecl *cd);
+    ~NProgram();
     virtual void print();
-};
 
-class NClassBody : public BaseNode
-{
-public:
-    NClassBody(LVarDecl *vd, LConstDecl *cd, LMethDecl *md);
-    virtual void print();
-};
-
-class NBlock : public BaseNode
-{
-public:
-    NBlock(LLocalVarDecl *lvd, LStatements *s);
-    virtual void print();
+private:
+    NClassDecl *classDeclaration;
 };
 
 #endif

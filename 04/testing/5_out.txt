@@ -1,0 +1,65 @@
+<program> -> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> Misc
+    <classbody> --> { <vardecs> <methdecs> }
+      <vardecs> --> <vardec>
+        <vardec> --> ID ID SEMI
+          <type> -> INT
+          ID --> a
+      <vardecs> --> <vardecs> <vardec>
+        <vardec> --> ID ID SEMI
+          ID --> char
+          ID --> b
+      <methods> --> <methdec>
+        <methdec> --> type ID <block> 
+          <type> -> INT
+          ID --> last_method
+          <paramlist> --> <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> a
+          <paramlist> --> <paramlist> , <param>
+            <param> --> <type> ID
+              <type> -> INT
+              ID --> b
+          <paramlist> --> <paramlist> , <param>
+            <param> --> ID ID
+              ID --> char
+              ID --> c
+          <block> --> { <local vardecs> <statements> }
+            <vardecs> --> <vardec>
+              <vardec> --> ID ID SEMI
+                <type> -> INT
+                ID --> val
+            <statements> --> <statement>
+              <statement> --> PRINT ( <arglist> )
+                <arglist> --> <exp>
+                  <exp> --> <name>
+                    ID --> a
+                <arglist> --> <arglist> , <exp>
+                  <exp> --> <name>
+                    ID --> b
+                <arglist> --> <arglist> , <exp>
+                  <exp> --> <name>
+                    ID --> c
+            <statements> --> <statements> <statement>
+              <statement> --> ID = <exp> ;
+                ID --> val
+                <exp> -> READ LPAREN RPAREN
+            <statements> --> <statements> <statement>
+            <statements> --> <statements> <statement>
+              <statement> --> RETURN <optional_expression>
+                <exp> --> <exp> + <exp>
+                  <exp> --> <exp> + <exp>
+                    <exp> --> <name>
+                      ID --> x
+                    <exp> --> <name>
+                      ID --> y
+                  <exp> --> <exp> % <exp>
+                    <exp> --> <exp> * <exp>
+                      <exp> --> <name>
+                        ID --> z
+                      <exp> --> NUMBER
+                        NUMBER --> 97
+                    <exp> --> NUMBER
+                      NUMBER --> 6

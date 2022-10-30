@@ -12,6 +12,30 @@
 
 #include "nodes.hpp"
 
+class NNewExp : public BaseNode
+{
+};
+
+class NNewExpIdArgs : public NNewExp
+{
+public:
+    NNewExpIdArgs(NId *i, LArgs *l);
+    virtual void print();
+};
+
+class NNewExpType : public NNewExp
+{
+public:
+    NNewExpType(NSimpleType *s, LBrackExps *be, LBracks *b);
+    virtual void print();
+};
+
+// ^^^
+// new expressions
+//
+// expressions
+// vvv
+
 class NExp : public BaseNode
 {
 };
@@ -92,27 +116,10 @@ public:
     virtual void print();
 };
 
-// ^^^
-// expressions
-// 
-// new expressions
-// vvv
-
-class NNewExp : public BaseNode 
-{
-};
-
-class NNewExpIdArgs : public NNewExp
+class NNameExp : public NName
 {
 public:
-    NNewExpIdArgs(NId *i, LArgs *l);
-    virtual void print();
-};
-
-class NNewExpType : public NNewExp
-{
-public:
-    NNewExpType(NSimpleType *s, LBrackExps *be, LBracks *b);
+    NNameExp(NName *n, NExp *e);
     virtual void print();
 };
 

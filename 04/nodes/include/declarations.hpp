@@ -11,23 +11,13 @@
 #define DECLARATIONS_HPP
 
 #include "nodes.hpp"
-
-class NClassDecl : public BaseNode
-{
-public:
-    NClassDecl(NKeyword *cls, NId *id, NClassBody *cb);
-    virtual void print();
-};
+#include "list-base.hpp"
 
 class LVarDecl : public BaseList
 {
 public:
     LVarDecl();
     virtual void print();
-};
-
-class LLocalVarDecl : public LVarDecl
-{
 };
 
 class NVarDecl : public BaseNode
@@ -63,6 +53,25 @@ class NMethDecl : public BaseNode
 public:
     NMethDecl(NResultType *rt, NId *id, LParams *p, NBlock *b);
     virtual void print();
+};
+
+class NClassBody : public BaseNode
+{
+public:
+    NClassBody(LVarDecl *vd, LConstDecl *cd, LMethDecl *md);
+    virtual void print();
+};
+
+class NClassDecl : public BaseNode
+{
+public:
+    NClassDecl(NId *id, NClassBody *cb);
+    ~NClassDecl();
+    virtual void print();
+
+private:
+    NId *className;
+    NClassBody *classBody;
 };
 
 #endif

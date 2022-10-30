@@ -45,13 +45,6 @@ public:
     virtual void print();
 };
 
-class NStateCond : public NStatement
-{
-public:
-    NStateCond(NCondition *c);
-    virtual void print();
-};
-
 class NStateWhile : public NStatement
 {
 public:
@@ -76,6 +69,13 @@ public:
 protected:
     NStatement *trueBlock;
     NStatement *falseBlock;
+};
+
+class NStateCond : public NStatement
+{
+public:
+    NStateCond(NCondition *c);
+    virtual void print();
 };
 
 #endif

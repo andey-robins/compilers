@@ -37,11 +37,4 @@ public:
     virtual void print();
 };
 
-class NNameExp : public NName
-{
-public:
-    NNameExp(NName *n, NExp *e);
-    virtual void print();
-};
-
 #endif

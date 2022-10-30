@@ -58,15 +58,14 @@ void yyerror(const char* string);
 
 program:
     classDeclarations { 
-        tree = new NProgram(static_cast<NClassDecl*>($1));
-        $$ = tree;
+        ast = new NProgram(static_cast<NClassDecl*>($1));
+        $$ = ast;
     }
 ;
 
 classDeclarations:
     CLASS ID classBody {
-        NKeyword *cls = new NKeyword($1);
-        $$ = new NClassDecl(cls, $2, $3);
+        $$ = new NClassDecl($2, $3);
     }
 ;
 

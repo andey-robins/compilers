@@ -1,0 +1,50 @@
+/* 
+ * This is a basic input file for the 4th program that will be their compiler.
+ * It does not test everything but does what should be enough for now.
+ * Where the comments are, modify the file, one error at a time and make sure
+ * that you can catch it or at least don't break the program. 
+ * Then fix the error and try the next. 
+ */
+
+class foo {
+
+  int a;
+  int b;// missing semicolon
+
+  foo()
+  {
+     int a;
+     this.a = 5; // comma vice period 
+  }
+  int boo(int a)
+  {
+    b=a; // colon instead of semicolon
+    return 1;
+   // missing a brace  
+  } 
+
+}
+
+class goo {
+  int x;
+
+  foo c;
+
+  // missing rparen here
+  int main()
+  {
+    foo f;
+
+    if( x > 5) print(x);
+    return 0;
+  }
+
+  int boo()
+  {
+    // non-statement, should be good with empty block
+    //blah ;
+  }
+
+}
+
+
