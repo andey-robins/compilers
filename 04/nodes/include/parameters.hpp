@@ -10,7 +10,7 @@
 #ifndef PARAMETERS_HPP
 #define PARAMETERS_HPP
 
-#include "nodes.hpp"
+#include "name.hpp"
 
 class LParams : public BaseList
 {
@@ -19,11 +19,22 @@ public:
     virtual void print();
 };
 
+class NParams : public BaseNode
+{
+public:
+    NParams();
+    virtual void print();
+};
+
 class NParam : public BaseNode
 {
 public:
     NParam(NType *t, NId *id);
     virtual void print();
+
+private:
+    NType *type;
+    NId *id;
 };
 
 class LArgs : public BaseList

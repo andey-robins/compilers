@@ -10,7 +10,7 @@
 #ifndef NAME_HPP
 #define NAME_HPP
 
-#include "nodes.hpp"
+#include "type.hpp"
 
 class NName : public BaseNode
 {

@@ -7,12 +7,10 @@
  *
  */
 
-#include "nodes.hpp"
-#include "leaves.hpp"
-#include "list-base.hpp"
-
 #ifndef STRUCT_HPP
 #define STRUCT_HPP
+
+#include "declarations.hpp"
 
 class NProgram : public BaseNode
 {

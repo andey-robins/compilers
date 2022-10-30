@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor block
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
@@ -58,51 +58,125 @@ void yyerror(const char* string);
 
 program:
     classDeclarations { 
-        ast = new NProgram(static_cast<NClassDecl*>($1));
+        ast = new NProgram(static_cast<NClassDecl *>($1));
         $$ = ast;
     }
 ;
 
 classDeclarations:
     CLASS ID classBody {
-        $$ = new NClassDecl($2, $3);
+        NId *id = new NId($2->getText());
+        $$ = new NClassDecl(id, static_cast<NClassBody *>($3));
     }
 ;
 
 classBody:
     LBRACE varDeclHeaderChoice {
-        
+        // TODO check if we only got back an epsilon for an empty body
+        auto *derivedVar = dynamic_cast<NVarDecl *>($2);
+        auto *derivedConst = dynamic_cast<NConstDecl *>($2);
+        auto *derivedMeth = dynamic_cast<NMethDecl *>($2);
+
+        if (derivedVar) 
+        {
+            $$ = new NClassBody(derivedVar);
+        }
+        else if (derivedConst) 
+        {
+            $$ = new NClassBody(derivedConst);
+        }
+        else if (derivedMeth) 
+        {
+            $$ = new NClassBody(derivedMeth);
+        }
+        else
+        {
+            // TODO remove
+            cout << "Oh noes" << endl;
+        }
     }
 ;
 
 varDeclHeaderChoice:
     INT bracks ID SEMI varDeclHeaderChoice {
-
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NKeyword *key = new NKeyword($1->getText());
+        NSimpleType *st = new NSimpleType(key);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NVarDecl *curr = new NVarDecl(type, static_cast<NId*>($3));
+        curr->setNext($5);
+        $$ = curr;
     }
 |   ID bracks ID SEMI varDeclHeaderChoice {
-
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(id);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NVarDecl *curr = new NVarDecl(type, static_cast<NId*>($3));
+        curr->setNext($5);
+        $$ = curr;
     }
-|   constDeclHeaderChoice
+|   INT ID SEMI varDeclHeaderChoice {
+        NKeyword *key = new NKeyword($1->getText());
+        NId *id = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NVarDecl *curr = new NVarDecl(type, id);
+        curr->setNext($4);
+        $$ = curr;
+    }
+|   ID ID SEMI varDeclHeaderChoice {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
+        NType *type = new NType(st);
+        NVarDecl *curr = new NVarDecl(type, idTwo);
+        curr->setNext($4);
+        $$ = curr;
+    }
+    
+|   constDeclHeaderChoice { 
+        cout << "done with vardecls" << endl;
+        $$ = $1; 
+    }
 ;
 
 constDeclHeaderChoice:
     ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-
+        cout << "to constDeclHeaderChoice" << endl;
+        NId *id = new NId($1->getText());
+        NConstDecl *curr;
+        if ($3->getText() == "epsilon") 
+        {
+            NParam *epsilon = new NParam(0, 0);
+            epsilon->setVal("epsilon");
+            curr = new NConstDecl(id, epsilon, static_cast<NBlock *>($5));
+        }
+        else 
+        {
+            curr = new NConstDecl(id, static_cast<NParam *>($3), static_cast<NBlock *>($5));
+        }
+        curr->setNext($6);
+        $$ = curr;
     }
-|   VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-
-    }
-|   methDeclHeaderChoice
+|   methDeclHeaderChoice { $$ = $1; }
 ;
 
 methDeclHeaderChoice:
-    INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+    VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        
+    }
+|   INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
 
     }
 |   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
 
     }
-|   RBRACE { }
+|   RBRACE {
+        $$ = new NEpsilon();
+    }
 ;
 
 type:
@@ -116,25 +190,32 @@ type:
 
 parameterList:
     parameter parameterListStar {
-        // TODO properly build this list
-        $$ = new LParams();
+        cout << "to param list" << endl;
+        $1->setNext($2);
+        $$ = $1;
     }
 |   /* epsilon */ {
+        cout << "to param list epsilon" << endl;
         $$ = new NEpsilon();
     }
 ;
 
 parameterListStar:
     COMMA parameter parameterListStar {
-
+        cout << "to param list star" << endl;
+        $2->setNext($3);
+        $$ = $2;
     }
 |   /* epsilon */ {
+        cout << "to param list star epsilon" << endl;
         $$ = new NEpsilon();
     }
 
 parameter:
     type ID {
-        $$ = new NParam(static_cast<NType *>($1), static_cast<NId *>($2));
+        cout << "to param" << endl;
+        NId *id = new NId($2->getText());
+        $$ = new NParam(static_cast<NType *>($1), id);
     }
 ;
 
@@ -156,7 +237,7 @@ blockHeadChoice:
 
 localVarDeclaration:
     type ID SEMI {
-        $$ = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
+        // $$ = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
     }
 ;
 
@@ -193,6 +274,7 @@ thisName:
 
     }
 |   name
+;
 
 name:
     ID {
@@ -211,7 +293,7 @@ argList:
         // TODO
     }
 |   /* epsilon */ {
-        $$ = new NEpsilon();
+        // $$ = new NEpsilon();
     }
 ;
 
@@ -314,9 +396,11 @@ brackExp:
 
 bracks:
     LBRACKET RBRACKET bracks {
-        // TODO
+        $$ = new NType(0, static_cast<NType*>($3)->getBracks()+1);
     }
-|   LBRACKET RBRACKET
+|   LBRACKET RBRACKET {
+        $$ = new NType(0, 1);
+    }
 ;
 
 

@@ -55,7 +55,6 @@ string BaseNode::getText()
 
 void BaseNode::print()
 {
-    cout << "BaseNode" << endl;
-    cout << "Next" << endl;
+    // TODO remove this
     cout << "print not extended" << endl;
 }

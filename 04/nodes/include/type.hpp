@@ -7,11 +7,11 @@
  *
  */
 
-#include "nodes.hpp"
-#include "list-base.hpp"
-
 #ifndef TYPES_HPP
 #define TYPES_HPP
+
+#include "leaves.hpp"
+#include "list-base.hpp"
 
 class NSimpleType : public BaseNode
 {
@@ -19,14 +19,21 @@ public:
     NSimpleType(NKeyword *k); // int keyword
     NSimpleType(NId *id);
     virtual void print();
+
+private:
+    bool isId = false;
 };
 
 class NType : public BaseNode
 {
 public:
     NType(NSimpleType *st);
-    NType(NType *t);
+    NType(NType *t, int bracks);
+    int getBracks();
     virtual void print();
+
+private:
+    int brackCount;
 };
 
 class NResultType : public BaseNode

@@ -10,7 +10,7 @@
 #ifndef EXPRESSIONS_HPP
 #define EXPRESSIONS_HPP
 
-#include "nodes.hpp"
+#include "parameters.hpp"
 
 class NNewExp : public BaseNode
 {

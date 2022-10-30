@@ -1,0 +1,10 @@
+class foo {
+    int a;
+    int b;
+
+    foo()
+    {
+        // int a;
+        // this.a = 5;
+    }
+}

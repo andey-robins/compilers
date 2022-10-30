@@ -11,16 +11,28 @@
 #define LEAVES_HPP
 
 #include <string>
-#include "nodes.hpp"
+#include "node-base.hpp"
+
+using std::string;
 
 class NId : public BaseNode
 {
-    // TODO
+public:
+    NId(string id);
+    virtual void print();
+
+private:
+    string text;
 };
 
-class NKeyword : public NId
+class NKeyword : public BaseNode
 {
-    // TODO
+public:
+    NKeyword(string key);
+    virtual void print();
+
+private:
+    string text;
 };
 
 class NNumber : public BaseNode

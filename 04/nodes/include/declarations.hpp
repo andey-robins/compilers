@@ -10,42 +10,30 @@
 #ifndef DECLARATIONS_HPP
 #define DECLARATIONS_HPP
 
-#include "nodes.hpp"
-#include "list-base.hpp"
-
-class LVarDecl : public BaseList
-{
-public:
-    LVarDecl();
-    virtual void print();
-};
+#include "block.hpp"
 
 class NVarDecl : public BaseNode
 {
 public:
     NVarDecl(NType *t, NId *id);
+    ~NVarDecl();
     virtual void print();
-};
 
-class LConstDecl : public BaseList
-{
-public:
-    LConstDecl();
-    virtual void print();
+private:
+    NType *type;
+    NId *id;
 };
 
 class NConstDecl : public BaseNode
 {
 public:
-    NConstDecl(NId *id, LParams *p, NBlock *b);
+    NConstDecl(NId *id, NParam *p, NBlock *b);
     virtual void print();
-};
 
-class LMethDecl : public BaseList
-{
-public:
-    LMethDecl();
-    virtual void print();
+private:
+    NId *id;
+    NParam *params;
+    NBlock *block;
 };
 
 class NMethDecl : public BaseNode
@@ -58,7 +46,11 @@ public:
 class NClassBody : public BaseNode
 {
 public:
-    NClassBody(LVarDecl *vd, LConstDecl *cd, LMethDecl *md);
+    // declarations are tracked in NClassBody->next
+    NClassBody(NVarDecl *declHead);
+    NClassBody(NConstDecl *declHead);
+    NClassBody(NMethDecl *declHead);
+    ~NClassBody();
     virtual void print();
 };
 
