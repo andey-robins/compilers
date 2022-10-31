@@ -72,21 +72,26 @@ public:
 class NExpNull : public NExp
 {
 public:
-    NExpNull(NKeyword *k);
+    NExpNull();
     virtual void print();
 };
 
 class NExpCall : public NExp
 {
 public:
-    NExpCall(NName *n, LArgs *l);
+    NExpCall(NName *n, NArg *a);
+    ~NExpCall();
     virtual void print();
+
+private:
+    NName *name;
+    NArg *args;
 };
 
 class NExpRead : public NExp
 {
 public:
-    NExpRead(NKeyword *k);
+    NExpRead();
     virtual void print();
 };
 
@@ -94,14 +99,23 @@ class NExpNewExp : public NExp
 {
 public:
     NExpNewExp(NNewExp *ne);
+    ~NExpNewExp();
     virtual void print();
+
+private:
+    NNewExp *newExp;
 };
 
 class NPrefixExp : public NExp
 {
 public:
     NPrefixExp(NOperator *o, NExp *e);
+    ~NPrefixExp();
     virtual void print();
+
+private:
+    NOperator *op;
+    NExp *exp;
 };
 
 class NInfixExp : public NExp
@@ -121,7 +135,11 @@ class NParenExp : public NExp
 {
 public:
     NParenExp(NExp *inner);
+    ~NParenExp();
     virtual void print();
+
+private:
+    NExp *in;
 };
 
 class NNameExp : public NName

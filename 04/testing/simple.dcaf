@@ -24,5 +24,13 @@ class foo {
             return 2;
         else
             return 5;
+        
+        b = null;
+
+        c = 1 + ( 2 * 3 );
+
+        a = call(1, 2);
+
+        d = !1;
     }
 }

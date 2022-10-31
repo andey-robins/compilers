@@ -438,6 +438,7 @@ name:
     }
 ;
 
+ // TODO for some reason not printing all args in an arglist
 argList:
     expression argListStar {
         if ($2->getText() != "epsilon")
@@ -509,52 +510,60 @@ expression:
         NOperator *op = new NOperator("||");
         $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
     }
-|   term {
-        // TODO remove
-        $$ = $1;
+|   term
+;
+
+rterm:
+    term TIMES term {
+        NOperator *op = new NOperator("*");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term DIV term {
+        NOperator *op = new NOperator("/");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term MOD term {
+        NOperator *op = new NOperator("%");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term AND term {
+        NOperator *op = new NOperator("&&");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
     }
 ;
 
- // TODO rterms
-rterm:
-    term TIMES term
-|   term DIV term
-|   term MOD term
-|   term AND term
-;
-
- // TODO terms
 term:
     rterm
 |   factor
 ;
 
- // TODO factors
 factor:
-    // currently no unary ops, but otherwise all correct
+    // currently no unary ops, but otherwise all working
     NOT factor {
-        // TODO wrap in prefixEpx
-        $$ = $2;
+        NOperator *op = new NOperator("!");
+        $$ = new NPrefixExp(op, static_cast<NExp *>($2));
     }
 |   name %prec "shift" {
         $$ = $1;
     }
-|   LPAREN expression RPAREN
+|   LPAREN expression RPAREN {
+        $$ = new NParenExp(static_cast<NExp *>($2));
+    }
 |   NUMBER {
         int i = atoi($1->getText().c_str());
         $$ = new NNumber(i);
     }
 |   NULLT {
-        $$ = new NKeyword("null");
+        $$ = new NExpNull();
     }
 |   name LPAREN argList RPAREN {
-        // TODO
+        $$ = new NExpCall(static_cast<NName *>($1), static_cast<NArg *>($3));
     }
 |   READ LPAREN RPAREN {
-        // TODO
+        $$ = new NExpRead();
     }
 |   newExpression {
-        // TODO
+        $$ = new NExpNewExp(static_cast<NNewExp *>($1));
     }
 ;
 
