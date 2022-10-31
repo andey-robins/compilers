@@ -12,12 +12,10 @@
 #include <FlexLexer.h>
 #include <string>
 #include <typeinfo>
-#include "nodes/include/nodes.hpp"
+#include "nodes.hpp"
 #define YYERROR_VERBOSE
 
 using std::cerr;
-using std::cout;
-using std::endl;
 
 class BaseNode;
 extern BaseNode *ast;
@@ -62,13 +60,23 @@ program:
         ast = new NProgram(static_cast<NClassDecl *>($1));
         $$ = ast;
     }
+|   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
+|   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
+|   error SEMI { yyerror("err: syntax error in line"); }
 ;
 
 classDeclarations:
-    CLASS ID classBody {
+    CLASS ID classBody classDeclarations {
+        NId *id = new NId($2->getText());
+        NClassDecl *cls = new NClassDecl(id, static_cast<NClassBody *>($3));
+        cls->setNext(static_cast<NClassDecl *>($4));
+        $$ = cls;
+    }
+|   CLASS ID classBody {
         NId *id = new NId($2->getText());
         $$ = new NClassDecl(id, static_cast<NClassBody *>($3));
     }
+|   error { yyerror("err: bad class declaration"); }
 ;
 
 classBody:
@@ -90,6 +98,7 @@ classBody:
             $$ = new NClassBody(derivedMeth);
         }
     }
+|   error { yyerror("err: bad class body. check declarations"); }
 ;
 
 varDeclHeaderChoice:
@@ -132,15 +141,11 @@ varDeclHeaderChoice:
         $$ = curr;
     }
     
-|   constDeclHeaderChoice { 
-        cout << "done with vardecls" << endl;
-        $$ = $1; 
-    }
+|   constDeclHeaderChoice
 ;
 
 constDeclHeaderChoice:
     ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        cout << "to constDeclHeaderChoice" << endl;
         NId *id = new NId($1->getText());
         NConstDecl *curr;
         if ($3->getText() == "epsilon") 
@@ -161,7 +166,6 @@ constDeclHeaderChoice:
 
 methDeclHeaderChoice:
     VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        cout << "at meth decl 1" << endl;
         NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("void");
         NSimpleType *st = new NSimpleType(key);
@@ -172,7 +176,6 @@ methDeclHeaderChoice:
         $$ = method;
     }
 |   INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        cout << "at meth decl 2" << endl;
         int bracks = static_cast<NType*>($2)->getBracks();
         NId *id = new NId($3->getText());
         NKeyword *intId = new NKeyword("int");
@@ -185,7 +188,6 @@ methDeclHeaderChoice:
         $$ = method;
     }
 |   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        cout << "at meth decl 3" << endl;
         int bracks = static_cast<NType*>($2)->getBracks();
         NId *id = new NId($3->getText());
         NId *intId = new NId($1->getText());
@@ -198,7 +200,6 @@ methDeclHeaderChoice:
         $$ = method;
     }
 |   INT ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        cout << "at meth decl 4" << endl;
         NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
@@ -209,7 +210,6 @@ methDeclHeaderChoice:
         $$ = method;
     }
 |   ID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        cout << "at meth decl 5" << endl;
         NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
@@ -220,7 +220,6 @@ methDeclHeaderChoice:
         $$ = method;
     }
 |   RBRACE {
-        cout << "at rbrace" << endl;
         $$ = new NEpsilon();
     }
 ;
@@ -246,7 +245,6 @@ type:
 
 parameterList:
     parameter parameterListStar {
-        cout << "at parameterlist" << endl;
         if ($2->getText() != "epsilon")
         {
             $1->setNext($2);
@@ -260,7 +258,6 @@ parameterList:
 
 parameterListStar:
     COMMA parameter parameterListStar {
-        cout << "to param list star" << endl;
         if ($3->getText() != "epsilon")
         {
             $2->setNext($3);
@@ -269,19 +266,16 @@ parameterListStar:
         $$ = static_cast<NParam *>($2);
     }
 |   /* epsilon */ {
-        cout << "to param list star epsilon" << endl;
         $$ = new NEpsilon();
     }
 
 parameter:
     type ID {
-        cout << "to param" << endl;
         NId *id = new NId($2->getText());
         NParam *param = new NParam(static_cast<NType *>($1), id);
         $<ttype>$ = param;
     }
 |   INT ID {
-        cout << "to param 2" << endl;
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
@@ -290,7 +284,6 @@ parameter:
         $$ = param;
     }
 |   ID ID {
-        cout << "to param 3" << endl;
         NId *idOne = new NId($1->getText());
         NId *idTwo = new NId($2->getText());
         NSimpleType *st = new NSimpleType(idOne);
@@ -319,6 +312,7 @@ block:
             $$ = derivedEpsilon;
         }
     }
+|   error { yyerror("err: error detected within block"); }
 ;
 
 blockHeadChoice:

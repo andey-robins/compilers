@@ -23,8 +23,8 @@ BISONFLAGS=-d
 # BUILD #
 #########
 
-program4: program4.cpp program4_lex.cpp nodes/src/*.cpp
-	$(CXX) $(CXXFLAGS) *.cpp nodes/src/*.cpp -o program4
+program4: program4.cpp program4_lex.cpp *.cpp
+	$(CXX) $(CXXFLAGS) *.cpp -o program4
 
 program4_lex.cpp: program4.lpp program4.tab.cpp
 	$(LEX) $(LEXFLAGS) program4.lpp
@@ -53,4 +53,4 @@ test: program4
 	./program4 < testing/simple.dcaf
 
 tar: clean
-	tar -zcf program4.tgz Makefile program4.cpp program4.hpp program4.lpp program4.ypp nodes/*
+	tar -zcf program4.tgz Makefile program4.cpp program4.hpp program4.lpp program4.ypp block.* declarations.* expressions.* leaves.* name.* node-base.* nodes.hpp parameters.* statements.* struct.* type.hpp types.cpp

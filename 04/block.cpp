@@ -7,7 +7,7 @@
  *
  */
 
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 NBlock::NBlock(NLocalVarDecl *vd)
 {

@@ -1,8 +1,4 @@
-/* 
- * This is a basic input file for the 4th program that will be their compiler.
- * It does not test everything just has a single class with a constructor and
- * a method
- */
+
 
 class foo {
 

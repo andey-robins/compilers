@@ -7,7 +7,7 @@
  *
  */
 
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 NProgram::NProgram(NClassDecl *cd)
 {

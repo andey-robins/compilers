@@ -1,7 +1,4 @@
-/* vim: filetype=java
- * This is a bigger input file for the 4th program that will be their compiler.
- * It tests quite a bit.
- */
+
 
 class foo {
 

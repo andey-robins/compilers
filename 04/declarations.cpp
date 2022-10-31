@@ -7,7 +7,7 @@
  *
  */
 
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 NClassDecl::NClassDecl(NId *id, NClassBody *cb)
 {

@@ -7,7 +7,7 @@
  *
  */
 
-#include "../include/nodes.hpp"
+#include "nodes.hpp"
 
 NStateAssign::NStateAssign(NName *n, NExp *e)
 {
