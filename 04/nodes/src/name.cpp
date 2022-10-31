@@ -73,6 +73,7 @@ void NNameId::print()
     {
         this->be->print();
     }
+    cout << endl;
     indentation--;
 }
 
@@ -89,6 +90,7 @@ void NNameDotId::print()
          << endl;
     indentation++;
     this->id->print();
+    cout << endl;
     this->next->print();
     indentation--;
 }

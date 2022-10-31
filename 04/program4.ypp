@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression newExpTypes bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
@@ -73,7 +73,6 @@ classDeclarations:
 
 classBody:
     LBRACE varDeclHeaderChoice {
-        // TODO check if we only got back an epsilon for an empty body
         auto *derivedVar = dynamic_cast<NVarDecl *>($2);
         auto *derivedConst = dynamic_cast<NConstDecl *>($2);
         auto *derivedMeth = dynamic_cast<NMethDecl *>($2);
@@ -89,11 +88,6 @@ classBody:
         else if (derivedMeth) 
         {
             $$ = new NClassBody(derivedMeth);
-        }
-        else
-        {
-            // TODO remove
-            cout << "Oh noes" << endl;
         }
     }
 ;
@@ -162,10 +156,7 @@ constDeclHeaderChoice:
         curr->setNext($6);
         $$ = curr;
     }
-|   methDeclHeaderChoice { 
-        // TODO remove
-        $$ = $1; 
-    }
+|   methDeclHeaderChoice
 ;
 
 methDeclHeaderChoice:
@@ -326,11 +317,6 @@ block:
         else if (derivedEpsilon)
         {
             $$ = derivedEpsilon;
-        }
-        else
-        {
-            // TODO remove
-            cout << "Oh noes 2" << endl;
         }
     }
 ;
@@ -567,48 +553,54 @@ factor:
     }
 ;
 
- // TODO newepxs
 newExpression:
     NEW ID LPAREN argList RPAREN {
-        // TODO
+        NId *id = new NId($2->getText());
+        $$ = new NNewExpIdArgs(id, static_cast<NArg *>($4));
     }
 |   NEW newExpTypes {
-        // TODO
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2));
     }
 |   NEW newExpTypes bracks {
-        // TODO
+        int bracks = static_cast<NType *>($3)->getBracks();
+        NBracks *brackNode = new NBracks(bracks);
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2), brackNode);
     }
 |   NEW newExpTypes brackExp {
-        // TODO
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3));
     }
 |   NEW newExpTypes brackExp bracks {
-        // TODO
+        int bracks = static_cast<NType *>($4)->getBracks();
+        NBracks *brackNode = new NBracks(bracks);
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3), brackNode);
     }
 ;
 
- // TODO newexptyeps
 newExpTypes:
     ID %prec "reduce" {
-        // TODO
+        NId *id = new NId($1->getText());
+        $$ = new NSimpleType(id);
     }
 |   INT {
-        // TODO
+        NKeyword *intKey = new NKeyword("int");
+        $$ = new NSimpleType(intKey);
     }
 ;
 
- // TODO brackexp
 brackExp:
     LBRACKET expression RBRACKET brackExp {
-
+        NBrackExps *curr = new NBrackExps(static_cast<NExp *>($2));
+        curr->setNext(static_cast<NBrackExps *>($4));
+        $$ = curr;
     }
 |   LBRACKET expression RBRACKET {
-
+        $$ = new NBrackExps(static_cast<NExp *>($2));
     }
 ;
 
 bracks:
     LBRACKET RBRACKET bracks {
-        $$ = new NType(0, static_cast<NType*>($3)->getBracks()+1);
+        $$ = new NType(0, static_cast<NType *>($3)->getBracks()+1);
     }
 |   LBRACKET RBRACKET {
         $$ = new NType(0, 1);

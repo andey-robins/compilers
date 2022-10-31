@@ -12,12 +12,19 @@
 NSimpleType::NSimpleType(NKeyword *k)
 {
     this->next = k;
+    this->type = k->getText();
 }
 
 NSimpleType::NSimpleType(NId *id)
 {
     this->next = id;
     this->isId = true;
+    this->type = "ID";
+}
+
+string NSimpleType::getType()
+{
+    return this->type;
 }
 
 void NSimpleType::print()
@@ -42,6 +49,7 @@ void NSimpleType::print()
 NType::NType(NSimpleType *st)
 {
     this->next = st;
+    this->type = st->getType();
 }
 
 NType::NType(NType *t, int bracks)
@@ -53,6 +61,11 @@ NType::NType(NType *t, int bracks)
 int NType::getBracks()
 {
     return this->brackCount;
+}
+
+string NType::getType()
+{
+    return this->type;
 }
 
 void NType::print()
@@ -99,8 +112,4 @@ NEpsilon::NEpsilon()
 
 void NEpsilon::print()
 {
-    // TODO remove this
-    cout << string(indentation * 2, ' ')
-         << "epsilon"
-         << endl;
 }

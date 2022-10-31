@@ -23,7 +23,14 @@ void BaseNode::setNext(BaseNode *n)
 {
     if (n)
     {
-        this->next = n;
+        if (this->next)
+        {
+            this->next->setNext(n);
+        }
+        else
+        {
+            this->next = n;
+        }
     }
     else
     {
@@ -55,6 +62,4 @@ string BaseNode::getText()
 
 void BaseNode::print()
 {
-    // TODO remove this
-    cout << "print not extended" << endl;
 }

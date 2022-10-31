@@ -18,8 +18,7 @@ void NId::print()
 {
     cout << string(indentation * 2, ' ')
          << "ID --> "
-         << this->text
-         << endl;
+         << this->text;
 }
 
 NKeyword::NKeyword(string key)

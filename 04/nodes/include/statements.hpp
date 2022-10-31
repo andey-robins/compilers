@@ -14,13 +14,6 @@
 
 class NBlock;
 
-class LStatements : public BaseList
-{
-public:
-    LStatements();
-    virtual void print();
-};
-
 class NStatement : public BaseNode
 {
 };
@@ -47,13 +40,6 @@ public:
 private:
     NName *name;
     NArg *args;
-};
-
-class NStatePrint : public NStatement
-{
-public:
-    NStatePrint(LArgs *a);
-    virtual void print();
 };
 
 class NStateWhile : public NStatement

@@ -32,5 +32,9 @@ class foo {
         a = call(1, 2);
 
         d = !1;
+
+        e = new b[];
+
+        d = new e[1];
     }
 }

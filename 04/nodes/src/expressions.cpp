@@ -249,3 +249,89 @@ void NPrefixExp::print()
         this->next->print();
     }
 }
+
+NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes, NBracks *bs)
+{
+    this->t = s;
+    this->bes = bes;
+    this->bs = bs;
+}
+
+NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes)
+{
+    this->t = s;
+    this->bes = bes;
+    this->bs = 0;
+}
+
+NNewExpType::NNewExpType(NSimpleType *s, NBracks *bs)
+{
+    this->t = s;
+    this->bes = 0;
+    this->bs = bs;
+}
+
+NNewExpType::NNewExpType(NSimpleType *s)
+{
+    this->t = s;
+    this->bes = 0;
+    this->bs = 0;
+}
+
+NNewExpType::~NNewExpType()
+{
+    delete this->t;
+    delete this->bes;
+    delete this->bs;
+}
+
+void NNewExpType::print()
+{
+    cout << string(indentation * 2, ' ')
+         << "<newexp> --> NEW <type>"
+         << endl;
+    indentation++;
+    static_cast<NSimpleType *>(this->t)->print();
+    if (this->bes)
+    {
+        this->bes->print();
+    }
+    if (this->bs)
+    {
+        this->bs->print();
+    }
+    cout << endl;
+    indentation--;
+    if (this->next)
+    {
+        this->next->print();
+    }
+}
+
+NNewExpIdArgs::NNewExpIdArgs(NId *i, NArg *a)
+{
+    this->id = i;
+    this->args = a;
+}
+
+NNewExpIdArgs::~NNewExpIdArgs()
+{
+    delete this->id;
+    delete this->args;
+}
+
+void NNewExpIdArgs::print()
+{
+    cout << string(indentation * 2, ' ')
+         << "<newexp> --> NEW ID ( <arglist> )"
+         << endl;
+    indentation++;
+    this->id->print();
+    cout << endl;
+    this->args->print();
+    indentation--;
+    if (this->next)
+    {
+        this->next->print();
+    }
+}

@@ -19,15 +19,29 @@ class NNewExp : public BaseNode
 class NNewExpIdArgs : public NNewExp
 {
 public:
-    NNewExpIdArgs(NId *i, LArgs *l);
+    NNewExpIdArgs(NId *i, NArg *a);
+    ~NNewExpIdArgs();
     virtual void print();
+
+private:
+    NId *id;
+    NArg *args;
 };
 
 class NNewExpType : public NNewExp
 {
 public:
-    NNewExpType(NSimpleType *s, LBrackExps *be, LBracks *b);
+    NNewExpType(NSimpleType *s, NBrackExps *bes, NBracks *bs);
+    NNewExpType(NSimpleType *s, NBrackExps *bes);
+    NNewExpType(NSimpleType *s, NBracks *bs);
+    NNewExpType(NSimpleType *s);
+    ~NNewExpType();
     virtual void print();
+
+private:
+    NSimpleType *t;
+    NBrackExps *bes;
+    NBracks *bs;
 };
 
 // ^^^

@@ -14,13 +14,6 @@
 
 class NExp;
 
-class LParams : public BaseList
-{
-public:
-    LParams();
-    virtual void print();
-};
-
 class NParams : public BaseNode
 {
 public:
@@ -39,13 +32,6 @@ private:
     NId *id;
 };
 
-class LArgs : public BaseList
-{
-public:
-    LArgs();
-    virtual void print();
-};
-
 class NArg : public BaseNode
 {
 public:
@@ -57,25 +43,27 @@ private:
     NExp *e;
 };
 
-class LBracks : public BaseList
+class NBracks : public BaseNode
 {
 public:
-    LBracks();
+    NBracks(int count);
+    int getCount();
     virtual void print();
+
+private:
+    int count;
 };
 
-class LBrackExps : public LBracks
-{
-public:
-    LBrackExps();
-    virtual void print();
-};
-
+// Subsequent bracket expressions should be in this->next
 class NBrackExps : public BaseNode
 {
 public:
-    NBrackExps();
+    NBrackExps(NExp *e);
+    ~NBrackExps();
     virtual void print();
+
+private:
+    NExp *exp;
 };
 
 #endif

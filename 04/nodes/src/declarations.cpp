@@ -28,6 +28,7 @@ void NClassDecl::print()
          << endl;
     indentation++;
     this->className->print();
+    cout << endl;
     this->classBody->print();
     indentation--;
 }
@@ -88,6 +89,7 @@ void NConstDecl::print()
              << endl;
         indentation++;
         this->id->print();
+        cout << endl;
         this->block->print();
         indentation -= 2;
     }
@@ -98,6 +100,7 @@ void NConstDecl::print()
              << endl;
         indentation++;
         this->id->print();
+        cout << endl;
         cout << string(indentation * 2, ' ')
              << "<paramlist> --> <param>"
              << endl;
@@ -137,6 +140,7 @@ void NMethDecl::print()
         indentation++;
         this->resType->print();
         this->id->print();
+        cout << endl;
         this->block->print();
         indentation -= 2;
     }
@@ -148,6 +152,7 @@ void NMethDecl::print()
         indentation++;
         this->resType->print();
         this->id->print();
+        cout << endl;
         cout << string(indentation * 2, ' ')
              << "<paramlist> --> <param>"
              << endl;

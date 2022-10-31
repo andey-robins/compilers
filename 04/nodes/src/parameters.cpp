@@ -23,6 +23,7 @@ void NParam::print()
     indentation++;
     this->type->print();
     this->id->print();
+    cout << endl;
     indentation--;
     if (this->next)
     {
@@ -52,4 +53,50 @@ void NArg::print()
     {
         this->next->print();
     }
+}
+
+NBracks::NBracks(int count)
+{
+    this->count = count;
+}
+
+int NBracks::getCount()
+{
+    return this->count;
+}
+
+void NBracks::print()
+{
+    for (int i = 0; i < this->count; i++)
+    {
+        cout << " []";
+    }
+    cout << endl;
+    if (this->next)
+    {
+        this->next->print();
+    }
+}
+
+NBrackExps::NBrackExps(NExp *e)
+{
+    this->exp = e;
+}
+
+NBrackExps::~NBrackExps()
+{
+    delete this->exp;
+}
+
+void NBrackExps::print()
+{
+    cout << " [<exp>]";
+    if (this->next)
+    {
+        this->next->print();
+    }
+    cout << endl;
+    indentation++;
+    this->exp->print();
+    indentation--;
 }

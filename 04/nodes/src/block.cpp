@@ -21,9 +21,6 @@ NBlock::NBlock(NStatement *s)
 
 void NBlock::print()
 {
-    // TODO
-    // cout << "TODO write print for blocks" << endl;
-
     cout << string(indentation * 2, ' ')
          << "<block> --> { <localvardecs>* <statements>* }"
          << endl;
@@ -70,7 +67,12 @@ void NVarDecl::print()
          << endl;
     indentation++;
     this->type->print();
+    if (this->type->getType() == "ID")
+    {
+        cout << endl;
+    }
     static_cast<NId *>(this->id)->print();
+    cout << endl;
     indentation -= 2;
     // expand the <vardecs> nonterminal
     if (this->next)
