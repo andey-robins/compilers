@@ -312,6 +312,7 @@ block:
     LBRACE blockHeadChoice {
         auto *derivedLocalVars = dynamic_cast<NLocalVarDecl *>($2);
         auto *derivedStatements = dynamic_cast<NStatement *>($2);
+        auto *derivedEpsilon = dynamic_cast<NEpsilon *>($2);
 
         if (derivedLocalVars)
         {
@@ -320,6 +321,10 @@ block:
         else if (derivedStatements)
         {
             $$ = new NBlock(derivedStatements);
+        }
+        else if (derivedEpsilon)
+        {
+            $$ = derivedEpsilon;
         }
         else
         {
@@ -359,7 +364,8 @@ blockStatementChoice:
 
 localVarDeclaration:
     type ID SEMI {
-        // $$ = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
+        NId *id = new NId($2->getText());
+        $$ = new NVarDecl(static_cast<NType *>($1), id);
     }
 |   INT ID SEMI {
         NId *id = new NId($2->getText());
@@ -380,7 +386,9 @@ localVarDeclaration:
 ;
 
 statement:
-    SEMI {}
+    SEMI {
+        $$ = new NEpsilon();
+    }
 |   thisName ASSIGN expression SEMI {
         // TODO
     }
