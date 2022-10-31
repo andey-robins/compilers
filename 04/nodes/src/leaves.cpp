@@ -29,5 +29,5 @@ NKeyword::NKeyword(string key)
 
 void NKeyword::print()
 {
-    cout << "i'm a keyword" << endl;
+    cout << this->text << endl;
 }

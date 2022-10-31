@@ -4,7 +4,18 @@ class foo {
 
     foo()
     {
-        // int a;
-        // this.a = 5;
+        //int a;
+        //this.a = 5;
+    }
+
+    int baz()
+    {
+        
+    }
+
+    int boo(int a, int b)
+    {
+        // b=a;
+        // return 1;
     }
 }

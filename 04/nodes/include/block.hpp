@@ -3,17 +3,29 @@
 
 #include "statements.hpp"
 
-class LLocalVarDecl : public BaseList
+class NVarDecl : public BaseNode
 {
 public:
-    LLocalVarDecl();
+    NVarDecl(NType *t, NId *id);
+    ~NVarDecl();
     virtual void print();
+
+private:
+    NType *type;
+    NId *id;
+};
+
+class NLocalVarDecl : public BaseNode
+{
+public:
+    NLocalVarDecl(NVarDecl *vd);
 };
 
 class NBlock : public BaseNode
 {
 public:
-    NBlock(LLocalVarDecl *lvd, LStatements *s);
+    NBlock(NLocalVarDecl *vd);
+    NBlock(NStatement *s);
     virtual void print();
 };
 

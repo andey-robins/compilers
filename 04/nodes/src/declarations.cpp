@@ -68,43 +68,6 @@ void NClassBody::print()
     indentation--;
 }
 
-NVarDecl::NVarDecl(NType *t, NId *id)
-{
-    this->type = t;
-    this->id = id;
-}
-
-NVarDecl::~NVarDecl()
-{
-    delete this->type;
-    delete this->id;
-
-    if (this->next)
-    {
-        delete this->next;
-    }
-}
-
-void NVarDecl::print()
-{
-    cout << string(indentation * 2, ' ')
-         << "<vardecs> --> <vardecs> <vardec>"
-         << endl;
-    indentation++;
-    cout << string(indentation * 2, ' ')
-         << "<vardec> --> <type> ID SEMI"
-         << endl;
-    indentation++;
-    this->type->print();
-    static_cast<NId *>(this->id)->print();
-    indentation -= 2;
-    // expand the <vardecs> nonterminal
-    if (this->next)
-    {
-        this->next->print();
-    }
-}
-
 NConstDecl::NConstDecl(NId *id, NParam *p, NBlock *b)
 {
     this->id = id;
@@ -152,12 +115,52 @@ void NConstDecl::print()
     }
 }
 
-NMethDecl::NMethDecl(NResultType *rt, NId *id, LParams *p, NBlock *b)
+NMethDecl::NMethDecl(NResultType *rt, NId *id, NParam *p, NBlock *b)
 {
-    // TODO
+    this->resType = rt;
+    this->id = id;
+    this->params = p;
+    this->block = b;
 }
 
 void NMethDecl::print()
 {
-    cout << "Todo NMethDecl" << endl;
+    cout << string(indentation * 2, ' ')
+         << "<methdecs> --> <methdecs> <methdec>"
+         << endl;
+    indentation++;
+    if (this->params->getText() == "epsilon")
+    {
+        cout << string(indentation * 2, ' ')
+             << "<methdec> --> <resulttype> ID () <block>"
+             << endl;
+        indentation++;
+        this->resType->print();
+        this->id->print();
+        this->block->print();
+        indentation -= 2;
+    }
+    else
+    {
+        cout << string(indentation * 2, ' ')
+             << "<methdec> --> <resulttype> ID ( <params> ) <block>"
+             << endl;
+        indentation++;
+        this->resType->print();
+        this->id->print();
+        cout << string(indentation * 2, ' ')
+             << "<paramlist> --> <param>"
+             << endl;
+        indentation++;
+        this->params->print();
+        indentation--;
+        this->block->print();
+        indentation -= 2;
+    }
+
+    // expand the <constdecs> nonterminal
+    if (this->next)
+    {
+        this->next->print();
+    }
 }

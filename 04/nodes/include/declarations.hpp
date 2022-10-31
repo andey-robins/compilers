@@ -12,18 +12,6 @@
 
 #include "block.hpp"
 
-class NVarDecl : public BaseNode
-{
-public:
-    NVarDecl(NType *t, NId *id);
-    ~NVarDecl();
-    virtual void print();
-
-private:
-    NType *type;
-    NId *id;
-};
-
 class NConstDecl : public BaseNode
 {
 public:
@@ -39,8 +27,14 @@ private:
 class NMethDecl : public BaseNode
 {
 public:
-    NMethDecl(NResultType *rt, NId *id, LParams *p, NBlock *b);
+    NMethDecl(NResultType *rt, NId *id, NParam *p, NBlock *b);
     virtual void print();
+
+private:
+    NResultType *resType;
+    NId *id;
+    NParam *params;
+    NBlock *block;
 };
 
 class NClassBody : public BaseNode

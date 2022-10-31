@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor block
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor block blockHeadChoice
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
@@ -161,41 +161,106 @@ constDeclHeaderChoice:
         curr->setNext($6);
         $$ = curr;
     }
-|   methDeclHeaderChoice { $$ = $1; }
+|   methDeclHeaderChoice { 
+        $$ = $1; 
+    }
 ;
 
 methDeclHeaderChoice:
     VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        
+        cout << "at meth decl 1" << endl;
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("void");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        method->setNext($7);
+        $$ = method;
     }
 |   INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-
+        cout << "at meth decl 2" << endl;
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($3->getText());
+        NKeyword *intId = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(intId);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($5), static_cast<NBlock *>($7));
+        method->setNext($8);
+        $$ = method;
     }
 |   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
-
+        cout << "at meth decl 3" << endl;
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($3->getText());
+        NId *intId = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(intId);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($5), static_cast<NBlock *>($7));
+        method->setNext($8);
+        $$ = method;
+    }
+|   INT ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        cout << "at meth decl 4" << endl;
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        method->setNext($7);
+        $$ = method;
+    }
+|   ID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        cout << "at meth decl 5" << endl;
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        method->setNext($7);
+        $$ = method;
     }
 |   RBRACE {
+        cout << "at rbrace" << endl;
         $$ = new NEpsilon();
     }
 ;
 
 type:
     INT bracks {
-        // TODO
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        $$ = type;
     }
 |   ID bracks {
-        // TODO
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(id);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        $$ = type;
     }
 ;
 
 parameterList:
     parameter parameterListStar {
-        cout << "to param list" << endl;
-        $1->setNext($2);
-        $$ = $1;
+        cout << "at parameterlist" << endl;
+        if ($2->getText() != "epsilon")
+        {
+            $1->setNext($2);
+        }
+        $$ = static_cast<NParam *>($1);
     }
 |   /* epsilon */ {
-        cout << "to param list epsilon" << endl;
         $$ = new NEpsilon();
     }
 ;
@@ -203,8 +268,12 @@ parameterList:
 parameterListStar:
     COMMA parameter parameterListStar {
         cout << "to param list star" << endl;
-        $2->setNext($3);
-        $$ = $2;
+        if ($3->getText() != "epsilon")
+        {
+            $2->setNext($3);
+
+        }
+        $$ = static_cast<NParam *>($2);
     }
 |   /* epsilon */ {
         cout << "to param list star epsilon" << endl;
@@ -215,29 +284,75 @@ parameter:
     type ID {
         cout << "to param" << endl;
         NId *id = new NId($2->getText());
-        $$ = new NParam(static_cast<NType *>($1), id);
+        NParam *param = new NParam(static_cast<NType *>($1), id);
+        $<ttype>$ = param;
+    }
+|   INT ID {
+        cout << "to param 2" << endl;
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NId *id = new NId($2->getText());
+        NParam *param = new NParam(type, id);
+        $$ = param;
+    }
+|   ID ID {
+        cout << "to param 3" << endl;
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
+        NType *type = new NType(st);
+        NParam *param = new NParam(type, idTwo);
+        $$ = param;
     }
 ;
 
 block:
     LBRACE blockHeadChoice {
-        // TODO
+        auto *derivedLocalVars = dynamic_cast<NLocalVarDecl *>($2);
+        auto *derivedStatements = dynamic_cast<NStatement *>($2);
+
+        if (derivedLocalVars)
+        {
+            $$ = new NBlock(derivedLocalVars);
+        }
+        else if (derivedStatements)
+        {
+            $$ = new NBlock(derivedStatements);
+        }
+        else
+        {
+            // TODO remove
+            cout << "Oh noes" << endl;
+        }
     }
 ;
 
 blockHeadChoice:
-    // TODO, split to avoid vardecls after statement decls
-    localVarDeclaration blockHeadChoice {
+    localVarDeclaration blockStatementChoice {
+        // NLocalVarDecl
+    }
+|   blockStatementChoice {
 
     }
-|   statement blockHeadChoice {
+;
+
+blockStatementChoice:
+    statement blockHeadChoice {
         // done w/ local var decls
     }
 |   RBRACE {}
+;
 
 localVarDeclaration:
     type ID SEMI {
         // $$ = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
+    }
+|   INT ID SEMI {
+
+    }
+|   ID ID SEMI {
+
     }
 ;
 

@@ -42,6 +42,10 @@ public:
     NResultType(NType *t);
     NResultType(NKeyword *k);
     virtual void print();
+
+private:
+    NType *type;
+    NKeyword *voidType;
 };
 
 class NEpsilon : public BaseNode

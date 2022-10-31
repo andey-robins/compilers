@@ -25,7 +25,8 @@ void NSimpleType::print()
     if (this->isId)
     {
         cout << string(indentation * 2, ' ')
-             << "<type> -> ID";
+             << "<type> -> ID"
+             << endl;
         indentation++;
         this->next->print();
         indentation--;
@@ -58,6 +59,37 @@ void NType::print()
 {
     // Todo handle printing brackets
     this->next->print();
+}
+
+NResultType::NResultType(NType *t)
+{
+    this->type = t;
+    this->voidType = 0;
+}
+
+NResultType::NResultType(NKeyword *k)
+{
+    this->voidType = k;
+    this->type = 0;
+}
+
+void NResultType::print()
+{
+    if (this->type)
+    {
+        cout << string(indentation * 2, ' ')
+             << "<resultype> --> <type>"
+             << endl;
+        indentation++;
+        this->type->print();
+        indentation--;
+    }
+    else
+    {
+        cout << string(indentation * 2, ' ')
+             << "<resultype> --> ";
+        this->voidType->print();
+    }
 }
 
 NEpsilon::NEpsilon()
