@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor block blockHeadChoice blockStatementChoice
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
@@ -56,6 +56,7 @@ void yyerror(const char* string);
 
 %%
 
+ // TODO add in errors
 program:
     classDeclarations { 
         ast = new NProgram(static_cast<NClassDecl *>($1));
@@ -335,26 +336,16 @@ block:
 ;
 
 blockHeadChoice:
-    localVarDeclaration blockStatementChoice {
-        if ($2->getText() != "epsilon")
-        {
-            $1->setNext($2);
-        }
-
-        $<ttype>$ = $1;
-    }
-|   blockStatementChoice {
-        // TODO remove
+    localVarDeclaration blockHeadChoice {
+        $1->setNext($2);
         $$ = $1;
     }
+|   blockStatementChoice
 ;
 
 blockStatementChoice:
-    statement blockHeadChoice {
-        if ($2->getText() != "epsilon")
-        {
-            $1->setNext($2);
-        }
+    statement blockStatementChoice {
+        $1->setNext($2);
         $$ = $1;
     }
 |   RBRACE {
@@ -365,7 +356,8 @@ blockStatementChoice:
 localVarDeclaration:
     type ID SEMI {
         NId *id = new NId($2->getText());
-        $$ = new NVarDecl(static_cast<NType *>($1), id);
+        NVarDecl *var = new NVarDecl(static_cast<NType *>($1), id);
+        $$ = new NLocalVarDecl(var);
     }
 |   INT ID SEMI {
         NId *id = new NId($2->getText());
@@ -389,83 +381,141 @@ statement:
     SEMI {
         $$ = new NEpsilon();
     }
-|   thisName ASSIGN expression SEMI {
-        // TODO
+|   name ASSIGN expression SEMI {
+        $$ = new NStateAssign(static_cast<NName *>($1), static_cast<NExp *>($3));
     }
-|   thisName LPAREN argList RPAREN SEMI {
-        // TODO
+|   name LPAREN argList RPAREN SEMI {
+        $$ = new NStateCall(static_cast<NName *>($1), static_cast<NArg *>($3));
     }
 |   PRINT LPAREN argList RPAREN SEMI {
-        // TODO
+        NId *printId = new NId("print");
+        NNameId *print = new NNameId(printId);
+        $$ = new NStateCall(print, static_cast<NArg *>($3));
     }
 |   conditionalStatement {
         // TODO
     }
 |   WHILE LPAREN expression RPAREN statement {
-        // TODO
+        $$ = new NStateWhile(static_cast<NExp *>($3), static_cast<NStatement *>($5));
     }
 |   RETURN expression SEMI {
-        // TODO
+        NOptExp *oe = new NOptExp(static_cast<NExp *>($2));
+        $$ = new NStateReturn(oe);
     }
 |   RETURN SEMI {
-        // TODO
+        NOptExp *oe = new NOptExp(); // None monad
+        $$ = new NStateReturn(oe);
     }
-|   block {
-        // TODO
-    }
-;
-
-thisName:
-    THIS name {
-
-    }
-|   name
+    // TODO fix this
+/* |   block {
+        $$ = static_cast<NBlock *>($1);
+    } */
 ;
 
 name:
     ID {
-        // TODO
+        NId *id = new NId($1->getText());
+        $$ = new NNameId(id);
     }
 |   ID DOT name {
-        // TODO
+        NId *id = new NId($1->getText());
+        $$ = new NNameDotId(id, static_cast<NName *>($3));
     }
 |   ID brackExp {
-        // TODO
+        NId *id = new NId($1->getText());
+        $$ = new NNameId(id, static_cast<NBrackExps *>($2));
+    }
+|   THIS DOT name {
+        $$ = new NNameThisDot(static_cast<NName *>($3));
+    }
+|   THIS brackExp {
+        NNameThis *name = new NNameThis();
+        name->setNext(static_cast<NBrackExps *>($2));
+        $$ = name;
+    }
+|   THIS {
+        $$ = new NNameThis();
     }
 ;
 
 argList:
-    expression argList {
-        // TODO
+    expression argListStar {
+        if ($2->getText() != "epsilon")
+        {
+            $1->setNext($2);
+        }
+        $$ = static_cast<NArg *>($1);
     }
 |   /* epsilon */ {
-        // $$ = new NEpsilon();
+        $$ = new NEpsilon();
     }
 ;
 
+argListStar:
+    COMMA expression argListStar {
+        if ($3->getText() != "epsilon")
+        {
+            $2->setNext($3);
+        }
+        $$ = static_cast<NArg *>($2);
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+
 conditionalStatement:
     IF LPAREN expression RPAREN statement {
-        // TODO
+        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NStatement *>($5));
     }
 |   IF LPAREN expression RPAREN statement ELSE statement {
-        // TODO
+        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NStatement *>($5), static_cast<NStatement *>($7));
     }
 ;
 
 expression:
-    expression EQ expression { }
-|   expression NE expression { }
-|   expression LT expression { }
-|   expression GT expression { }
-|   expression LE expression { }
-|   expression GE expression { }
-|   expression PLUS term
-|   expression MINUS term
-|   expression OR rterm
-|   term
-
+    expression EQ expression {
+        NOperator *op = new NOperator("==");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression NE expression {
+        NOperator *op = new NOperator("!=");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression LT expression {
+        NOperator *op = new NOperator("<");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression GT expression {
+        NOperator *op = new NOperator(">");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression LE expression {
+        NOperator *op = new NOperator("<=");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression GE expression {
+        NOperator *op = new NOperator(">=");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression PLUS term {
+        NOperator *op = new NOperator("+");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression MINUS term {
+        NOperator *op = new NOperator("-");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression OR rterm {
+        NOperator *op = new NOperator("||");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term {
+        // TODO remove
+        $$ = $1;
+    }
 ;
 
+ // TODO rterms
 rterm:
     term TIMES term
 |   term DIV term
@@ -473,27 +523,31 @@ rterm:
 |   term AND term
 ;
 
+ // TODO terms
 term:
     rterm
 |   factor
 ;
 
+ // TODO factors
 factor:
     // currently no unary ops, but otherwise all correct
-    NOT factor
-|   thisName %prec "shift" {
-        // TODO
+    NOT factor {
+        // TODO wrap in prefixEpx
+        $$ = $2;
     }
-|   LPAREN expression RPAREN {
-        // TODO
+|   name %prec "shift" {
+        $$ = $1;
     }
+|   LPAREN expression RPAREN
 |   NUMBER {
-        // TODO
+        int i = atoi($1->getText().c_str());
+        $$ = new NNumber(i);
     }
 |   NULLT {
-        // TODO
+        $$ = new NKeyword("null");
     }
-|   thisName LPAREN argList RPAREN {
+|   name LPAREN argList RPAREN {
         // TODO
     }
 |   READ LPAREN RPAREN {
@@ -504,6 +558,7 @@ factor:
     }
 ;
 
+ // TODO newepxs
 newExpression:
     NEW ID LPAREN argList RPAREN {
         // TODO
@@ -522,6 +577,7 @@ newExpression:
     }
 ;
 
+ // TODO newexptyeps
 newExpTypes:
     ID %prec "reduce" {
         // TODO
@@ -531,6 +587,7 @@ newExpTypes:
     }
 ;
 
+ // TODO brackexp
 brackExp:
     LBRACKET expression RBRACKET brackExp {
 

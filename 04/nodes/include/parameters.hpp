@@ -10,7 +10,9 @@
 #ifndef PARAMETERS_HPP
 #define PARAMETERS_HPP
 
-#include "name.hpp"
+#include "type.hpp"
+
+class NExp;
 
 class LParams : public BaseList
 {
@@ -44,6 +46,17 @@ public:
     virtual void print();
 };
 
+class NArg : public BaseNode
+{
+public:
+    NArg(NExp *e);
+    ~NArg();
+    virtual void print();
+
+private:
+    NExp *e;
+};
+
 class LBracks : public BaseList
 {
 public:
@@ -55,6 +68,13 @@ class LBrackExps : public LBracks
 {
 public:
     LBrackExps();
+    virtual void print();
+};
+
+class NBrackExps : public BaseNode
+{
+public:
+    NBrackExps();
     virtual void print();
 };
 

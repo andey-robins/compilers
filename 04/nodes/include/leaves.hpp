@@ -37,12 +37,24 @@ private:
 
 class NNumber : public BaseNode
 {
-    // TODO
+public:
+    NNumber(int n);
+    int getVal();
+    virtual void print();
+
+private:
+    int num;
 };
 
 class NOperator : public BaseNode
 {
-    // TODO
+public:
+    NOperator(string op);
+    string getOp();
+    virtual void print();
+
+private:
+    string op;
 };
 
 #endif

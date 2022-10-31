@@ -29,3 +29,27 @@ void NParam::print()
         this->next->print();
     }
 }
+
+NArg::NArg(NExp *e)
+{
+    this->e = e;
+}
+
+NArg::~NArg()
+{
+    delete this->e;
+}
+
+void NArg::print()
+{
+    cout << string(indentation * 2, ' ')
+         << "<arg> --> <expression>"
+         << endl;
+    indentation++;
+    this->e->print();
+    indentation--;
+    if (this->next)
+    {
+        this->next->print();
+    }
+}

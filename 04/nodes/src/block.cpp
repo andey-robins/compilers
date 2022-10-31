@@ -28,7 +28,17 @@ void NBlock::print()
          << "<block> --> { <localvardecs>* <statements>* }"
          << endl;
     indentation++;
-    this->next->print();
+    auto *derivedDecl = dynamic_cast<NLocalVarDecl *>(this->next);
+    auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
+
+    if (derivedDecl)
+    {
+        derivedDecl->print();
+    }
+    else
+    {
+        derivedStmt->print();
+    }
     indentation--;
 }
 
@@ -71,13 +81,19 @@ void NVarDecl::print()
 
 NLocalVarDecl::NLocalVarDecl(NVarDecl *vd)
 {
-    this->next = vd;
+    this->vd = vd;
 }
 
 void NLocalVarDecl::print()
 {
+    cout << string(indentation * 2, ' ')
+         << "<localvardec> --> <vardec>"
+         << endl;
+    indentation++;
+    this->vd->print();
+    indentation--;
     if (this->next)
     {
-        static_cast<NVarDecl *>(this->next)->print();
+        this->next->print();
     }
 }

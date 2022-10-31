@@ -10,7 +10,7 @@
 #ifndef NAME_HPP
 #define NAME_HPP
 
-#include "type.hpp"
+#include "parameters.hpp"
 
 class NName : public BaseNode
 {
@@ -23,18 +23,33 @@ public:
     virtual void print();
 };
 
+class NNameThisDot : public NName
+{
+public:
+    NNameThisDot(NName *next);
+    virtual void print();
+};
+
 class NNameId : public NName
 {
 public:
     NNameId(NId *id);
+    NNameId(NId *id, NBrackExps *be);
+    ~NNameId();
     virtual void print();
+
+private:
+    NBrackExps *be;
 };
 
 class NNameDotId : public NName
 {
 public:
-    NNameDotId(NName *n, NId *id);
+    NNameDotId(NId *id, NName *n);
     virtual void print();
+
+private:
+    NId *id;
 };
 
 #endif

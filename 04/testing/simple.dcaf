@@ -5,7 +5,7 @@ class foo {
     foo()
     {
         int a;
-        //this.a = 5;
+        this.a = 5;
     }
 
     int baz()
@@ -15,7 +15,14 @@ class foo {
 
     int boo(int a, int b)
     {
-        // b=a;
-        // return 1;
+        b=a;
+        b = a + a;
+        print(5);
+        while (1 == 1) print(5);
+        return 1;
+        if (2 == 2)
+            return 2;
+        else
+            return 5;
     }
 }

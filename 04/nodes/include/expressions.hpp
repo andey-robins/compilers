@@ -10,7 +10,7 @@
 #ifndef EXPRESSIONS_HPP
 #define EXPRESSIONS_HPP
 
-#include "parameters.hpp"
+#include "name.hpp"
 
 class NNewExp : public BaseNode
 {
@@ -38,19 +38,21 @@ public:
 
 class NExp : public BaseNode
 {
+public:
+    virtual void print();
 };
 
 // A maybe monad adapted to hold an optional expression
-class NOptExp : public BaseNode
+class NOptExp : public NExp
 {
 public:
     NOptExp();
     NOptExp(NExp *e);
     virtual void print();
-    NExp *maybe();
+    bool maybe();
 
 protected:
-    bool isEmpty;
+    NExp *e;
 };
 
 class NExpName : public NExp
@@ -106,7 +108,13 @@ class NInfixExp : public NExp
 {
 public:
     NInfixExp(NOperator *o, NExp *left, NExp *right);
+    ~NInfixExp();
     virtual void print();
+
+private:
+    NOperator *op;
+    NExp *left;
+    NExp *right;
 };
 
 class NParenExp : public NExp
