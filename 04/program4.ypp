@@ -393,7 +393,7 @@ statement:
         $$ = new NStateCall(print, static_cast<NArg *>($3));
     }
 |   conditionalStatement {
-        // TODO
+        $$ = new NStateCond(static_cast<NCondition *>($1));
     }
 |   WHILE LPAREN expression RPAREN statement {
         $$ = new NStateWhile(static_cast<NExp *>($3), static_cast<NStatement *>($5));
