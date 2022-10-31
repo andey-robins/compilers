@@ -73,3 +73,11 @@ NLocalVarDecl::NLocalVarDecl(NVarDecl *vd)
 {
     this->next = vd;
 }
+
+void NLocalVarDecl::print()
+{
+    if (this->next)
+    {
+        static_cast<NVarDecl *>(this->next)->print();
+    }
+}

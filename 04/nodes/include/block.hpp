@@ -19,6 +19,7 @@ class NLocalVarDecl : public BaseNode
 {
 public:
     NLocalVarDecl(NVarDecl *vd);
+    virtual void print();
 };
 
 class NBlock : public BaseNode

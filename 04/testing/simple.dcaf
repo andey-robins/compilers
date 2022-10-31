@@ -4,13 +4,13 @@ class foo {
 
     foo()
     {
-        //int a;
+        int a;
         //this.a = 5;
     }
 
     int baz()
     {
-        
+        a a ;
     }
 
     int boo(int a, int b)

@@ -37,7 +37,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor block blockHeadChoice
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList conditionalStatement expression newExpression bracks rterm term factor block blockHeadChoice blockStatementChoice
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
@@ -162,6 +162,7 @@ constDeclHeaderChoice:
         $$ = curr;
     }
 |   methDeclHeaderChoice { 
+        // TODO remove
         $$ = $1; 
     }
 ;
@@ -323,25 +324,37 @@ block:
         else
         {
             // TODO remove
-            cout << "Oh noes" << endl;
+            cout << "Oh noes 2" << endl;
         }
     }
 ;
 
 blockHeadChoice:
     localVarDeclaration blockStatementChoice {
-        // NLocalVarDecl
+        if ($2->getText() != "epsilon")
+        {
+            $1->setNext($2);
+        }
+
+        $<ttype>$ = $1;
     }
 |   blockStatementChoice {
-
+        // TODO remove
+        $$ = $1;
     }
 ;
 
 blockStatementChoice:
     statement blockHeadChoice {
-        // done w/ local var decls
+        if ($2->getText() != "epsilon")
+        {
+            $1->setNext($2);
+        }
+        $$ = $1;
     }
-|   RBRACE {}
+|   RBRACE {
+        $$ = new NEpsilon();
+    }
 ;
 
 localVarDeclaration:
@@ -349,10 +362,20 @@ localVarDeclaration:
         // $$ = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
     }
 |   INT ID SEMI {
-
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NVarDecl *var = new NVarDecl(type, id);
+        $$ = new NLocalVarDecl(var);
     }
 |   ID ID SEMI {
-
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
+        NType *type = new NType(st);
+        NVarDecl *var = new NVarDecl(type, idTwo);
+        $$ = new NLocalVarDecl(var);
     }
 ;
 
