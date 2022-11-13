@@ -7,16 +7,16 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NId::NId(string id)
 {
     this->text = id;
 }
 
-void NId::print()
+void NId::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "ID --> "
          << this->text;
 }
@@ -26,9 +26,9 @@ NKeyword::NKeyword(string key)
     this->text = key;
 }
 
-void NKeyword::print()
+void NKeyword::print(ostream *out)
 {
-    cout << this->text << endl;
+    *out << this->text << endl;
 }
 
 NNumber::NNumber(int n)
@@ -41,9 +41,9 @@ int NNumber::getVal()
     return this->num;
 }
 
-void NNumber::print()
+void NNumber::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "NUMBER --> "
          << this->num
          << endl;
@@ -59,7 +59,7 @@ string NOperator::getOp()
     return this->op;
 }
 
-void NOperator::print()
+void NOperator::print(ostream *out)
 {
-    cout << this->op;
+    *out << this->op;
 }

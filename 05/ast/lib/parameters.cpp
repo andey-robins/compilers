@@ -7,7 +7,7 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NParam::NParam(NType *t, NId *id)
 {
@@ -15,19 +15,19 @@ NParam::NParam(NType *t, NId *id)
     this->id = id;
 }
 
-void NParam::print()
+void NParam::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<param> --> <type> ID"
          << endl;
     indentation++;
-    this->type->print();
-    this->id->print();
-    cout << endl;
+    this->type->print(out);
+    this->id->print(out);
+    *out << endl;
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -41,17 +41,17 @@ NArg::~NArg()
     delete this->e;
 }
 
-void NArg::print()
+void NArg::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<arg> --> <expression>"
          << endl;
     indentation++;
-    this->e->print();
+    this->e->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -65,16 +65,16 @@ int NBracks::getCount()
     return this->count;
 }
 
-void NBracks::print()
+void NBracks::print(ostream *out)
 {
     for (int i = 0; i < this->count; i++)
     {
-        cout << " []";
+        *out << " []";
     }
-    cout << endl;
+    *out << endl;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -88,15 +88,15 @@ NBrackExps::~NBrackExps()
     delete this->exp;
 }
 
-void NBrackExps::print()
+void NBrackExps::print(ostream *out)
 {
-    cout << " [<exp>]";
+    *out << " [<exp>]";
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
-    cout << endl;
+    *out << endl;
     indentation++;
-    this->exp->print();
+    this->exp->print(out);
     indentation--;
 }

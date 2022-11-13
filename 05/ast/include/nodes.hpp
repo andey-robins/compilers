@@ -14,6 +14,7 @@
 #include "struct.hpp"
 
 using std::cout;
+using std::ostream;
 using std::string;
 
 extern int indentation;

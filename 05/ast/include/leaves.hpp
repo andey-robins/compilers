@@ -19,7 +19,7 @@ class NId : public BaseNode
 {
 public:
     NId(string id);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     string text;
@@ -29,7 +29,7 @@ class NKeyword : public BaseNode
 {
 public:
     NKeyword(string key);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     string text;
@@ -40,7 +40,7 @@ class NNumber : public BaseNode
 public:
     NNumber(int n);
     int getVal();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     int num;
@@ -51,7 +51,7 @@ class NOperator : public BaseNode
 public:
     NOperator(string op);
     string getOp();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     string op;

@@ -16,9 +16,8 @@ using std::string;
 using std::cerr;
 using std::cout;
 using std::endl;
-#include "nodes.hpp"
-#include "program5.tab.hpp"
 #include "program5.hpp"
+#include "program5.tab.hpp"
 
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 

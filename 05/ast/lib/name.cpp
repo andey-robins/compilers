@@ -7,22 +7,22 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NNameThis::NNameThis() {}
 
-void NNameThis::print()
+void NNameThis::print(ostream *out)
 {
     if (this->next)
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<name> -> THIS"
              << endl;
-        this->next->print();
+        this->next->print(out);
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<name> --> THIS"
              << endl;
     }
@@ -33,12 +33,12 @@ NNameThisDot::NNameThisDot(NName *next)
     this->next = next;
 }
 
-void NNameThisDot::print()
+void NNameThisDot::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<name> --> THIS . <name>"
          << endl;
-    this->next->print();
+    this->next->print(out);
 }
 
 NNameId::NNameId(NId *id)
@@ -62,18 +62,18 @@ NNameId::~NNameId()
     }
 }
 
-void NNameId::print()
+void NNameId::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<name> --> ID"
          << endl;
     indentation++;
-    this->next->print();
+    this->next->print(out);
     if (this->be)
     {
-        this->be->print();
+        this->be->print(out);
     }
-    cout << endl;
+    *out << endl;
     indentation--;
 }
 
@@ -83,14 +83,14 @@ NNameDotId::NNameDotId(NId *id, NName *n)
     this->next = n;
 }
 
-void NNameDotId::print()
+void NNameDotId::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<name> --> ID . <name>"
          << endl;
     indentation++;
-    this->id->print();
-    cout << endl;
-    this->next->print();
+    this->id->print(out);
+    *out << endl;
+    this->next->print(out);
     indentation--;
 }

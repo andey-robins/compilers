@@ -7,7 +7,7 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 BaseNode::BaseNode() {}
 
@@ -60,6 +60,6 @@ string BaseNode::getText()
     return this->text;
 }
 
-void BaseNode::print()
+void BaseNode::print(ostream *out)
 {
 }

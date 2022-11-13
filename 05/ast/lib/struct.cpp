@@ -7,7 +7,9 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
+
+int indentation = 0;
 
 NProgram::NProgram(NClassDecl *cd)
 {
@@ -19,10 +21,10 @@ NProgram::~NProgram()
     delete this->classDeclaration;
 }
 
-void NProgram::print()
+void NProgram::print(ostream *out)
 {
-    cout << "<program> -> <classdec>" << endl;
+    *out << "<program> -> <classdec>" << endl;
     indentation = 1;
-    this->classDeclaration->print();
+    this->classDeclaration->print(out);
     indentation = 0;
 }

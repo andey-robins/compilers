@@ -16,7 +16,7 @@ class NConstDecl : public BaseNode
 {
 public:
     NConstDecl(NId *id, NParam *p, NBlock *b);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NId *id;
@@ -28,7 +28,7 @@ class NMethDecl : public BaseNode
 {
 public:
     NMethDecl(NResultType *rt, NId *id, NParam *p, NBlock *b);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NResultType *resType;
@@ -45,7 +45,7 @@ public:
     NClassBody(NConstDecl *declHead);
     NClassBody(NMethDecl *declHead);
     ~NClassBody();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NClassDecl : public BaseNode
@@ -53,7 +53,7 @@ class NClassDecl : public BaseNode
 public:
     NClassDecl(NId *id, NClassBody *cb);
     ~NClassDecl();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NId *className;

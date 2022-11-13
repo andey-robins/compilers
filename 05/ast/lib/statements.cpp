@@ -7,7 +7,7 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NStateAssign::NStateAssign(NName *n, NExp *e)
 {
@@ -21,18 +21,18 @@ NStateAssign::~NStateAssign()
     delete this->exp;
 }
 
-void NStateAssign::print()
+void NStateAssign::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<statement> --> <name> = <expression> SEMI"
          << endl;
     indentation++;
-    this->name->print();
-    this->exp->print();
+    this->name->print(out);
+    this->exp->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -48,18 +48,18 @@ NStateCall::~NStateCall()
     delete this->args;
 }
 
-void NStateCall::print()
+void NStateCall::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<statement> --> <name> ( <argList> ) SEMI"
          << endl;
     indentation++;
-    this->name->print();
-    this->args->print();
+    this->name->print(out);
+    this->args->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -75,18 +75,18 @@ NStateWhile::~NStateWhile()
     delete this->s;
 }
 
-void NStateWhile::print()
+void NStateWhile::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<statement> --> WHILE ( <exp> ) <statement>"
          << endl;
     indentation++;
-    this->e->print();
-    this->s->print();
+    this->e->print(out);
+    this->s->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -100,26 +100,26 @@ NStateReturn::~NStateReturn()
     delete this->oe;
 }
 
-void NStateReturn::print()
+void NStateReturn::print(ostream *out)
 {
     if (this->oe->maybe())
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<statement> --> RETURN <exp>"
              << endl;
         indentation++;
-        this->oe->print();
+        this->oe->print(out);
         indentation--;
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<statement> --> RETURN"
              << endl;
     }
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -133,17 +133,17 @@ NStateBlock::~NStateBlock()
     delete this->block;
 }
 
-void NStateBlock::print()
+void NStateBlock::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<statement> --> <block>"
          << endl;
     indentation++;
-    this->block->print();
+    this->block->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -171,32 +171,32 @@ NCondition::~NCondition()
     }
 }
 
-void NCondition::print()
+void NCondition::print(ostream *out)
 {
     if (this->falseBlock)
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<condition> --> IF ( <exp> ) <statement> ELSE <statement>"
              << endl;
         indentation++;
-        this->cond->print();
-        this->trueBlock->print();
-        this->falseBlock->print();
+        this->cond->print(out);
+        this->trueBlock->print(out);
+        this->falseBlock->print(out);
         indentation--;
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<condition> --> IF ( <exp> ) <statement>"
              << endl;
         indentation++;
-        this->cond->print();
-        this->trueBlock->print();
+        this->cond->print(out);
+        this->trueBlock->print(out);
         indentation--;
     }
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -210,16 +210,16 @@ NStateCond::~NStateCond()
     delete this->cond;
 }
 
-void NStateCond::print()
+void NStateCond::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<statement> --> <condition>"
          << endl;
     indentation++;
-    this->cond->print();
+    this->cond->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }

@@ -56,6 +56,10 @@ void Scope::registerSymbolWithValue(string symbol, Value *val)
 {
     (*this->scopeStack).top()->registerSymbolWithValue(symbol, val);
 }
+void Scope::registerGlobalSymbolWithValue(string symbol, Value *val)
+{
+    (*this->scopeStack).top()->registerGlobalSymbolWithValue(symbol, val);
+}
 Value *Scope::lookupSymbol(string symbol)
 {
     return (*this->scopeStack).top()->lookupSymbol(symbol);

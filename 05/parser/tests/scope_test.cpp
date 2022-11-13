@@ -46,3 +46,29 @@ BOOST_AUTO_TEST_CASE(multipleTableInScopeAndRedefinitions)
     BOOST_CHECK(!scope->lookupSymbol("x")->isEpsilon());
     BOOST_CHECK(!scope->lookupSymbol("x")->isString());
 }
+
+BOOST_AUTO_TEST_CASE(registerGlobalValue)
+{
+    SymbolTable *tab = new SymbolTable(0);
+    SymbolTable *tabTwo = new SymbolTable(tab);
+    Value *five = new Value(5);
+    Value *ten = new Value(10);
+    string voidStr = "void";
+    Value *type = new Value(&voidStr);
+    Scope *scope = new Scope(tab);
+    scope->registerSymbolWithValue("x", ten);
+    scope->registerGlobalSymbolWithValue("void", type);
+    scope->push(tabTwo);
+    scope->registerSymbolWithValue("x", five);
+    BOOST_CHECK(scope->lookupSymbol("x")->isInt());
+    BOOST_CHECK(scope->lookupSymbol("x")->getInt() == 5);
+    BOOST_CHECK(!scope->lookupSymbol("x")->isEpsilon());
+    BOOST_CHECK(!scope->lookupSymbol("x")->isString());
+    BOOST_CHECK(scope->lookupSymbol("void")->isString());
+    scope->pop();
+    BOOST_CHECK(scope->lookupSymbol("x")->isInt());
+    BOOST_CHECK(scope->lookupSymbol("x")->getInt() == 10);
+    BOOST_CHECK(!scope->lookupSymbol("x")->isEpsilon());
+    BOOST_CHECK(!scope->lookupSymbol("x")->isString());
+    BOOST_CHECK(scope->lookupSymbol("void")->isString());
+}

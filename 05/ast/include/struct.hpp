@@ -17,7 +17,7 @@ class NProgram : public BaseNode
 public:
     NProgram(NClassDecl *cd);
     ~NProgram();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NClassDecl *classDeclaration;

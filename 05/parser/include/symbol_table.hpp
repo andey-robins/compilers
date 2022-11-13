@@ -20,6 +20,7 @@ public:
     virtual ~SymbolTable();
     void registerSymbol(string symbol);
     void registerSymbolWithValue(string symbol, Value *val);
+    void registerGlobalSymbolWithValue(string symbol, Value *val);
     Value *lookupSymbol(string symbol);
     void print();
 

@@ -26,7 +26,7 @@ public:
     void setVal(string s);
     BaseNode *getNext();
     string getText();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 protected:
     BaseNode *next;

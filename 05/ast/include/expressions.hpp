@@ -21,7 +21,7 @@ class NNewExpIdArgs : public NNewExp
 public:
     NNewExpIdArgs(NId *i, NArg *a);
     ~NNewExpIdArgs();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NId *id;
@@ -36,7 +36,7 @@ public:
     NNewExpType(NSimpleType *s, NBracks *bs);
     NNewExpType(NSimpleType *s);
     ~NNewExpType();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NSimpleType *t;
@@ -53,7 +53,7 @@ private:
 class NExp : public BaseNode
 {
 public:
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 // A maybe monad adapted to hold an optional expression
@@ -62,7 +62,7 @@ class NOptExp : public NExp
 public:
     NOptExp();
     NOptExp(NExp *e);
-    virtual void print();
+    virtual void print(ostream *out = 0);
     bool maybe();
 
 protected:
@@ -73,21 +73,21 @@ class NExpName : public NExp
 {
 public:
     NExpName(NName *n);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NExpNumber : public NExp
 {
 public:
     NExpNumber(NNumber *n);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NExpNull : public NExp
 {
 public:
     NExpNull();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NExpCall : public NExp
@@ -95,7 +95,7 @@ class NExpCall : public NExp
 public:
     NExpCall(NName *n, NArg *a);
     ~NExpCall();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NName *name;
@@ -106,7 +106,7 @@ class NExpRead : public NExp
 {
 public:
     NExpRead();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NExpNewExp : public NExp
@@ -114,7 +114,7 @@ class NExpNewExp : public NExp
 public:
     NExpNewExp(NNewExp *ne);
     ~NExpNewExp();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NNewExp *newExp;
@@ -125,7 +125,7 @@ class NPrefixExp : public NExp
 public:
     NPrefixExp(NOperator *o, NExp *e);
     ~NPrefixExp();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NOperator *op;
@@ -137,7 +137,7 @@ class NInfixExp : public NExp
 public:
     NInfixExp(NOperator *o, NExp *left, NExp *right);
     ~NInfixExp();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NOperator *op;
@@ -150,7 +150,7 @@ class NParenExp : public NExp
 public:
     NParenExp(NExp *inner);
     ~NParenExp();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NExp *in;
@@ -160,7 +160,7 @@ class NNameExp : public NName
 {
 public:
     NNameExp(NName *n, NExp *e);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 #endif

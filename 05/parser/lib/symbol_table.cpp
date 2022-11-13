@@ -37,6 +37,17 @@ void SymbolTable::registerSymbolWithValue(string symbol, Value *val)
     (*this->symbols)[symbol] = val;
 }
 
+void SymbolTable::registerGlobalSymbolWithValue(string symbol, Value *val)
+{
+    if (this->prev)
+    {
+        this->prev->registerGlobalSymbolWithValue(symbol, val);
+        return;
+    }
+
+    (*this->symbols)[symbol] = val;
+}
+
 // Returns 0 if the symbol is not found. Allows for:
 // if (auto symb = table->lookupSymbol(symbol)) { // do something with symb; }
 Value *SymbolTable::lookupSymbol(string symbol)

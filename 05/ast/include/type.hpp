@@ -18,7 +18,7 @@ public:
     NSimpleType(NKeyword *k); // int keyword
     NSimpleType(NId *id);
     string getType();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     bool isId = false;
@@ -32,7 +32,7 @@ public:
     NType(NType *t, int bracks);
     int getBracks();
     string getType();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     int brackCount;
@@ -44,7 +44,7 @@ class NResultType : public BaseNode
 public:
     NResultType(NType *t);
     NResultType(NKeyword *k);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NType *type;
@@ -55,7 +55,7 @@ class NEpsilon : public BaseNode
 {
 public:
     NEpsilon();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 #endif

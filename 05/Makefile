@@ -14,6 +14,9 @@ CXX=g++
 CXXFLAGS=-ggdb -Wall -Wno-sign-compare
 CXXFLAGS_TESTING= -ggdb -Wall -Wno-sign-compare -lboost_unit_test_framework
 
+PARSER_DIR=parser/lib
+AST_DIR=ast/lib
+
 LEX=flex++
 LEXFLAGS=--warn
 
@@ -24,36 +27,36 @@ BISONFLAGS=-d
 # BUILD #
 #########
 
-program4: program4.cpp program4_lex.cpp *.cpp
-	$(CXX) $(CXXFLAGS) *.cpp -o program4
+program5: program5.cpp program5_lex.cpp *.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp
+	$(CXX) $(CXXFLAGS) *.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp -o program5
 
-program4_lex.cpp: program4.lpp program4.tab.cpp
-	$(LEX) $(LEXFLAGS) program4.lpp
+program5_lex.cpp: program5.lpp program5.tab.cpp
+	$(LEX) $(LEXFLAGS) program5.lpp
 
-program4.tab.cpp: program4.ypp
-	$(BISON) $(BISONFLAGS) program4.ypp
+program5.tab.cpp: program5.ypp
+	$(BISON) $(BISONFLAGS) program5.ypp
 
 ############
 # COMMANDS #
 ############
 
 bison:
-	$(BISON) $(BISONFLAGS) -v program4.ypp
+	$(BISON) $(BISONFLAGS) -v program5.ypp
 
 clean:
-	/bin/rm -f program4 program4_lex.cpp program4.tab.*
+	/bin/rm -f program5 program5_lex.cpp program5.tab.*
 	/bin/rm -f *.output
 	/bin/rm -rf *.dSYM
 	/bin/rm -f core.*
 	/bin/rm -f boost_test
-	/bin/rm -f program4.tgz
+	/bin/rm -f program5.tgz
 
-run: program4
-	./program4
+run: program5
+	./program5
 
-test: parser/lib/*.cpp
-	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/lib/*.cpp
+test: $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp parser/tests/*.cpp 
+	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/tests/*.cpp ast/tests/*.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp
 	./boost_test
 
 tar: clean
-	tar -zcf program4.tgz Makefile program4.cpp program4.hpp program4.lpp program4.ypp block.* declarations.* expressions.* leaves.* name.* node-base.* nodes.hpp parameters.* statements.* struct.* type.hpp types.cpp
+	tar -zcf program5.tgz Makefile program5.cpp program5.hpp program5.lpp program5.ypp ast/lib/*.cpp ast/include/*.hpp parser/include/*.hpp parser/lib/*.cpp

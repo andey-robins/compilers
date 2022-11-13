@@ -20,14 +20,14 @@ class NNameThis : public NName
 {
 public:
     NNameThis();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NNameThisDot : public NName
 {
 public:
     NNameThisDot(NName *next);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NNameId : public NName
@@ -36,7 +36,7 @@ public:
     NNameId(NId *id);
     NNameId(NId *id, NBrackExps *be);
     ~NNameId();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NBrackExps *be;
@@ -46,7 +46,7 @@ class NNameDotId : public NName
 {
 public:
     NNameDotId(NId *id, NName *n);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NId *id;

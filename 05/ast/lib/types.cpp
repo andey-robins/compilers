@@ -7,7 +7,7 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NSimpleType::NSimpleType(NKeyword *k)
 {
@@ -27,20 +27,20 @@ string NSimpleType::getType()
     return this->type;
 }
 
-void NSimpleType::print()
+void NSimpleType::print(ostream *out)
 {
     if (this->isId)
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<type> -> ID"
              << endl;
         indentation++;
-        this->next->print();
+        this->next->print(out);
         indentation--;
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<type> -> INT"
              << endl;
     }
@@ -68,10 +68,10 @@ string NType::getType()
     return this->type;
 }
 
-void NType::print()
+void NType::print(ostream *out)
 {
     // Todo handle printing brackets
-    this->next->print();
+    this->next->print(out);
 }
 
 NResultType::NResultType(NType *t)
@@ -86,22 +86,22 @@ NResultType::NResultType(NKeyword *k)
     this->type = 0;
 }
 
-void NResultType::print()
+void NResultType::print(ostream *out)
 {
     if (this->type)
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<resultype> --> <type>"
              << endl;
         indentation++;
-        this->type->print();
+        this->type->print(out);
         indentation--;
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<resultype> --> ";
-        this->voidType->print();
+        this->voidType->print(out);
     }
 }
 
@@ -110,6 +110,6 @@ NEpsilon::NEpsilon()
     this->setVal("epsilon");
 }
 
-void NEpsilon::print()
+void NEpsilon::print(ostream *out)
 {
 }

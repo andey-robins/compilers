@@ -23,7 +23,7 @@ class NStateAssign : public NStatement
 public:
     NStateAssign(NName *n, NExp *e);
     ~NStateAssign();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NName *name;
@@ -35,7 +35,7 @@ class NStateCall : public NStatement
 public:
     NStateCall(NName *n, NArg *a);
     ~NStateCall();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NName *name;
@@ -47,7 +47,7 @@ class NStateWhile : public NStatement
 public:
     NStateWhile(NExp *e, NStatement *s);
     ~NStateWhile();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NExp *e;
@@ -59,7 +59,7 @@ class NStateReturn : public NStatement
 public:
     NStateReturn(NOptExp *oe);
     ~NStateReturn();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NOptExp *oe;
@@ -70,7 +70,7 @@ class NStateBlock : public NStatement
 public:
     NStateBlock(NBlock *b);
     ~NStateBlock();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NBlock *block;
@@ -82,7 +82,7 @@ public:
     NCondition(NExp *e, NStatement *s);
     NCondition(NExp *e, NStatement *trueStmt, NStatement *falseStmt);
     ~NCondition();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 protected:
     NExp *cond;
@@ -95,7 +95,7 @@ class NStateCond : public NStatement
 public:
     NStateCond(NCondition *c);
     ~NStateCond();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NCondition *cond;

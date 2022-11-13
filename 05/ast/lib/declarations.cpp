@@ -7,7 +7,7 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NClassDecl::NClassDecl(NId *id, NClassBody *cb)
 {
@@ -21,15 +21,15 @@ NClassDecl::~NClassDecl()
     delete this->classBody;
 }
 
-void NClassDecl::print()
+void NClassDecl::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<classdec> --> CLASS ID <classbody>"
          << endl;
     indentation++;
-    this->className->print();
-    cout << endl;
-    this->classBody->print();
+    this->className->print(out);
+    *out << endl;
+    this->classBody->print(out);
     indentation--;
 }
 
@@ -56,15 +56,15 @@ NClassBody::~NClassBody()
     }
 }
 
-void NClassBody::print()
+void NClassBody::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<classbody> --> { <vardecs> <consdecs> <methdecs> }"
          << endl;
     indentation++;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
     indentation--;
 }
@@ -76,45 +76,45 @@ NConstDecl::NConstDecl(NId *id, NParam *p, NBlock *b)
     this->block = b;
 }
 
-void NConstDecl::print()
+void NConstDecl::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<consdecs> --> <consdecs> <consdec>"
          << endl;
     indentation++;
     if (this->params->getText() == "epsilon")
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<consdec> --> ID () <block>"
              << endl;
         indentation++;
-        this->id->print();
-        cout << endl;
-        this->block->print();
+        this->id->print(out);
+        *out << endl;
+        this->block->print(out);
         indentation -= 2;
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<consdec> --> ID ( <params> ) <block>"
              << endl;
         indentation++;
-        this->id->print();
-        cout << endl;
-        cout << string(indentation * 2, ' ')
+        this->id->print(out);
+        *out << endl;
+        *out << string(indentation * 2, ' ')
              << "<paramlist> --> <param>"
              << endl;
         indentation++;
-        this->params->print();
+        this->params->print(out);
         indentation--;
-        this->block->print();
+        this->block->print(out);
         indentation -= 2;
     }
 
     // expand the <constdecs> nonterminal
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -126,46 +126,46 @@ NMethDecl::NMethDecl(NResultType *rt, NId *id, NParam *p, NBlock *b)
     this->block = b;
 }
 
-void NMethDecl::print()
+void NMethDecl::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<methdecs> --> <methdecs> <methdec>"
          << endl;
     indentation++;
     if (this->params->getText() == "epsilon")
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<methdec> --> <resulttype> ID () <block>"
              << endl;
         indentation++;
-        this->resType->print();
-        this->id->print();
-        cout << endl;
-        this->block->print();
+        this->resType->print(out);
+        this->id->print(out);
+        *out << endl;
+        this->block->print(out);
         indentation -= 2;
     }
     else
     {
-        cout << string(indentation * 2, ' ')
+        *out << string(indentation * 2, ' ')
              << "<methdec> --> <resulttype> ID ( <params> ) <block>"
              << endl;
         indentation++;
-        this->resType->print();
-        this->id->print();
-        cout << endl;
-        cout << string(indentation * 2, ' ')
+        this->resType->print(out);
+        this->id->print(out);
+        *out << endl;
+        *out << string(indentation * 2, ' ')
              << "<paramlist> --> <param>"
              << endl;
         indentation++;
-        this->params->print();
+        this->params->print(out);
         indentation--;
-        this->block->print();
+        this->block->print(out);
         indentation -= 2;
     }
 
     // expand the <constdecs> nonterminal
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }

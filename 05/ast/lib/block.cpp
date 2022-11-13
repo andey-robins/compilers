@@ -7,7 +7,7 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
 NBlock::NBlock(NLocalVarDecl *vd)
 {
@@ -19,9 +19,9 @@ NBlock::NBlock(NStatement *s)
     this->next = s;
 }
 
-void NBlock::print()
+void NBlock::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<block> --> { <localvardecs>* <statements>* }"
          << endl;
     indentation++;
@@ -30,11 +30,11 @@ void NBlock::print()
 
     if (derivedDecl)
     {
-        derivedDecl->print();
+        derivedDecl->print(out);
     }
     else
     {
-        derivedStmt->print();
+        derivedStmt->print(out);
     }
     indentation--;
 }
@@ -56,28 +56,28 @@ NVarDecl::~NVarDecl()
     }
 }
 
-void NVarDecl::print()
+void NVarDecl::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<vardecs> --> <vardecs> <vardec>"
          << endl;
     indentation++;
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<vardec> --> <type> ID SEMI"
          << endl;
     indentation++;
-    this->type->print();
+    this->type->print(out);
     if (this->type->getType() == "ID")
     {
-        cout << endl;
+        *out << endl;
     }
-    static_cast<NId *>(this->id)->print();
-    cout << endl;
+    static_cast<NId *>(this->id)->print(out);
+    *out << endl;
     indentation -= 2;
     // expand the <vardecs> nonterminal
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -86,16 +86,16 @@ NLocalVarDecl::NLocalVarDecl(NVarDecl *vd)
     this->vd = vd;
 }
 
-void NLocalVarDecl::print()
+void NLocalVarDecl::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<localvardec> --> <vardec>"
          << endl;
     indentation++;
-    this->vd->print();
+    this->vd->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }

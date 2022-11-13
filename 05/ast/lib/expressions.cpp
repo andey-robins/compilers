@@ -7,9 +7,9 @@
  *
  */
 
-#include "nodes.hpp"
+#include "../include/nodes.hpp"
 
-void NExp::print()
+void NExp::print(ostream *out)
 {
     auto *derivedInfix = dynamic_cast<NInfixExp *>(this);
     auto *derivedOpt = dynamic_cast<NOptExp *>(this);
@@ -22,40 +22,40 @@ void NExp::print()
 
     if (derivedInfix)
     {
-        derivedInfix->print();
+        derivedInfix->print(out);
     }
     else if (derivedOpt)
     {
-        derivedOpt->print();
+        derivedOpt->print(out);
     }
     else if (derivedNull)
     {
-        derivedNull->print();
+        derivedNull->print(out);
     }
     else if (derivedParen)
     {
-        derivedParen->print();
+        derivedParen->print(out);
     }
     else if (derivedCall)
     {
-        derivedCall->print();
+        derivedCall->print(out);
     }
     else if (derivedRead)
     {
-        derivedRead->print();
+        derivedRead->print(out);
     }
     else if (derivedNew)
     {
-        derivedNew->print();
+        derivedNew->print(out);
     }
     else if (derivedPrefix)
     {
-        derivedPrefix->print();
+        derivedPrefix->print(out);
     }
 
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -73,20 +73,20 @@ NInfixExp::~NInfixExp()
     delete this->op;
 }
 
-void NInfixExp::print()
+void NInfixExp::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> <exp> "
          << this->op->getOp()
          << " <exp>"
          << endl;
     indentation++;
-    this->left->print();
-    this->right->print();
+    this->left->print(out);
+    this->right->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -100,15 +100,15 @@ NOptExp::NOptExp(NExp *e)
     this->e = e;
 }
 
-void NOptExp::print()
+void NOptExp::print(ostream *out)
 {
     if (this->e)
     {
-        this->e->print();
+        this->e->print(out);
     }
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -121,14 +121,14 @@ NExpNull::NExpNull()
 {
 }
 
-void NExpNull::print()
+void NExpNull::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> null"
          << endl;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -142,17 +142,17 @@ NParenExp::~NParenExp()
     delete this->in;
 }
 
-void NParenExp::print()
+void NParenExp::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> ( <exp> )"
          << endl;
     indentation++;
-    this->in->print();
+    this->in->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -168,18 +168,18 @@ NExpCall::~NExpCall()
     delete this->args;
 }
 
-void NExpCall::print()
+void NExpCall::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> <name> ( <exp> )"
          << endl;
     indentation++;
-    this->name->print();
-    this->args->print();
+    this->name->print(out);
+    this->args->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -187,14 +187,14 @@ NExpRead::NExpRead()
 {
 }
 
-void NExpRead::print()
+void NExpRead::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> READ"
          << endl;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -208,17 +208,17 @@ NExpNewExp::~NExpNewExp()
     delete this->newExp;
 }
 
-void NExpNewExp::print()
+void NExpNewExp::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> <newexp>"
          << endl;
     indentation++;
-    this->newExp->print();
+    this->newExp->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -234,19 +234,19 @@ NPrefixExp::~NPrefixExp()
     delete this->exp;
 }
 
-void NPrefixExp::print()
+void NPrefixExp::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<exp> --> "
          << this->op->getOp()
          << " <exp>"
          << endl;
     indentation++;
-    this->exp->print();
+    this->exp->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -285,26 +285,26 @@ NNewExpType::~NNewExpType()
     delete this->bs;
 }
 
-void NNewExpType::print()
+void NNewExpType::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<newexp> --> NEW <type>"
          << endl;
     indentation++;
-    static_cast<NSimpleType *>(this->t)->print();
+    static_cast<NSimpleType *>(this->t)->print(out);
     if (this->bes)
     {
-        this->bes->print();
+        this->bes->print(out);
     }
     if (this->bs)
     {
-        this->bs->print();
+        this->bs->print(out);
     }
-    cout << endl;
+    *out << endl;
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }
 
@@ -320,18 +320,18 @@ NNewExpIdArgs::~NNewExpIdArgs()
     delete this->args;
 }
 
-void NNewExpIdArgs::print()
+void NNewExpIdArgs::print(ostream *out)
 {
-    cout << string(indentation * 2, ' ')
+    *out << string(indentation * 2, ' ')
          << "<newexp> --> NEW ID ( <arglist> )"
          << endl;
     indentation++;
-    this->id->print();
-    cout << endl;
-    this->args->print();
+    this->id->print(out);
+    *out << endl;
+    this->args->print(out);
     indentation--;
     if (this->next)
     {
-        this->next->print();
+        this->next->print(out);
     }
 }

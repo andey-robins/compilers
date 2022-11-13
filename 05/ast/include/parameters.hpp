@@ -18,14 +18,14 @@ class NParams : public BaseNode
 {
 public:
     NParams();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 };
 
 class NParam : public BaseNode
 {
 public:
     NParam(NType *t, NId *id);
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NType *type;
@@ -37,7 +37,7 @@ class NArg : public BaseNode
 public:
     NArg(NExp *e);
     ~NArg();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NExp *e;
@@ -48,7 +48,7 @@ class NBracks : public BaseNode
 public:
     NBracks(int count);
     int getCount();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     int count;
@@ -60,7 +60,7 @@ class NBrackExps : public BaseNode
 public:
     NBrackExps(NExp *e);
     ~NBrackExps();
-    virtual void print();
+    virtual void print(ostream *out = 0);
 
 private:
     NExp *exp;
