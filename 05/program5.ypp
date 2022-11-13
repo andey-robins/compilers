@@ -1,0 +1,605 @@
+/*
+ * program4.ypp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ * The bison input file for program4
+ */
+%{
+
+#include <iostream>
+#include <FlexLexer.h>
+#include <string>
+#include <typeinfo>
+#include "nodes.hpp"
+#define YYERROR_VERBOSE
+
+using std::cerr;
+
+class BaseNode;
+extern BaseNode *ast;
+extern yyFlexLexer lexer;
+
+#define yylex() lexer.yylex()
+void yyerror(const char* string);
+
+%}
+
+%locations
+
+%union {
+    BaseNode *ttype;
+}
+
+%precedence "shift"
+%precedence "reduce"
+
+%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression newExpTypes bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
+
+%left<ttype> PLUS MINUS NOT OR
+%token<ttype> SEMI DOT COMMA
+%token<ttype> ID
+%left<ttype> LPAREN RPAREN LBRACKET RBRACKET RBRACE LBRACE
+%token<ttype> NUMBER NULLT READ NEW THIS
+%left<ttype> IF ELSE WHILE RETURN CLASS PRINT VOID
+%left<ttype> TIMES DIV MOD AND
+%left<ttype> EQ NE GE LE GT LT ASSIGN
+%token<ttype> INT
+
+// To be made use of in the future
+%token<ttype> ER_WD ER_CH
+
+%expect 0
+
+%%
+
+ // TODO add in errors
+program:
+    classDeclarations { 
+        ast = new NProgram(static_cast<NClassDecl *>($1));
+        $$ = ast;
+    }
+|   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
+|   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
+|   error SEMI { yyerror("err: syntax error in line"); }
+;
+
+classDeclarations:
+    CLASS ID classBody classDeclarations {
+        NId *id = new NId($2->getText());
+        NClassDecl *cls = new NClassDecl(id, static_cast<NClassBody *>($3));
+        cls->setNext(static_cast<NClassDecl *>($4));
+        $$ = cls;
+    }
+|   CLASS ID classBody {
+        NId *id = new NId($2->getText());
+        $$ = new NClassDecl(id, static_cast<NClassBody *>($3));
+    }
+|   error { yyerror("err: bad class declaration"); }
+;
+
+classBody:
+    LBRACE varDeclHeaderChoice {
+        auto *derivedVar = dynamic_cast<NVarDecl *>($2);
+        auto *derivedConst = dynamic_cast<NConstDecl *>($2);
+        auto *derivedMeth = dynamic_cast<NMethDecl *>($2);
+
+        if (derivedVar) 
+        {
+            $$ = new NClassBody(derivedVar);
+        }
+        else if (derivedConst) 
+        {
+            $$ = new NClassBody(derivedConst);
+        }
+        else if (derivedMeth) 
+        {
+            $$ = new NClassBody(derivedMeth);
+        }
+    }
+|   error { yyerror("err: bad class body. check declarations"); }
+;
+
+varDeclHeaderChoice:
+    INT bracks ID SEMI varDeclHeaderChoice {
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NKeyword *key = new NKeyword($1->getText());
+        NSimpleType *st = new NSimpleType(key);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NVarDecl *curr = new NVarDecl(type, static_cast<NId*>($3));
+        curr->setNext($5);
+        $$ = curr;
+    }
+|   ID bracks ID SEMI varDeclHeaderChoice {
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(id);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NVarDecl *curr = new NVarDecl(type, static_cast<NId*>($3));
+        curr->setNext($5);
+        $$ = curr;
+    }
+|   INT ID SEMI varDeclHeaderChoice {
+        NKeyword *key = new NKeyword($1->getText());
+        NId *id = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NVarDecl *curr = new NVarDecl(type, id);
+        curr->setNext($4);
+        $$ = curr;
+    }
+|   ID ID SEMI varDeclHeaderChoice {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
+        NType *type = new NType(st);
+        NVarDecl *curr = new NVarDecl(type, idTwo);
+        curr->setNext($4);
+        $$ = curr;
+    }
+    
+|   constDeclHeaderChoice
+;
+
+constDeclHeaderChoice:
+    ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($1->getText());
+        NConstDecl *curr;
+        if ($3->getText() == "epsilon") 
+        {
+            NParam *epsilon = new NParam(0, 0);
+            epsilon->setVal("epsilon");
+            curr = new NConstDecl(id, epsilon, static_cast<NBlock *>($5));
+        }
+        else 
+        {
+            curr = new NConstDecl(id, static_cast<NParam *>($3), static_cast<NBlock *>($5));
+        }
+        curr->setNext($6);
+        $$ = curr;
+    }
+|   methDeclHeaderChoice
+;
+
+methDeclHeaderChoice:
+    VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("void");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        method->setNext($7);
+        $$ = method;
+    }
+|   INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($3->getText());
+        NKeyword *intId = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(intId);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($5), static_cast<NBlock *>($7));
+        method->setNext($8);
+        $$ = method;
+    }
+|   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($3->getText());
+        NId *intId = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(intId);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($5), static_cast<NBlock *>($7));
+        method->setNext($8);
+        $$ = method;
+    }
+|   INT ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        method->setNext($7);
+        $$ = method;
+    }
+|   ID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NResultType *resType = new NResultType(type);
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        method->setNext($7);
+        $$ = method;
+    }
+|   RBRACE {
+        $$ = new NEpsilon();
+    }
+;
+
+type:
+    INT bracks {
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        $$ = type;
+    }
+|   ID bracks {
+        int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(id);
+        NType *stWrapper = new NType(st);
+        NType *type = new NType(stWrapper, bracks);
+        $$ = type;
+    }
+;
+
+parameterList:
+    parameter parameterListStar {
+        if ($2->getText() != "epsilon")
+        {
+            $1->setNext($2);
+        }
+        $$ = static_cast<NParam *>($1);
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+parameterListStar:
+    COMMA parameter parameterListStar {
+        if ($3->getText() != "epsilon")
+        {
+            $2->setNext($3);
+
+        }
+        $$ = static_cast<NParam *>($2);
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+
+parameter:
+    type ID {
+        NId *id = new NId($2->getText());
+        NParam *param = new NParam(static_cast<NType *>($1), id);
+        $<ttype>$ = param;
+    }
+|   INT ID {
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NId *id = new NId($2->getText());
+        NParam *param = new NParam(type, id);
+        $$ = param;
+    }
+|   ID ID {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
+        NType *type = new NType(st);
+        NParam *param = new NParam(type, idTwo);
+        $$ = param;
+    }
+;
+
+block:
+    LBRACE blockHeadChoice {
+        auto *derivedLocalVars = dynamic_cast<NLocalVarDecl *>($2);
+        auto *derivedStatements = dynamic_cast<NStatement *>($2);
+        auto *derivedEpsilon = dynamic_cast<NEpsilon *>($2);
+
+        if (derivedLocalVars)
+        {
+            $$ = new NBlock(derivedLocalVars);
+        }
+        else if (derivedStatements)
+        {
+            $$ = new NBlock(derivedStatements);
+        }
+        else if (derivedEpsilon)
+        {
+            $$ = derivedEpsilon;
+        }
+    }
+|   error { yyerror("err: error detected within block"); }
+;
+
+blockHeadChoice:
+    localVarDeclaration blockHeadChoice {
+        $1->setNext($2);
+        $$ = $1;
+    }
+|   blockStatementChoice
+;
+
+blockStatementChoice:
+    statement blockStatementChoice {
+        $1->setNext($2);
+        $$ = $1;
+    }
+|   RBRACE {
+        $$ = new NEpsilon();
+    }
+;
+
+localVarDeclaration:
+    type ID SEMI {
+        NId *id = new NId($2->getText());
+        NVarDecl *var = new NVarDecl(static_cast<NType *>($1), id);
+        $$ = new NLocalVarDecl(var);
+    }
+|   INT ID SEMI {
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword("int");
+        NSimpleType *st = new NSimpleType(key);
+        NType *type = new NType(st);
+        NVarDecl *var = new NVarDecl(type, id);
+        $$ = new NLocalVarDecl(var);
+    }
+|   ID ID SEMI {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
+        NType *type = new NType(st);
+        NVarDecl *var = new NVarDecl(type, idTwo);
+        $$ = new NLocalVarDecl(var);
+    }
+;
+
+statement:
+    SEMI {
+        $$ = new NEpsilon();
+    }
+|   name ASSIGN expression SEMI {
+        $$ = new NStateAssign(static_cast<NName *>($1), static_cast<NExp *>($3));
+    }
+|   name LPAREN argList RPAREN SEMI {
+        $$ = new NStateCall(static_cast<NName *>($1), static_cast<NArg *>($3));
+    }
+|   PRINT LPAREN argList RPAREN SEMI {
+        NId *printId = new NId("print");
+        NNameId *print = new NNameId(printId);
+        $$ = new NStateCall(print, static_cast<NArg *>($3));
+    }
+|   conditionalStatement {
+        $$ = new NStateCond(static_cast<NCondition *>($1));
+    }
+|   WHILE LPAREN expression RPAREN statement {
+        $$ = new NStateWhile(static_cast<NExp *>($3), static_cast<NStatement *>($5));
+    }
+|   RETURN expression SEMI {
+        NOptExp *oe = new NOptExp(static_cast<NExp *>($2));
+        $$ = new NStateReturn(oe);
+    }
+|   RETURN SEMI {
+        NOptExp *oe = new NOptExp(); // None monad
+        $$ = new NStateReturn(oe);
+    }
+    // TODO fix this
+/* |   block {
+        $$ = static_cast<NBlock *>($1);
+    } */
+;
+
+name:
+    ID {
+        NId *id = new NId($1->getText());
+        $$ = new NNameId(id);
+    }
+|   ID DOT name {
+        NId *id = new NId($1->getText());
+        $$ = new NNameDotId(id, static_cast<NName *>($3));
+    }
+|   ID brackExp {
+        NId *id = new NId($1->getText());
+        $$ = new NNameId(id, static_cast<NBrackExps *>($2));
+    }
+|   THIS DOT name {
+        $$ = new NNameThisDot(static_cast<NName *>($3));
+    }
+|   THIS brackExp {
+        NNameThis *name = new NNameThis();
+        name->setNext(static_cast<NBrackExps *>($2));
+        $$ = name;
+    }
+|   THIS {
+        $$ = new NNameThis();
+    }
+;
+
+ // TODO for some reason not printing all args in an arglist
+argList:
+    expression argListStar {
+        if ($2->getText() != "epsilon")
+        {
+            $1->setNext($2);
+        }
+        $$ = static_cast<NArg *>($1);
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+;
+
+argListStar:
+    COMMA expression argListStar {
+        if ($3->getText() != "epsilon")
+        {
+            $2->setNext($3);
+        }
+        $$ = static_cast<NArg *>($2);
+    }
+|   /* epsilon */ {
+        $$ = new NEpsilon();
+    }
+
+conditionalStatement:
+    IF LPAREN expression RPAREN statement {
+        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NStatement *>($5));
+    }
+|   IF LPAREN expression RPAREN statement ELSE statement {
+        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NStatement *>($5), static_cast<NStatement *>($7));
+    }
+;
+
+expression:
+    expression EQ expression {
+        NOperator *op = new NOperator("==");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression NE expression {
+        NOperator *op = new NOperator("!=");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression LT expression {
+        NOperator *op = new NOperator("<");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression GT expression {
+        NOperator *op = new NOperator(">");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression LE expression {
+        NOperator *op = new NOperator("<=");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression GE expression {
+        NOperator *op = new NOperator(">=");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression PLUS term {
+        NOperator *op = new NOperator("+");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression MINUS term {
+        NOperator *op = new NOperator("-");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   expression OR rterm {
+        NOperator *op = new NOperator("||");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term
+;
+
+rterm:
+    term TIMES term {
+        NOperator *op = new NOperator("*");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term DIV term {
+        NOperator *op = new NOperator("/");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term MOD term {
+        NOperator *op = new NOperator("%");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+|   term AND term {
+        NOperator *op = new NOperator("&&");
+        $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
+    }
+;
+
+term:
+    rterm
+|   factor
+;
+
+factor:
+    // currently no unary ops, but otherwise all working
+    NOT factor {
+        NOperator *op = new NOperator("!");
+        $$ = new NPrefixExp(op, static_cast<NExp *>($2));
+    }
+|   name %prec "shift" {
+        $$ = $1;
+    }
+|   LPAREN expression RPAREN {
+        $$ = new NParenExp(static_cast<NExp *>($2));
+    }
+|   NUMBER {
+        int i = atoi($1->getText().c_str());
+        $$ = new NNumber(i);
+    }
+|   NULLT {
+        $$ = new NExpNull();
+    }
+|   name LPAREN argList RPAREN {
+        $$ = new NExpCall(static_cast<NName *>($1), static_cast<NArg *>($3));
+    }
+|   READ LPAREN RPAREN {
+        $$ = new NExpRead();
+    }
+|   newExpression {
+        $$ = new NExpNewExp(static_cast<NNewExp *>($1));
+    }
+;
+
+newExpression:
+    NEW ID LPAREN argList RPAREN {
+        NId *id = new NId($2->getText());
+        $$ = new NNewExpIdArgs(id, static_cast<NArg *>($4));
+    }
+|   NEW newExpTypes {
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2));
+    }
+|   NEW newExpTypes bracks {
+        int bracks = static_cast<NType *>($3)->getBracks();
+        NBracks *brackNode = new NBracks(bracks);
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2), brackNode);
+    }
+|   NEW newExpTypes brackExp {
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3));
+    }
+|   NEW newExpTypes brackExp bracks {
+        int bracks = static_cast<NType *>($4)->getBracks();
+        NBracks *brackNode = new NBracks(bracks);
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3), brackNode);
+    }
+;
+
+newExpTypes:
+    ID %prec "reduce" {
+        NId *id = new NId($1->getText());
+        $$ = new NSimpleType(id);
+    }
+|   INT {
+        NKeyword *intKey = new NKeyword("int");
+        $$ = new NSimpleType(intKey);
+    }
+;
+
+brackExp:
+    LBRACKET expression RBRACKET brackExp {
+        NBrackExps *curr = new NBrackExps(static_cast<NExp *>($2));
+        curr->setNext(static_cast<NBrackExps *>($4));
+        $$ = curr;
+    }
+|   LBRACKET expression RBRACKET {
+        $$ = new NBrackExps(static_cast<NExp *>($2));
+    }
+;
+
+bracks:
+    LBRACKET RBRACKET bracks {
+        $$ = new NType(0, static_cast<NType *>($3)->getBracks()+1);
+    }
+|   LBRACKET RBRACKET {
+        $$ = new NType(0, 1);
+    }
+;
+
+
+%%
