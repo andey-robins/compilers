@@ -13,6 +13,7 @@ NParam::NParam(NType *t, NId *id)
 {
     this->type = t;
     this->id = id;
+    this->next = 0;
 }
 
 void NParam::print(ostream *out)
@@ -22,6 +23,7 @@ void NParam::print(ostream *out)
          << endl;
     indentation++;
     this->type->print(out);
+    *out << endl;
     this->id->print(out);
     *out << endl;
     indentation--;
@@ -34,6 +36,7 @@ void NParam::print(ostream *out)
 NArg::NArg(NExp *e)
 {
     this->e = e;
+    this->next = 0;
 }
 
 NArg::~NArg()
@@ -58,6 +61,7 @@ void NArg::print(ostream *out)
 NBracks::NBracks(int count)
 {
     this->count = count;
+    this->next = 0;
 }
 
 int NBracks::getCount()
@@ -81,6 +85,7 @@ void NBracks::print(ostream *out)
 NBrackExps::NBrackExps(NExp *e)
 {
     this->exp = e;
+    this->next = 0;
 }
 
 NBrackExps::~NBrackExps()

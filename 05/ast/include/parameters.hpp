@@ -14,12 +14,12 @@
 
 class NExp;
 
-class NParams : public BaseNode
-{
-public:
-    NParams();
-    virtual void print(ostream *out = 0);
-};
+// class NParams : public BaseNode
+// {
+// public:
+//     NParams();
+//     virtual void print(ostream *out = 0);
+// };
 
 class NParam : public BaseNode
 {

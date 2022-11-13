@@ -119,6 +119,7 @@ bool NOptExp::maybe()
 
 NExpNull::NExpNull()
 {
+    this->next = 0;
 }
 
 void NExpNull::print(ostream *out)
