@@ -1,3 +1,11 @@
+/*
+ * value.hpp
+ * Andey Robins
+ * 11/7/22
+ * Compilers Program 5
+ *
+ */
+
 #ifndef VALUE_HPP
 #define VALUE_HPP
 

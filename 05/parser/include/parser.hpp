@@ -20,5 +20,6 @@ using std::string;
 
 #include "value.hpp"
 #include "symbol_table.hpp"
+#include "scope.hpp"
 
 #endif

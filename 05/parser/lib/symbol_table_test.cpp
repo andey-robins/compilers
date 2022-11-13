@@ -1,5 +1,14 @@
-// #define BOOST_TEST_DYN_LINK only define once (in value_test.cpp)
-#define BOOST_TEST_MODULE ClassSymbolTable
+/*
+ * symbol_table_test.cpp
+ * Andey Robins
+ * 11/7/22
+ * Compilers Program 5
+ *
+ */
+
+#ifndef BOOST_TEST_DYN_LINK
+#define BOOST_TEST_DYN_LINK // only define once (in value_test.cpp)
+#endif
 #include <boost/test/unit_test.hpp>
 #include "../include/parser.hpp"
 

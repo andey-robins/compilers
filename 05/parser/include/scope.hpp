@@ -1,31 +1,33 @@
 /*
- * symbol_table.hpp
+ * scope.hpp
  * Andey Robins
  * 11/7/22
  * Compilers Program 5
  *
  */
 
-#ifndef SYMBOL_TABLE_HPP
-#define SYMBOL_TABLE_HPP
+#ifndef SCOPE_HPP
+#define SCOPE_HPP
 
 #include "parser.hpp"
 
-class Value;
+class SymbolTable;
 
-class SymbolTable
+class Scope
 {
 public:
-    SymbolTable(SymbolTable *prev);
-    virtual ~SymbolTable();
+    Scope(SymbolTable *rootTable);
+    virtual ~Scope();
+    void push(SymbolTable *tab);
+    SymbolTable *peek();
+    SymbolTable *pop();
     void registerSymbol(string symbol);
     void registerSymbolWithValue(string symbol, Value *val);
     Value *lookupSymbol(string symbol);
     void print();
 
 private:
-    SymbolTable *prev;
-    std::map<string, Value *> *symbols;
+    std::stack<SymbolTable *> *scopeStack;
 };
 
 #endif

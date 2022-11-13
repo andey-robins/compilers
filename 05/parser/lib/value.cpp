@@ -1,3 +1,11 @@
+/*
+ * value.cpp
+ * Andey Robins
+ * 11/7/22
+ * Compilers Program 5
+ *
+ */
+
 #include "../include/value.hpp"
 
 Value::Value()
