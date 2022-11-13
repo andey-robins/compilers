@@ -4,7 +4,10 @@
  * 10/20/22
  * Compilers Program 4
  *
+ *  In here are all the implementations for parameterized
+ *  or other lists of values such as argument lists
  *
+ *  Also has the bracket expressions and empty brackets
  */
 
 #ifndef PARAMETERS_HPP

@@ -4,7 +4,8 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ *  The type header for all of the type information
+ *  such as SimpleTypes, ReturnType, etc.
  */
 
 #ifndef TYPES_HPP

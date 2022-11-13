@@ -4,7 +4,10 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ * Larger block structer classes and definitions
+ * Included are the definitions for variable declarations since they're
+ * related to scoping and fit here more than the method and class declarations
+ * in the declarations file
  */
 
 #include "nodes.hpp"

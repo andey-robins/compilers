@@ -4,7 +4,10 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ *  The NodeBase which is extended by every node in the AST
+ *  This implementation is more on the minimal side with very little
+ *  being incldued in the structure by default, instead additional
+ *  data is associated with the child nodes
  */
 
 #include "nodes.hpp"

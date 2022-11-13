@@ -4,7 +4,9 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ *  Structural nodes for the AST. Only the Program node
+ *  currently, though other language structure productions
+ *  and nodes could find their home here eventually
  */
 
 #ifndef STRUCT_HPP

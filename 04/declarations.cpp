@@ -4,7 +4,8 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ *  Declaration related class implementations
+ *  Used for class, method, var, and constructor declarations
  */
 
 #include "nodes.hpp"

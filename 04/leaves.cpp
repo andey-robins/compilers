@@ -4,7 +4,8 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ *  Leaf nodes in the AST. Most notably ID, Number, and Epsilon
+ *  Also including Keyword
  */
 
 #include "nodes.hpp"

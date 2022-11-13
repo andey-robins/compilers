@@ -1,3 +1,13 @@
+/*
+ * declarations.hpp
+ * Andey Robins
+ * 10/20/22
+ * Compilers Program 4
+ *
+ * Class declarations and definitions for block related AST
+ * nodes such as Block and LocalVarDeclarations
+ */
+
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 

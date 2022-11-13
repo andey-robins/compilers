@@ -4,8 +4,6 @@
 # 10/20/22
 # Compilers Program 4
 #
-# The makefile. It's a makefile.
-#
 # Primary target: make run
 # Other targets: make tar
 #
@@ -43,7 +41,7 @@ clean:
 	/bin/rm -f program4 program4_lex.cpp program4.tab.*
 	/bin/rm -f *.output
 	/bin/rm -rf *.dSYM
-	/bin/rm core.*
+	/bin/rm -rf core.*
 	/bin/rm -f program4.tgz
 
 run: program4

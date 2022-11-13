@@ -4,8 +4,8 @@
  * 10/20/22
  * Compilers Program 4
  *
- * The header file for program3.cpp. Defines ...
- *
+ * The header file for program4.cpp. Defines some values used
+ * for nice output
  */
 
 #ifndef PROGRAM4_HPP

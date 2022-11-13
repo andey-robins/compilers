@@ -222,6 +222,7 @@ methDeclHeaderChoice:
 |   RBRACE {
         $$ = new NEpsilon();
     }
+|   error { yyerror("err: runaway input"); }
 ;
 
 type:
@@ -331,6 +332,7 @@ blockStatementChoice:
 |   RBRACE {
         $$ = new NEpsilon();
     }
+|   error { yyerror("err: runaway input"); }
 ;
 
 localVarDeclaration:
@@ -390,6 +392,9 @@ statement:
 /* |   block {
         $$ = static_cast<NBlock *>($1);
     } */
+|   error ER_CH error SEMI { yyerror("err: unsupported character in statement"); }
+|   error ER_WD error SEMI { yyerror("err: unsupported word in statement"); }
+|   error SEMI { yyerror("err: syntax error in statement"); }
 ;
 
 name:
@@ -545,6 +550,9 @@ factor:
 |   newExpression {
         $$ = new NExpNewExp(static_cast<NNewExp *>($1));
     }
+|   error ER_CH error SEMI { yyerror("err: unsupported character in expression"); }
+|   error ER_WD error SEMI { yyerror("err: unsupported word in expression"); }
+|   error SEMI { yyerror("err: syntax error in expression"); }
 ;
 
 newExpression:

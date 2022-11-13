@@ -4,7 +4,7 @@
  * 10/20/22
  * Compilers Program 4
  *
- *
+ *  Expressions and NewExpressions nodes for the AST
  */
 
 #include "nodes.hpp"
