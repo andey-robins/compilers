@@ -12,6 +12,7 @@
 
 CXX=g++
 CXXFLAGS=-ggdb -Wall -Wno-sign-compare
+CXXFLAGS_TESTING= -ggdb -Wall -Wno-sign-compare -lboost_unit_test_framework
 
 LEX=flex++
 LEXFLAGS=--warn
@@ -43,14 +44,16 @@ clean:
 	/bin/rm -f program4 program4_lex.cpp program4.tab.*
 	/bin/rm -f *.output
 	/bin/rm -rf *.dSYM
-	/bin/rm core.*
+	/bin/rm -f core.*
+	/bin/rm -f boost_test
 	/bin/rm -f program4.tgz
 
 run: program4
 	./program4
 
-test: program4
-	./program4 < testing/simple.dcaf
+test: parser/lib/*.cpp
+	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/lib/*.cpp
+	./boost_test
 
 tar: clean
 	tar -zcf program4.tgz Makefile program4.cpp program4.hpp program4.lpp program4.ypp block.* declarations.* expressions.* leaves.* name.* node-base.* nodes.hpp parameters.* statements.* struct.* type.hpp types.cpp

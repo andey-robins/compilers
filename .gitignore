@@ -47,6 +47,11 @@ docs/
 # and it makes things bad
 02/program2
 03/program3
+04/program4
+05/program5
+
+# testing executables
+05/boost_test
 
 # Examples
 basic_bison/
