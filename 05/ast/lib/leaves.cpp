@@ -26,6 +26,11 @@ NKeyword::NKeyword(string key)
     this->text = key;
 }
 
+string NKeyword::getText()
+{
+    return this->text;
+}
+
 void NKeyword::print(ostream *out)
 {
     *out << this->text << endl;

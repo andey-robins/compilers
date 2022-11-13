@@ -32,7 +32,7 @@ void NSimpleType::print(ostream *out)
     if (this->isId)
     {
         *out << string(indentation * 2, ' ')
-             << "<type> -> ID"
+             << "<type> --> ID"
              << endl;
         indentation++;
         this->next->print(out);
@@ -41,7 +41,7 @@ void NSimpleType::print(ostream *out)
     else
     {
         *out << string(indentation * 2, ' ')
-             << "<type> -> INT"
+             << "<type> --> INT"
              << endl;
     }
 }
@@ -50,6 +50,7 @@ NType::NType(NSimpleType *st)
 {
     this->next = st;
     this->type = st->getType();
+    this->brackCount = 0;
 }
 
 NType::NType(NType *t, int bracks)
@@ -91,7 +92,7 @@ void NResultType::print(ostream *out)
     if (this->type)
     {
         *out << string(indentation * 2, ' ')
-             << "<resultype> --> <type>"
+             << "<resulttype> --> <type>"
              << endl;
         indentation++;
         this->type->print(out);
@@ -100,7 +101,7 @@ void NResultType::print(ostream *out)
     else
     {
         *out << string(indentation * 2, ' ')
-             << "<resultype> --> ";
+             << "<resulttype> --> ";
         this->voidType->print(out);
     }
 }

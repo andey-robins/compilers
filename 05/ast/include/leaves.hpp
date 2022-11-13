@@ -29,6 +29,7 @@ class NKeyword : public BaseNode
 {
 public:
     NKeyword(string key);
+    string getText();
     virtual void print(ostream *out = 0);
 
 private:
