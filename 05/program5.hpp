@@ -12,7 +12,8 @@
 #ifndef PROGRAM5_HPP
 #define PROGRAM5_HPP
 
-#include <string>
+#include "ast/include/nodes.hpp"
+#include "parser/include/helpers.hpp"
 
 extern std::string colStr;
 extern std::string token;
