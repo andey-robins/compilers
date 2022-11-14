@@ -47,8 +47,8 @@ BOOST_AUTO_TEST_CASE(bracks)
 BOOST_AUTO_TEST_CASE(brackExps)
 {
     NExpNull *exp = new NExpNull();
-    NBrackExps *bes = new NBrackExps();
+    NBrackExps *bes = new NBrackExps(exp);
     std::stringstream s;
     bes->print(&s);
-    BOOST_CHECK(s.str() == " [<exp>]");
+    BOOST_CHECK(s.str() == " [<exp>]\n  <exp> --> null\n");
 }

@@ -9,14 +9,17 @@
 
 #include "../include/nodes.hpp"
 
-NNameThis::NNameThis() {}
+NNameThis::NNameThis()
+{
+    this->next = 0;
+}
 
 void NNameThis::print(ostream *out)
 {
     if (this->next)
     {
         *out << string(indentation * 2, ' ')
-             << "<name> -> THIS"
+             << "<name> --> THIS"
              << endl;
         this->next->print(out);
     }
@@ -38,7 +41,9 @@ void NNameThisDot::print(ostream *out)
     *out << string(indentation * 2, ' ')
          << "<name> --> THIS . <name>"
          << endl;
+    indentation++;
     this->next->print(out);
+    indentation--;
 }
 
 NNameId::NNameId(NId *id)
