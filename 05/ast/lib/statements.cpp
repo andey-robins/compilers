@@ -9,10 +9,26 @@
 
 #include "../include/nodes.hpp"
 
+void NStatement::print(ostream *out)
+{
+    auto *derivedAssign = dynamic_cast<NStateAssign *>(this);
+    auto *derivedCall = dynamic_cast<NStateCall *>(this);
+
+    if (derivedAssign)
+    {
+        derivedAssign->print(out);
+    }
+    else if (derivedCall)
+    {
+        derivedCall->print(out);
+    }
+}
+
 NStateAssign::NStateAssign(NName *n, NExp *e)
 {
     this->name = n;
     this->exp = e;
+    this->next = 0;
 }
 
 NStateAssign::~NStateAssign()
@@ -40,6 +56,7 @@ NStateCall::NStateCall(NName *n, NArg *a)
 {
     this->name = n;
     this->args = a;
+    this->next = 0;
 }
 
 NStateCall::~NStateCall()
@@ -67,6 +84,7 @@ NStateWhile::NStateWhile(NExp *e, NStatement *s)
 {
     this->e = e;
     this->s = s;
+    this->next = 0;
 }
 
 NStateWhile::~NStateWhile()
@@ -93,6 +111,7 @@ void NStateWhile::print(ostream *out)
 NStateReturn::NStateReturn(NOptExp *oe)
 {
     this->oe = oe;
+    this->next = 0;
 }
 
 NStateReturn::~NStateReturn()
@@ -152,6 +171,7 @@ NCondition::NCondition(NExp *e, NStatement *s)
     this->cond = e;
     this->trueBlock = s;
     this->falseBlock = 0;
+    this->next = 0;
 }
 
 NCondition::NCondition(NExp *e, NStatement *t, NStatement *f)
@@ -159,6 +179,7 @@ NCondition::NCondition(NExp *e, NStatement *t, NStatement *f)
     this->cond = e;
     this->trueBlock = t;
     this->falseBlock = f;
+    this->next = 0;
 }
 
 NCondition::~NCondition()
@@ -203,6 +224,7 @@ void NCondition::print(ostream *out)
 NStateCond::NStateCond(NCondition *c)
 {
     this->cond = c;
+    this->next = 0;
 }
 
 NStateCond::~NStateCond()

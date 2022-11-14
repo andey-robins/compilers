@@ -16,6 +16,8 @@ class NBlock;
 
 class NStatement : public BaseNode
 {
+public:
+    virtual void print(ostream *out = 0);
 };
 
 class NStateAssign : public NStatement
