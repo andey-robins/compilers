@@ -61,6 +61,8 @@ public:
     NBrackExps(NExp *e);
     ~NBrackExps();
     virtual void print(ostream *out = 0);
+    void printType(ostream *out = 0, bool printEndline = true);
+    void printExpression(ostream *out = 0);
 
 private:
     NExp *exp;

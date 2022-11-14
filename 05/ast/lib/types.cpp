@@ -11,7 +11,9 @@
 
 NSimpleType::NSimpleType(NKeyword *k)
 {
+    // this is for int keywords
     this->next = k;
+    this->isId = false;
     this->type = k->getText();
 }
 
@@ -44,6 +46,30 @@ void NSimpleType::print(ostream *out)
              << "<type> --> INT"
              << endl;
     }
+}
+
+void NSimpleType::printClipped(ostream *out)
+{
+    *out << string(indentation * 2, ' ')
+         << "<type> --> ";
+    if (this->isId)
+    {
+        *out << "ID";
+    }
+    else
+    {
+        *out << "INT";
+    }
+}
+
+void NSimpleType::printNext(ostream *out)
+{
+    indentation++;
+    // *out << string(indentation * 2, ' ')
+    //      << "ID --> ";
+    this->next->print(out);
+    *out << endl;
+    indentation--;
 }
 
 NType::NType(NSimpleType *st)

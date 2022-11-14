@@ -93,11 +93,13 @@ void NInfixExp::print(ostream *out)
 NOptExp::NOptExp()
 {
     this->e = 0;
+    this->next = 0;
 }
 
 NOptExp::NOptExp(NExp *e)
 {
     this->e = e;
+    this->next = 0;
 }
 
 void NOptExp::print(ostream *out)
@@ -161,6 +163,7 @@ NExpCall::NExpCall(NName *n, NArg *a)
 {
     this->name = n;
     this->args = a;
+    this->next = 0;
 }
 
 NExpCall::~NExpCall()
@@ -186,6 +189,7 @@ void NExpCall::print(ostream *out)
 
 NExpRead::NExpRead()
 {
+    this->next = 0;
 }
 
 void NExpRead::print(ostream *out)
@@ -256,6 +260,7 @@ NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes, NBracks *bs)
     this->t = s;
     this->bes = bes;
     this->bs = bs;
+    this->next = 0;
 }
 
 NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes)
@@ -263,6 +268,7 @@ NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes)
     this->t = s;
     this->bes = bes;
     this->bs = 0;
+    this->next = 0;
 }
 
 NNewExpType::NNewExpType(NSimpleType *s, NBracks *bs)
@@ -270,6 +276,7 @@ NNewExpType::NNewExpType(NSimpleType *s, NBracks *bs)
     this->t = s;
     this->bes = 0;
     this->bs = bs;
+    this->next = 0;
 }
 
 NNewExpType::NNewExpType(NSimpleType *s)
@@ -277,6 +284,7 @@ NNewExpType::NNewExpType(NSimpleType *s)
     this->t = s;
     this->bes = 0;
     this->bs = 0;
+    this->next = 0;
 }
 
 NNewExpType::~NNewExpType()
@@ -292,27 +300,44 @@ void NNewExpType::print(ostream *out)
          << "<newexp> --> NEW <type>"
          << endl;
     indentation++;
-    static_cast<NSimpleType *>(this->t)->print(out);
-    if (this->bes)
+    static_cast<NSimpleType *>(this->t)->printClipped(out);
+    // inject type brackets between type and next
+    if (this->bes && !this->bs)
     {
-        this->bes->print(out);
+        this->bes->printType(out, true);
     }
-    if (this->bs)
+    if (this->bs && !this->bes)
     {
         this->bs->print(out);
     }
-    *out << endl;
+    if (this->bs && this->bes)
+    {
+        this->bes->printType(out, false);
+        this->bs->print(out);
+    }
+    if (!this->bes && !this->bs)
+    {
+        *out << endl;
+    }
+    static_cast<NSimpleType *>(this->t)->printNext(out);
     indentation--;
     if (this->next)
     {
         this->next->print(out);
     }
+    indentation++;
+    if (this->bes)
+    {
+        this->bes->printExpression(out);
+    }
+    indentation--;
 }
 
 NNewExpIdArgs::NNewExpIdArgs(NId *i, NArg *a)
 {
     this->id = i;
     this->args = a;
+    this->next = 0;
 }
 
 NNewExpIdArgs::~NNewExpIdArgs()

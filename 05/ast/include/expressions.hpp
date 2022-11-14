@@ -69,19 +69,19 @@ protected:
     NExp *e;
 };
 
-class NExpName : public NExp
-{
-public:
-    NExpName(NName *n);
-    virtual void print(ostream *out = 0);
-};
+// class NExpName : public NExp
+// {
+// public:
+//     NExpName(NName *n);
+//     virtual void print(ostream *out = 0);
+// };
 
-class NExpNumber : public NExp
-{
-public:
-    NExpNumber(NNumber *n);
-    virtual void print(ostream *out = 0);
-};
+// class NExpNumber : public NExp
+// {
+// public:
+//     NExpNumber(NNumber *n);
+//     virtual void print(ostream *out = 0);
+// };
 
 class NExpNull : public NExp
 {

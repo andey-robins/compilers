@@ -75,11 +75,11 @@ void NBracks::print(ostream *out)
     {
         *out << " []";
     }
-    *out << endl;
     if (this->next)
     {
         this->next->print(out);
     }
+    *out << endl;
 }
 
 NBrackExps::NBrackExps(NExp *e)
@@ -101,6 +101,26 @@ void NBrackExps::print(ostream *out)
         this->next->print(out);
     }
     *out << endl;
+    indentation++;
+    this->exp->print(out);
+    indentation--;
+}
+
+void NBrackExps::printType(ostream *out, bool printEndline)
+{
+    *out << " [<exp>]";
+    if (this->next)
+    {
+        this->next->print(out);
+    }
+    if (printEndline)
+    {
+        *out << endl;
+    }
+}
+
+void NBrackExps::printExpression(ostream *out)
+{
     indentation++;
     this->exp->print(out);
     indentation--;

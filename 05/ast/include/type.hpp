@@ -19,6 +19,8 @@ public:
     NSimpleType(NId *id);
     string getType();
     virtual void print(ostream *out = 0);
+    void printClipped(ostream *out = 0);
+    void printNext(ostream *out = 0);
 
 private:
     bool isId = false;
