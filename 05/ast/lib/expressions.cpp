@@ -64,6 +64,7 @@ NInfixExp::NInfixExp(NOperator *o, NExp *left, NExp *right)
     this->left = left;
     this->right = right;
     this->op = o;
+    this->next = 0;
 }
 
 NInfixExp::~NInfixExp()
@@ -138,6 +139,7 @@ void NExpNull::print(ostream *out)
 NParenExp::NParenExp(NExp *inner)
 {
     this->in = inner;
+    this->next = 0;
 }
 
 NParenExp::~NParenExp()
@@ -206,6 +208,7 @@ void NExpRead::print(ostream *out)
 NExpNewExp::NExpNewExp(NNewExp *ne)
 {
     this->newExp = ne;
+    this->next = 0;
 }
 
 NExpNewExp::~NExpNewExp()
@@ -231,6 +234,7 @@ NPrefixExp::NPrefixExp(NOperator *o, NExp *e)
 {
     this->op = o;
     this->exp = e;
+    this->next = 0;
 }
 
 NPrefixExp::~NPrefixExp()

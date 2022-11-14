@@ -113,20 +113,56 @@ BOOST_AUTO_TEST_CASE(expRead)
 
 BOOST_AUTO_TEST_CASE(expNewExp)
 {
+    NId *id = new NId("x");
+    NSimpleType *st = new NSimpleType(id);
+    NNewExp *newExp = new NNewExpType(st);
+    NExpNewExp *expNewExp = new NExpNewExp(newExp);
+
+    std::stringstream s;
+    expNewExp->print(&s);
+    BOOST_CHECK(s.str() == "<exp> --> <newexp>\n  <newexp> --> NEW <type>\n    <type> --> ID\n      ID --> x\n");
 }
 
 BOOST_AUTO_TEST_CASE(prefixExp)
 {
+    NExpNull *nullExp = new NExpNull();
+    NOperator *op = new NOperator("+");
+    NPrefixExp *infix = new NPrefixExp(op, nullExp);
+
+    std::stringstream s;
+    infix->print(&s);
+    BOOST_CHECK(s.str() == "<exp> --> + <exp>\n  <exp> --> null\n");
 }
 
 BOOST_AUTO_TEST_CASE(infixExp)
 {
+    NExpNull *nullExp = new NExpNull();
+    NOperator *op = new NOperator("+");
+    NInfixExp *infix = new NInfixExp(op, nullExp, nullExp);
+
+    std::stringstream s;
+    infix->print(&s);
+    BOOST_CHECK(s.str() == "<exp> --> <exp> + <exp>\n  <exp> --> null\n  <exp> --> null\n");
 }
 
 BOOST_AUTO_TEST_CASE(parenExp)
 {
+    NExpNull *nullExp = new NExpNull();
+    NParenExp *parens = new NParenExp(nullExp);
+
+    std::stringstream s;
+    parens->print(&s);
+    BOOST_CHECK(s.str() == "<exp> --> ( <exp> )\n  <exp> --> null\n");
 }
 
-BOOST_AUTO_TEST_CASE(nameExp)
-{
-}
+// BOOST_AUTO_TEST_CASE(nameExp)
+// {
+//     NExpNull *nullExp = new NExpNull();
+//     NNameThis *name = new NNameThis();
+//     NNameExp *nameExp = new NNameExp(name, nullExp);
+
+//     std::stringstream s;
+//     nameExp->print(&s);
+//     cout << s.str();
+//     BOOST_CHECK("<exp> --> <>")
+// }

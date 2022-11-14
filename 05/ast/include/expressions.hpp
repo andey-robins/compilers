@@ -156,11 +156,11 @@ private:
     NExp *in;
 };
 
-class NNameExp : public NName
-{
-public:
-    NNameExp(NName *n, NExp *e);
-    virtual void print(ostream *out = 0);
-};
+// class NNameExp : public NName
+// {
+// public:
+//     NNameExp(NName *n, NExp *e);
+//     virtual void print(ostream *out = 0);
+// };
 
 #endif
