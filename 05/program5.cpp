@@ -8,6 +8,8 @@
  * It also includes a definition for the pretty printer used in the output for program3
  */
 
+#define YYDEBUG 1
+
 #include <iostream>
 #include <iomanip>
 #include <FlexLexer.h>
@@ -25,6 +27,7 @@ extern int symbolIndentation;
 int main()
 {
     ast = 0;
+    yydebug = 0;
     symbols = new SymbolTree();
     yyparse();
 
@@ -34,6 +37,7 @@ int main()
     // ast->print(&cout);
     if (ast)
     {
+        ast->print(&cout);
         static_cast<NProgram *>(ast)->addSymbols(symbols);
     }
     symbols->print();

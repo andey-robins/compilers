@@ -18,6 +18,7 @@ class NStatement : public BaseNode
 {
 public:
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 };
 
 class NStateAssign : public NStatement
@@ -73,6 +74,7 @@ public:
     NStateBlock(NBlock *b);
     ~NStateBlock();
     virtual void print(ostream *out = 0);
+    void addSymbols();
 
 private:
     NBlock *block;

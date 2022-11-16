@@ -19,3 +19,10 @@
 - [x] 3_many.dcaf didn't handle a block as a statement
 - [x] error messages are too much
 - [ ] add unrecognized char errors to yylex
+- [ ] add params to symbol tables
+- [ ] get 1_class.decaf working
+- [ ] get 2_class.decaf working
+- [ ] get 3_output.decaf working
+- [ ] get 4_errors.decaf working
+- [ ] get 5_mist.decaf working
+- [ ] get localvardecls put into symbol tables

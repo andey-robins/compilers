@@ -12,6 +12,8 @@
 %option yylineno
 /* %option reentrant */
 
+%x C_COMMENT
+
 %{
 using std::string;
 using std::cerr;
@@ -19,6 +21,7 @@ using std::cout;
 using std::endl;
 #include "program5.hpp"
 #include "program5.tab.hpp"
+#include <iostream>
 
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 
@@ -287,22 +290,12 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 }
 
  /* 12 C-STYLE COMMENTS */
-"/*"[^*/]*"*/" {
-    col += lastTokenLen;
-    lastTokenLen = 0;
-    string text = string(yytext);
-    for (int i = 0; i < int(text.length()); i++) {
-        if (text[i] == '\n') {
-            col = 1;
-            lastTokenLen = 0;
-        } else {
-            lastTokenLen++;
-        }
-    }
-    token = "COMMENT";
-    // per program2 instructions, no token is returned
-    // return COMMENT;
-}
+
+
+"/*" { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL); }
+<C_COMMENT>\n { }
+<C_COMMENT>. {}
 
  /* SLASH COMMENTS */
 "//"[^\n]*[\n] {
