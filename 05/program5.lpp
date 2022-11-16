@@ -290,8 +290,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
 }
 
  /* 12 C-STYLE COMMENTS */
-
-
+ /* bless my man rici https://stackoverflow.com/questions/2130097/difficulty-getting-c-style-comments-in-flex-lex */
 "/*" { BEGIN(C_COMMENT); }
 <C_COMMENT>"*/" { BEGIN(INITIAL); }
 <C_COMMENT>\n { }
