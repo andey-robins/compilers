@@ -18,6 +18,7 @@ public:
     NProgram(NClassDecl *cd);
     ~NProgram();
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NClassDecl *classDeclaration;

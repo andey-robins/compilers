@@ -8,6 +8,8 @@
 
 #include "../include/parser.hpp"
 
+int symbolIndentation = 0;
+
 Scope::Scope(SymbolTable *rootTable)
 {
     std::stack<SymbolTable *> *map = new std::stack<SymbolTable *>();
@@ -54,17 +56,25 @@ void Scope::registerSymbol(string symbol)
 }
 void Scope::registerSymbolWithValue(string symbol, Value *val)
 {
-    (*this->scopeStack).top()->registerSymbolWithValue(symbol, val);
+    cout << "trying" << endl;
+    cout << (*this->scopeStack).top() << endl;
+    cout << (*this->scopeStack).top();
+    // (*this->scopeStack).top()->registerSymbolWithValue(symbol, val);
 }
 void Scope::registerGlobalSymbolWithValue(string symbol, Value *val)
 {
-    (*this->scopeStack).top()->registerGlobalSymbolWithValue(symbol, val);
+    // (*this->scopeStack).top()->registerGlobalSymbolWithValue(symbol, val);
 }
-Value *Scope::lookupSymbol(string symbol)
-{
-    return (*this->scopeStack).top()->lookupSymbol(symbol);
-}
+// Value *Scope::lookupSymbol(string symbol)
+// {
+//     return (*this->scopeStack).top()->lookupSymbol(symbol);
+// }
 void Scope::print()
 {
-    (*this->scopeStack).top()->print();
+    // TODO remove this
+    cout << "scope print" << endl;
+    if ((*this->scopeStack).top())
+    {
+        (*this->scopeStack).top()->print();
+    }
 }

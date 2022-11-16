@@ -52,10 +52,10 @@ clean:
 	/bin/rm -f program5.tgz
 
 run: program5
-	./program5
+	./program5 < simple_tests/tiny.dcaf
 
-test: $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp parser/tests/*.cpp 
-	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/tests/*.cpp ast/tests/*.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp
+test: $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp parser/tests/*.cpp  ast/tests/*.cpp ast/tests/integration/*.cpp program5_lex.cpp program5.tab.cpp
+	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/tests/*.cpp ast/tests/*.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp ast/tests/integration/*.cpp program5.tab.cpp program5_lex.cpp
 	./boost_test
 
 tar: clean

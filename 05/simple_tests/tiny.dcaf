@@ -1,0 +1,14 @@
+class Foo {
+    
+    int a;
+    Foo() {
+        int b;
+    }
+
+    int bar() {
+        int d;
+        {
+            int f;
+        }
+    }
+}

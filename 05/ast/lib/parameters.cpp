@@ -33,6 +33,11 @@ void NParam::print(ostream *out)
     }
 }
 
+string NParam::getMangling()
+{
+    return "mangling";
+}
+
 NArg::NArg(NExp *e)
 {
     this->e = e;

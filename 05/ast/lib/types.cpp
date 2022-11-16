@@ -132,6 +132,15 @@ void NResultType::print(ostream *out)
     }
 }
 
+string NResultType::getType() 
+{
+    if (this->type)
+    {
+        return this->type->getType();
+    }
+    return "void";
+}
+
 NEpsilon::NEpsilon()
 {
     this->setVal("epsilon");

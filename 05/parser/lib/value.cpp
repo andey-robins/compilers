@@ -56,3 +56,15 @@ int Value::getInt()
 {
     return this->i;
 }
+
+void Value::print()
+{
+    if (this->s)
+    {
+        cout << (*this->s);
+    }
+    else
+    {
+        cout << this->i;
+    }
+}

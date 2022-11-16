@@ -46,6 +46,7 @@ class NResultType : public BaseNode
 public:
     NResultType(NType *t);
     NResultType(NKeyword *k);
+    string getType();
     virtual void print(ostream *out = 0);
 
 private:

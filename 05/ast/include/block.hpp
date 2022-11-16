@@ -9,6 +9,7 @@ public:
     NVarDecl(NType *t, NId *id);
     ~NVarDecl();
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NType *type;
@@ -20,6 +21,7 @@ class NLocalVarDecl : public BaseNode
 public:
     NLocalVarDecl(NVarDecl *vd);
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NVarDecl *vd;
@@ -31,6 +33,7 @@ public:
     NBlock(NLocalVarDecl *vd);
     NBlock(NStatement *s);
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 };
 
 #endif

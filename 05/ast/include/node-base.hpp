@@ -17,6 +17,8 @@ using std::endl;
 using std::ostream;
 using std::string;
 
+class SymbolTree;
+
 class BaseNode
 {
 public:

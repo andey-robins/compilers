@@ -17,17 +17,27 @@
 
 yyFlexLexer lexer;
 BaseNode *ast;
+SymbolTree *symbols;
+SymbolTable *activeSymbols;
 extern int indentation;
+extern int symbolIndentation;
 
 int main()
 {
     ast = 0;
+    symbols = new SymbolTree();
     yyparse();
 
     // Two spaces to separate errors from parse tree
     cout << endl
          << endl;
-    ast->print(&cout);
+    // ast->print(&cout);
+    if (ast)
+    {
+        static_cast<NProgram *>(ast)->addSymbols(symbols);
+    }
+    symbols->print();
+    
     cout << endl;
     return 0;
 }

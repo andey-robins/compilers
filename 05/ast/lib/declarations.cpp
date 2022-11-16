@@ -33,6 +33,16 @@ void NClassDecl::print(ostream *out)
     indentation--;
 }
 
+void NClassDecl::addSymbols(SymbolTree *node)
+{
+    // in this context, node == root
+    node->registerSymbolWithValue(this->className->getSymbol(), "class_type");
+    SymbolTree *child = new SymbolTree();
+    node->setChild(child);
+    child->setParent(node);
+    this->classBody->addSymbols(child);
+}
+
 NClassBody::NClassBody(NVarDecl *declHead)
 {
     this->next = declHead;
@@ -67,6 +77,29 @@ void NClassBody::print(ostream *out)
         this->next->print(out);
     }
     indentation--;
+}
+
+void NClassBody::addSymbols(SymbolTree *node)
+{
+    if (this->next)
+    {
+        auto *derivedVar = dynamic_cast<NVarDecl *>(this->next);
+        auto *derivedCons = dynamic_cast<NConstDecl *>(this->next);
+        auto *derivedMeth = dynamic_cast<NMethDecl *>(this->next);
+
+        if (derivedVar)
+        {
+            derivedVar->addSymbols(node);
+        }
+        else if (derivedCons)
+        {
+            derivedCons->addSymbols(node);
+        }
+        else if (derivedMeth)
+        {
+            derivedMeth->addSymbols(node);
+        }
+    }
 }
 
 NConstDecl::NConstDecl(NId *id, NParam *p, NBlock *b)
@@ -115,6 +148,29 @@ void NConstDecl::print(ostream *out)
     if (this->next)
     {
         this->next->print(out);
+    }
+}
+
+void NConstDecl::addSymbols(SymbolTree *node)
+{
+    node->registerSymbolWithValue(this->id->getSymbol(), "constructor_type <- ");
+    SymbolTree *child = new SymbolTree();
+    node->setChild(child);
+    child->setParent(node);
+    this->block->addSymbols(child);
+    if (this->next)
+    {
+        auto *derivedCons = dynamic_cast<NConstDecl *>(this->next);
+        auto *derivedMeth = dynamic_cast<NMethDecl *>(this->next);
+
+        if (derivedCons)
+        {
+            derivedCons->addSymbols(node);
+        }
+        else if (derivedMeth)
+        {
+            derivedMeth->addSymbols(node);
+        }
     }
 }
 
@@ -167,5 +223,29 @@ void NMethDecl::print(ostream *out)
     if (this->next)
     {
         this->next->print(out);
+    }
+}
+
+void NMethDecl::addSymbols(SymbolTree *node)
+{
+    string value = "method_type " + this->resType->getType() + " <- " + this->params->getMangling();
+    node->registerSymbolWithValue(this->id->getSymbol(), value);
+    SymbolTree *child = new SymbolTree();
+    node->setChild(child);
+    child->setParent(node);
+    this->block->addSymbols(child);
+    if (this->next)
+    {
+        auto *derivedCons = dynamic_cast<NConstDecl *>(this->next);
+        auto *derivedMeth = dynamic_cast<NMethDecl *>(this->next);
+
+        if (derivedCons)
+        {
+            derivedCons->addSymbols(node);
+        }
+        else if (derivedMeth)
+        {
+            derivedMeth->addSymbols(node);
+        }
     }
 }

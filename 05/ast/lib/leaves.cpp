@@ -21,6 +21,11 @@ void NId::print(ostream *out)
          << this->text;
 }
 
+string NId::getSymbol()
+{
+    return this->text;
+}
+
 NKeyword::NKeyword(string key)
 {
     this->text = key;
@@ -34,6 +39,11 @@ string NKeyword::getText()
 void NKeyword::print(ostream *out)
 {
     *out << this->text << endl;
+}
+
+string NKeyword::getSymbol()
+{
+    return this->text;
 }
 
 NNumber::NNumber(int n)
@@ -54,6 +64,11 @@ void NNumber::print(ostream *out)
          << endl;
 }
 
+string NNumber::getSymbol()
+{
+    return std::to_string(this->num);
+}
+
 NOperator::NOperator(string op)
 {
     this->op = op;
@@ -67,4 +82,9 @@ string NOperator::getOp()
 void NOperator::print(ostream *out)
 {
     *out << this->op;
+}
+
+string NOperator::getSymbol()
+{
+    return this->op;
 }

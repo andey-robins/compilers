@@ -39,10 +39,29 @@ void NBlock::print(ostream *out)
     indentation--;
 }
 
+void NBlock::addSymbols(SymbolTree *node)
+{
+    if (this->next)
+    {
+        auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
+        auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
+
+        if (derivedVar)
+        {
+            derivedVar->addSymbols(node);
+        }
+        // else if (derivedStmt)
+        // {
+        //     derivedStmt->addSymbols(node);
+        // }
+    }
+}
+
 NVarDecl::NVarDecl(NType *t, NId *id)
 {
     this->type = t;
     this->id = id;
+    this->next = 0;
 }
 
 NVarDecl::~NVarDecl()
@@ -81,6 +100,35 @@ void NVarDecl::print(ostream *out)
     }
 }
 
+void NVarDecl::addSymbols(SymbolTree *node)
+{
+
+    node->registerSymbolWithValue(this->id->getSymbol(), this->type->getType());
+    SymbolTree *child = new SymbolTree();
+    node->setChild(child);
+    child->setParent(node);
+
+    if (this->next)
+    {
+        auto *derivedVar = dynamic_cast<NVarDecl *>(this->next);
+        auto *derivedCons = dynamic_cast<NConstDecl *>(this->next);
+        auto *derivedMeth = dynamic_cast<NMethDecl *>(this->next);
+
+        if (derivedVar)
+        {
+            derivedVar->addSymbols(node);
+        }
+        else if (derivedCons)
+        {
+            derivedCons->addSymbols(node);
+        }
+        else if (derivedMeth)
+        {
+            derivedMeth->addSymbols(node);
+        }
+    }
+}
+
 NLocalVarDecl::NLocalVarDecl(NVarDecl *vd)
 {
     this->vd = vd;
@@ -98,4 +146,9 @@ void NLocalVarDecl::print(ostream *out)
     {
         this->next->print(out);
     }
+}
+
+void NLocalVarDecl::addSymbols(SymbolTree *node)
+{
+    this->vd->addSymbols(node);
 }

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include "struct.hpp"
+#include "../../parser/include/parser.hpp"
 
 using std::cout;
 using std::ostream;

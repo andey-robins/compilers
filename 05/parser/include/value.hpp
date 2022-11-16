@@ -23,6 +23,7 @@ public:
     bool isEpsilon();
     string *getString();
     int getInt();
+    void print();
 
 private:
     string *s;

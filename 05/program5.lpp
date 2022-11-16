@@ -10,6 +10,7 @@
 %option outfile="program5_lex.cpp"
 %option noyywrap
 %option yylineno
+/* %option reentrant */
 
 %{
 using std::string;

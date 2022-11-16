@@ -20,6 +20,7 @@ class NId : public BaseNode
 public:
     NId(string id);
     virtual void print(ostream *out = 0);
+    string getSymbol();
 
 private:
     string text;
@@ -31,6 +32,7 @@ public:
     NKeyword(string key);
     string getText();
     virtual void print(ostream *out = 0);
+    string getSymbol();
 
 private:
     string text;
@@ -42,6 +44,7 @@ public:
     NNumber(int n);
     int getVal();
     virtual void print(ostream *out = 0);
+    string getSymbol();
 
 private:
     int num;
@@ -53,6 +56,7 @@ public:
     NOperator(string op);
     string getOp();
     virtual void print(ostream *out = 0);
+    string getSymbol();
 
 private:
     string op;

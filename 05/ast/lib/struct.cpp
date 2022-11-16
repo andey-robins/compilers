@@ -28,3 +28,8 @@ void NProgram::print(ostream *out)
     this->classDeclaration->print(out);
     indentation = 0;
 }
+
+void NProgram::addSymbols(SymbolTree *node)
+{
+    this->classDeclaration->addSymbols(node);
+}

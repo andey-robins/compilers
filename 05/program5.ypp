@@ -19,6 +19,8 @@ using std::cerr;
 
 class BaseNode;
 extern BaseNode *ast;
+extern Scope *symbols;
+extern SymbolTable *activeSymbols;
 extern yyFlexLexer lexer;
 
 #define yylex() lexer.yylex()
@@ -60,9 +62,18 @@ program:
         ast = new NProgram(static_cast<NClassDecl *>($1));
         $$ = ast;
     }
-|   error ER_CH error SEMI { yyerror("err: unsupported character in line"); }
-|   error ER_WD error SEMI { yyerror("err: unsupported word in line"); }
-|   error SEMI { yyerror("err: syntax error in line"); }
+|   error ER_CH error SEMI { 
+        yyerror("err: unsupported character in line"); 
+        ast = 0;
+    }
+|   error ER_WD error SEMI { 
+        yyerror("err: unsupported word in line"); 
+        ast = 0;
+    }
+|   error SEMI { 
+        yyerror("err: syntax error in line"); 
+        ast = 0;
+    }
 ;
 
 classDeclarations:
@@ -76,7 +87,6 @@ classDeclarations:
         NId *id = new NId($2->getText());
         $$ = new NClassDecl(id, static_cast<NClassBody *>($3));
     }
-|   error { yyerror("err: bad class declaration"); }
 ;
 
 classBody:
@@ -98,7 +108,6 @@ classBody:
             $$ = new NClassBody(derivedMeth);
         }
     }
-|   error { yyerror("err: bad class body. check declarations"); }
 ;
 
 varDeclHeaderChoice:
@@ -312,7 +321,6 @@ block:
             $$ = derivedEpsilon;
         }
     }
-|   error { yyerror("err: error detected within block"); }
 ;
 
 blockHeadChoice:
@@ -387,9 +395,9 @@ statement:
         $$ = new NStateReturn(oe);
     }
     // TODO fix this
-/* |   block {
+|   block {
         $$ = static_cast<NBlock *>($1);
-    } */
+    }
 ;
 
 name:

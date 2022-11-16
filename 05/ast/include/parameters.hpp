@@ -26,6 +26,7 @@ class NParam : public BaseNode
 public:
     NParam(NType *t, NId *id);
     virtual void print(ostream *out = 0);
+    string getMangling();
 
 private:
     NType *type;
