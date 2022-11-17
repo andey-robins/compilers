@@ -23,8 +23,11 @@
   - [x] generate symbol mangling
   - [x] put parameters in table
 - [x] get 1_class.decaf working
-- [ ] get 2_class.decaf working
+- [x] get 2_class.decaf working
 - [ ] get 3_output.decaf working
 - [ ] get 4_errors.decaf working
 - [ ] get 5_mist.decaf working
 - [ ] get localvardecls put into symbol tables
+- [ ] get bracket types working
+  - [ ] only brackets
+  - [ ] brackets and brackexps

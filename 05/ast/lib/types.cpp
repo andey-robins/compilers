@@ -83,12 +83,19 @@ NType::NType(NType *t, int bracks)
 {
     this->brackCount = bracks;
     this->next = t;
-    string typeString = t->getType();
-    for (int i = 0; i < bracks; i++)
+    if (t != 0)
     {
-        typeString += "[]";
+        string typeString = t->getType();
+        for (int i = 0; i < bracks; i++)
+        {
+            typeString += "[]";
+        }
+        type = typeString;
     }
-    type = typeString;
+    else
+    {
+        type = "unknown";
+    }
 }
 
 int NType::getBracks()
@@ -98,11 +105,12 @@ int NType::getBracks()
 
 string NType::getType()
 {
-    if (this->type == "ID")
+    string typeString = this->type;
+    for (int i = 0; i < this->brackCount; i++)
     {
-        cout << this->getText() << endl;
+        typeString += " []";
     }
-    return this->type;
+    return typeString;
 }
 
 void NType::print(ostream *out)

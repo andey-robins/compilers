@@ -52,7 +52,7 @@ class boo {
   int a;
   foo b;
   goo[][] c;
-
+/*
   boo(int a, goo b) {
     int a;
     goo b;
@@ -93,5 +93,5 @@ class boo {
     while(x > 5) x = x -1;
     return ;
   }
-
+*/
 }

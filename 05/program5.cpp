@@ -26,10 +26,13 @@ extern int symbolIndentation;
 
 int main()
 {
+    cout << "welcome to the program" << endl;
     ast = 0;
     yydebug = 0;
     symbols = new SymbolTree();
     yyparse();
+
+    cout << "parsed" << endl;
 
     // Two spaces to separate errors from parse tree
     cout << endl

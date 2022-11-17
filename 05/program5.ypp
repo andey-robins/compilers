@@ -113,6 +113,7 @@ classBody:
 
 varDeclHeaderChoice:
     INT bracks ID SEMI varDeclHeaderChoice {
+        cout << "vardeclheader 1" << endl;
         int bracks = static_cast<NType*>($2)->getBracks();
         NKeyword *key = new NKeyword($1->getText());
         NSimpleType *st = new NSimpleType(key);
@@ -123,7 +124,9 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   ID bracks ID SEMI varDeclHeaderChoice {
+        cout << "decl" << endl;
         int bracks = static_cast<NType*>($2)->getBracks();
+        cout << "bracks" << endl;
         NId *id = new NId($1->getText());
         NSimpleType *st = new NSimpleType(id);
         NType *stWrapper = new NType(st);
@@ -133,6 +136,7 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   INT ID SEMI varDeclHeaderChoice {
+        cout << "vardeclheader 3" << endl;
         NKeyword *key = new NKeyword($1->getText());
         NId *id = new NId($2->getText());
         NSimpleType *st = new NSimpleType(key);
@@ -142,6 +146,7 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   ID ID SEMI varDeclHeaderChoice {
+        cout << "vardeclheader 4" << endl;
         NId *idOne = new NId($1->getText());
         NId *idTwo = new NId($2->getText());
         NSimpleType *st = new NSimpleType(idOne);
@@ -592,20 +597,24 @@ newExpTypes:
 
 brackExp:
     LBRACKET expression RBRACKET brackExp {
+        cout << "brackexp" << endl;
         NBrackExps *curr = new NBrackExps(static_cast<NExp *>($2));
         curr->setNext(static_cast<NBrackExps *>($4));
         $$ = curr;
     }
 |   LBRACKET expression RBRACKET {
+        cout << "brackexp" << endl;
         $$ = new NBrackExps(static_cast<NExp *>($2));
     }
 ;
 
 bracks:
     LBRACKET RBRACKET bracks {
+        cout << "multibrack" << endl;
         $$ = new NType(0, static_cast<NType *>($3)->getBracks()+1);
     }
 |   LBRACKET RBRACKET {
+        cout << "bracks" << endl;
         $$ = new NType(0, 1);
     }
 ;
