@@ -15,12 +15,14 @@
 - [x] Add in methods
 - [x] Get constructor bodies symbols
 - [x] Get method bodies symbols
-- [ ] fix C-style comments
+- [x] fix C-style comments
 - [x] 3_many.dcaf didn't handle a block as a statement
 - [x] error messages are too much
 - [ ] add unrecognized char errors to yylex
-- [ ] add params to symbol tables
-- [ ] get 1_class.decaf working
+- [x] add params to symbol tables
+  - [x] generate symbol mangling
+  - [x] put parameters in table
+- [x] get 1_class.decaf working
 - [ ] get 2_class.decaf working
 - [ ] get 3_output.decaf working
 - [ ] get 4_errors.decaf working

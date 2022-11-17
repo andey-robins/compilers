@@ -58,6 +58,7 @@ class NEpsilon : public BaseNode
 {
 public:
     NEpsilon();
+    string getType();
     virtual void print(ostream *out = 0);
 };
 

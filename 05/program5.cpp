@@ -37,11 +37,15 @@ int main()
     // ast->print(&cout);
     if (ast)
     {
-        ast->print(&cout);
+        // ast->print(&cout);
         static_cast<NProgram *>(ast)->addSymbols(symbols);
     }
+
+    cout << endl
+         << endl;
+
     symbols->print();
-    
+
     cout << endl;
     return 0;
 }

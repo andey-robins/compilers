@@ -52,7 +52,7 @@ clean:
 	/bin/rm -f program5.tgz
 
 run: program5
-	./program5 < testfiles/1_class.decaf
+	./program5 < testfiles/3_many.decaf
 
 test: $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp parser/tests/*.cpp  ast/tests/*.cpp ast/tests/integration/*.cpp program5_lex.cpp program5.tab.cpp
 	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/tests/*.cpp ast/tests/*.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp ast/tests/integration/*.cpp program5.tab.cpp program5_lex.cpp

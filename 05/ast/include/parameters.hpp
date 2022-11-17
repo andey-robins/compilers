@@ -27,6 +27,7 @@ public:
     NParam(NType *t, NId *id);
     virtual void print(ostream *out = 0);
     string getMangling();
+    void addSymbols(SymbolTree *node);
 
 private:
     NType *type;

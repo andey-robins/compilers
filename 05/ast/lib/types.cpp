@@ -21,7 +21,7 @@ NSimpleType::NSimpleType(NId *id)
 {
     this->next = id;
     this->isId = true;
-    this->type = "ID";
+    this->type = id->getSymbol();
 }
 
 string NSimpleType::getType()
@@ -83,6 +83,12 @@ NType::NType(NType *t, int bracks)
 {
     this->brackCount = bracks;
     this->next = t;
+    string typeString = t->getType();
+    for (int i = 0; i < bracks; i++)
+    {
+        typeString += "[]";
+    }
+    type = typeString;
 }
 
 int NType::getBracks()
@@ -92,6 +98,10 @@ int NType::getBracks()
 
 string NType::getType()
 {
+    if (this->type == "ID")
+    {
+        cout << this->getText() << endl;
+    }
     return this->type;
 }
 
@@ -132,7 +142,7 @@ void NResultType::print(ostream *out)
     }
 }
 
-string NResultType::getType() 
+string NResultType::getType()
 {
     if (this->type)
     {
@@ -144,6 +154,11 @@ string NResultType::getType()
 NEpsilon::NEpsilon()
 {
     this->setVal("epsilon");
+}
+
+string NEpsilon::getType()
+{
+    return "void";
 }
 
 void NEpsilon::print(ostream *out)

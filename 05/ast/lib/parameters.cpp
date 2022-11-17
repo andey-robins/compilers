@@ -35,7 +35,33 @@ void NParam::print(ostream *out)
 
 string NParam::getMangling()
 {
-    return "mangling";
+    if (this->next)
+    {
+        auto *derivedParam = dynamic_cast<NParam *>(this->next);
+        if (derivedParam)
+        {
+            return this->type->getType() + " x " + derivedParam->getMangling();
+        }
+    }
+
+    if (this->type)
+    {
+        return this->type->getType();
+    }
+
+    return "void";
+}
+
+void NParam::addSymbols(SymbolTree *node)
+{
+    if (this->id && this->type)
+    {
+        node->registerSymbolWithValue(this->id->getSymbol(), this->type->getType());
+    };
+    if (this->next)
+    {
+        static_cast<NParam *>(this->next)->addSymbols(node);
+    }
 }
 
 NArg::NArg(NExp *e)

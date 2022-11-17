@@ -40,7 +40,17 @@ void NClassDecl::addSymbols(SymbolTree *node)
     SymbolTree *child = new SymbolTree();
     node->setChild(child);
     child->setParent(node);
-    this->classBody->addSymbols(child);
+    if (this->classBody)
+    {
+        this->classBody->addSymbols(child);
+    }
+
+    // continue to next class declaration
+    auto *derivedNext = dynamic_cast<NClassDecl *>(this->next);
+    if (derivedNext)
+    {
+        static_cast<NClassDecl *>(this->next)->addSymbols(node);
+    }
 }
 
 NClassBody::NClassBody(NVarDecl *declHead)
@@ -153,7 +163,8 @@ void NConstDecl::print(ostream *out)
 
 void NConstDecl::addSymbols(SymbolTree *node)
 {
-    node->registerSymbolWithValue(this->id->getSymbol(), "constructor_type <- ");
+    string value = "constructor_type <- " + this->params->getMangling();
+    node->registerSymbolWithValue(this->id->getSymbol(), value);
     SymbolTree *child = new SymbolTree();
     node->setChild(child);
     child->setParent(node);
@@ -228,22 +239,23 @@ void NMethDecl::print(ostream *out)
 
 void NMethDecl::addSymbols(SymbolTree *node)
 {
+    // put method in symbol table
     string value = "method_type " + this->resType->getType() + " <- " + this->params->getMangling();
     node->registerSymbolWithValue(this->id->getSymbol(), value);
+    // create the sub-table for the method's internal scope
     SymbolTree *child = new SymbolTree();
     node->setChild(child);
     child->setParent(node);
+
+    this->params->addSymbols(child);
     this->block->addSymbols(child);
+
+    // continue adding next set of symbols to the table
     if (this->next)
     {
-        auto *derivedCons = dynamic_cast<NConstDecl *>(this->next);
         auto *derivedMeth = dynamic_cast<NMethDecl *>(this->next);
 
-        if (derivedCons)
-        {
-            derivedCons->addSymbols(node);
-        }
-        else if (derivedMeth)
+        if (derivedMeth)
         {
             derivedMeth->addSymbols(node);
         }

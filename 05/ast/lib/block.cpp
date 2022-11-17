@@ -102,7 +102,6 @@ void NVarDecl::print(ostream *out)
 
 void NVarDecl::addSymbols(SymbolTree *node)
 {
-
     node->registerSymbolWithValue(this->id->getSymbol(), this->type->getType());
     SymbolTree *child = new SymbolTree();
     node->setChild(child);

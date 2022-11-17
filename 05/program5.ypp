@@ -63,7 +63,7 @@ program:
         ast = new NProgram(static_cast<NClassDecl *>($1));
         $$ = ast;
     }
-/* |   error ER_CH error SEMI { 
+|   error ER_CH error SEMI { 
         yyerror("err: unsupported character in line"); 
         ast = 0;
     }
@@ -72,13 +72,9 @@ program:
         ast = 0;
     }
 |   error SEMI { 
-        cout << "error" << endl;
-        cout << token << endl;
-        yylex();
-        cout << token << endl;
         yyerror("err: syntax error in line"); 
         ast = 0;
-    } */
+    }
 ;
 
 classDeclarations:
@@ -137,7 +133,6 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   INT ID SEMI varDeclHeaderChoice {
-        cout << "int a;" << endl;
         NKeyword *key = new NKeyword($1->getText());
         NId *id = new NId($2->getText());
         NSimpleType *st = new NSimpleType(key);
