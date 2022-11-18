@@ -73,7 +73,7 @@ class boo {
   {
     int [][] d;
 
-    //d=new int [10][10][][][];
+    d=new int [10][10][][][];
 
     d[1]=a;
 

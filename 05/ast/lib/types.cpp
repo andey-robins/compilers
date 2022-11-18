@@ -98,6 +98,24 @@ NType::NType(NType *t, int bracks)
     }
 }
 
+NType::NType(NType *t, NBrackExps *bes)
+{
+    this->brackCount = 0;
+    this->bracketExps = bes;
+    if (t != 0)
+    {
+        string typeString = t->getType();
+        std::stringstream s;
+        bes->printType(&s);
+        typeString += s.str();
+        type = typeString;
+    }
+    else
+    {
+        type = "unknown";
+    }
+}
+
 int NType::getBracks()
 {
     return this->brackCount;

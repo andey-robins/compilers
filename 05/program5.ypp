@@ -39,13 +39,14 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression newExpTypes bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
+%type<ttype> bracketOpts optBracks program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression newExpTypes bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
 %token<ttype> ID
 %left<ttype> LPAREN RPAREN LBRACKET RBRACKET RBRACE LBRACE
-%token<ttype> NUMBER NULLT READ NEW THIS
+%token<ttype> NUMBER NULLT READ THIS
+%left<ttype> NEW
 %left<ttype> IF ELSE WHILE RETURN CLASS PRINT VOID
 %left<ttype> TIMES DIV MOD AND
 %left<ttype> EQ NE GE LE GT LT ASSIGN
@@ -405,7 +406,7 @@ statement:
 ;
 
 name:
-    ID {
+    ID %prec "reduce" {
         NId *id = new NId($1->getText());
         $$ = new NNameId(id);
     }
@@ -564,7 +565,7 @@ newExpression:
         NId *id = new NId($2->getText());
         $$ = new NNewExpIdArgs(id, static_cast<NArg *>($4));
     }
-|   NEW newExpTypes bracks %prec "shift" {
+/* |   NEW newExpTypes bracks %prec "shift" {
         int bracks = static_cast<NType *>($3)->getBracks();
         NBracks *brackNode = new NBracks(bracks);
         $$ = new NNewExpType(static_cast<NSimpleType *>($2), brackNode);
@@ -573,13 +574,39 @@ newExpression:
         $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3));
     }
 |   NEW newExpTypes brackExp bracks %prec "shift" {
-        int bracks = static_cast<NType *>($4)->getBracks();
-        NBracks *brackNode = new NBracks(bracks);
+        
         $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3), brackNode);
     }
 |   NEW newExpTypes %prec "reduce" {
         $$ = new NNewExpType(static_cast<NSimpleType *>($2));
+    } */
+|   NEW newExpTypes bracketOpts {
+        auto *derivedBracks = dynamic_cast<NBracks *>($3);
+        auto *derivedBrackExp = dynamic_cast<NBrackExps *>($3);
+
+        if (derivedBracks)
+        {
+            $$ = new NNewExpType(static_cast<NSimpleType *>($2), derivedBracks);
+        }
+        else if (derivedBrackExp)
+        {
+            $$ = new NNewExpType(static_cast<NSimpleType *>($2), derivedBrackExp);
+        }
     }
+;
+
+
+bracketOpts:
+    optBracks
+|   brackExp bracketOpts
+/* |   brackExp bracks {
+    // TODO
+    } */
+;
+
+optBracks:
+    bracks
+|   /* */ { $$ = new NEpsilon();}
 ;
 
 newExpTypes:

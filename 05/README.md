@@ -24,12 +24,12 @@
   - [x] put parameters in table
 - [x] get 1_class.decaf working
 - [x] get 2_class.decaf working
-- [ ] get 3_output.decaf working
+- [ ] get 3_many.decaf working
 - [ ] get 4_errors.decaf working
-- [ ] get 5_mist.decaf working
-- [ ] get localvardecls put into symbol tables
+- [x] get 5_misc.decaf working
+- [x] get localvardecls put into symbol tables
 - [ ] get bracket types working
   - [x] only brackets
+  - [x] only brackexps
   - [ ] brackets and brackexps
 - [ ] fix while statements
-- [ ] 

@@ -11,6 +11,9 @@
 #define TYPES_HPP
 
 #include "leaves.hpp"
+#include <sstream>
+
+class NBrackExps;
 
 class NSimpleType : public BaseNode
 {
@@ -32,12 +35,14 @@ class NType : public BaseNode
 public:
     NType(NSimpleType *st);
     NType(NType *t, int bracks);
+    NType(NType *t, NBrackExps *bes);
     int getBracks();
     string getType();
     virtual void print(ostream *out = 0);
 
 private:
     int brackCount;
+    NBrackExps *bracketExps;
     string type;
 };
 

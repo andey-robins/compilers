@@ -1,0 +1,5 @@
+class Foo {
+    Foo() {
+        d = new int [10][10][];
+    }
+}
