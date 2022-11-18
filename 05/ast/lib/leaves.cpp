@@ -8,6 +8,7 @@
  */
 
 #include "../include/nodes.hpp"
+#include <sstream>
 
 NId::NId(string id)
 {
@@ -23,6 +24,12 @@ void NId::print(ostream *out)
 
 string NId::getSymbol()
 {
+    std::stringstream s;
+    this->print(&s);
+    if (s.str() == "")
+    {
+        return "";
+    }
     return this->text;
 }
 

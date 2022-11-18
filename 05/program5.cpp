@@ -26,9 +26,9 @@ extern int symbolIndentation;
 
 int main()
 {
+    yydebug = 1;
     cout << "welcome to the program" << endl;
     ast = 0;
-    yydebug = 0;
     symbols = new SymbolTree();
     yyparse();
 

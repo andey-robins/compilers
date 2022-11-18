@@ -11,6 +11,7 @@
 #include <iostream>
 #include <FlexLexer.h>
 #include <string>
+#include <sstream>
 #include <typeinfo>
 #include "program5.hpp"
 #define YYERROR_VERBOSE
@@ -113,7 +114,6 @@ classBody:
 
 varDeclHeaderChoice:
     INT bracks ID SEMI varDeclHeaderChoice {
-        cout << "vardeclheader 1" << endl;
         int bracks = static_cast<NType*>($2)->getBracks();
         NKeyword *key = new NKeyword($1->getText());
         NSimpleType *st = new NSimpleType(key);
@@ -124,9 +124,7 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   ID bracks ID SEMI varDeclHeaderChoice {
-        cout << "decl" << endl;
         int bracks = static_cast<NType*>($2)->getBracks();
-        cout << "bracks" << endl;
         NId *id = new NId($1->getText());
         NSimpleType *st = new NSimpleType(id);
         NType *stWrapper = new NType(st);
@@ -136,7 +134,6 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   INT ID SEMI varDeclHeaderChoice {
-        cout << "vardeclheader 3" << endl;
         NKeyword *key = new NKeyword($1->getText());
         NId *id = new NId($2->getText());
         NSimpleType *st = new NSimpleType(key);
@@ -146,7 +143,6 @@ varDeclHeaderChoice:
         $$ = curr;
     }
 |   ID ID SEMI varDeclHeaderChoice {
-        cout << "vardeclheader 4" << endl;
         NId *idOne = new NId($1->getText());
         NId *idTwo = new NId($2->getText());
         NSimpleType *st = new NSimpleType(idOne);
@@ -375,6 +371,9 @@ statement:
     SEMI {
         $$ = new NEpsilon();
     }
+|   block {
+        $$ = static_cast<NBlock *>($1);
+    }
 |   name ASSIGN expression SEMI {
         $$ = new NStateAssign(static_cast<NName *>($1), static_cast<NExp *>($3));
     }
@@ -390,6 +389,10 @@ statement:
         $$ = new NStateCond(static_cast<NCondition *>($1));
     }
 |   WHILE LPAREN expression RPAREN statement {
+        cout << "marker" << endl;
+        std::stringstream s;
+        static_cast<NStatement *>($5)->print(&s);
+        cout << s.str() << endl;
         $$ = new NStateWhile(static_cast<NExp *>($3), static_cast<NStatement *>($5));
     }
 |   RETURN expression SEMI {
@@ -400,14 +403,12 @@ statement:
         NOptExp *oe = new NOptExp(); // None monad
         $$ = new NStateReturn(oe);
     }
-    // TODO fix this
-|   block {
-        $$ = static_cast<NBlock *>($1);
-    }
+
 ;
 
 name:
     ID {
+        cout << "name id" << $1->getText() << endl;
         NId *id = new NId($1->getText());
         $$ = new NNameId(id);
     }
@@ -492,19 +493,20 @@ expression:
         NOperator *op = new NOperator(">=");
         $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
     }
-|   expression PLUS term {
+|   expression PLUS expression {
+        cout << "exp plus" << endl;
         NOperator *op = new NOperator("+");
         $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
     }
-|   expression MINUS term {
+|   expression MINUS expression {
         NOperator *op = new NOperator("-");
         $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
     }
-|   expression OR rterm {
+|   expression OR expression {
         NOperator *op = new NOperator("||");
         $$ = new NInfixExp(op, static_cast<NExp *>($1), static_cast<NExp *>($3));
     }
-|   term
+|   term { cout << "term to expr" << endl; }
 ;
 
 rterm:
@@ -528,7 +530,7 @@ rterm:
 
 term:
     rterm
-|   factor
+|   factor { cout << "factor to term" << endl; }
 ;
 
 factor:
@@ -538,6 +540,7 @@ factor:
         $$ = new NPrefixExp(op, static_cast<NExp *>($2));
     }
 |   name %prec "shift" {
+        cout << "factor name " << $1->getText() << endl; 
         $$ = $1;
     }
 |   LPAREN expression RPAREN {
@@ -545,6 +548,7 @@ factor:
     }
 |   NUMBER {
         int i = atoi($1->getText().c_str());
+        cout << "factor number " << i << endl;
         $$ = new NNumber(i);
     }
 |   NULLT {
@@ -563,33 +567,40 @@ factor:
 
 newExpression:
     NEW ID LPAREN argList RPAREN {
+        cout << "newexp 1" << endl;
         NId *id = new NId($2->getText());
         $$ = new NNewExpIdArgs(id, static_cast<NArg *>($4));
     }
-|   NEW newExpTypes {
-        $$ = new NNewExpType(static_cast<NSimpleType *>($2));
-    }
-|   NEW newExpTypes bracks {
+|   NEW newExpTypes bracks %prec "shift" {
+        cout << "newexp 3" << endl;
         int bracks = static_cast<NType *>($3)->getBracks();
         NBracks *brackNode = new NBracks(bracks);
         $$ = new NNewExpType(static_cast<NSimpleType *>($2), brackNode);
     }
-|   NEW newExpTypes brackExp {
+|   NEW newExpTypes brackExp %prec "shift" {
+        cout << "newexp 4" << endl;
         $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3));
     }
-|   NEW newExpTypes brackExp bracks {
+|   NEW newExpTypes brackExp bracks %prec "shift" {
+        cout << "newexp 5" << endl;
         int bracks = static_cast<NType *>($4)->getBracks();
         NBracks *brackNode = new NBracks(bracks);
         $$ = new NNewExpType(static_cast<NSimpleType *>($2), static_cast<NBrackExps *>($3), brackNode);
+    }
+|   NEW newExpTypes %prec "reduce" {
+        cout << "newexp 2" << endl;
+        $$ = new NNewExpType(static_cast<NSimpleType *>($2));
     }
 ;
 
 newExpTypes:
     ID %prec "reduce" {
+        cout << "newexptype 1" << endl;
         NId *id = new NId($1->getText());
         $$ = new NSimpleType(id);
     }
 |   INT {
+        cout << "newexptype 2" << endl;
         NKeyword *intKey = new NKeyword("int");
         $$ = new NSimpleType(intKey);
     }
@@ -597,7 +608,7 @@ newExpTypes:
 
 brackExp:
     LBRACKET expression RBRACKET brackExp {
-        cout << "brackexp" << endl;
+        cout << "multis" << endl;
         NBrackExps *curr = new NBrackExps(static_cast<NExp *>($2));
         curr->setNext(static_cast<NBrackExps *>($4));
         $$ = curr;
@@ -610,11 +621,9 @@ brackExp:
 
 bracks:
     LBRACKET RBRACKET bracks {
-        cout << "multibrack" << endl;
         $$ = new NType(0, static_cast<NType *>($3)->getBracks()+1);
     }
 |   LBRACKET RBRACKET {
-        cout << "bracks" << endl;
         $$ = new NType(0, 1);
     }
 ;

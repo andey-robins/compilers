@@ -18,7 +18,7 @@ class foo {
     b=a; // colon instead of semicolon, not handled get unexpected $end
     return 1;
  // missing a brace  not expected either
-   } 
+  }
 
 }
 

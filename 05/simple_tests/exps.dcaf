@@ -1,0 +1,7 @@
+class Foo {
+    int a;
+    Foo() {
+        return a * 2 % 97;
+    }
+    void bar() {}
+}

@@ -29,5 +29,7 @@
 - [ ] get 5_mist.decaf working
 - [ ] get localvardecls put into symbol tables
 - [ ] get bracket types working
-  - [ ] only brackets
+  - [x] only brackets
   - [ ] brackets and brackexps
+- [ ] fix while statements
+- [ ] 

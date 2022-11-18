@@ -105,11 +105,8 @@ int NType::getBracks()
 
 string NType::getType()
 {
-    string typeString = this->type;
-    for (int i = 0; i < this->brackCount; i++)
-    {
-        typeString += " []";
-    }
+    string typeString;
+    typeString += this->type;
     return typeString;
 }
 

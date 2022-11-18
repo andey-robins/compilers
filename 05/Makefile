@@ -21,7 +21,7 @@ LEX=flex++
 LEXFLAGS=--warn
 
 BISON=bison
-BISONFLAGS=-d
+BISONFLAGS=-d --debug
 
 #########
 # BUILD #
@@ -52,11 +52,20 @@ clean:
 	/bin/rm -f program5.tgz
 
 run: program5
-	./program5 < testfiles/3_many.decaf
+	./program5 < simple_tests/exps.dcaf
 
 test: $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp parser/tests/*.cpp  ast/tests/*.cpp ast/tests/integration/*.cpp program5_lex.cpp program5.tab.cpp
 	$(CXX) $(CXXFLAGS_TESTING) -o boost_test parser/tests/*.cpp ast/tests/*.cpp $(PARSER_DIR)/*.cpp $(AST_DIR)/*.cpp ast/tests/integration/*.cpp program5.tab.cpp program5_lex.cpp
 	./boost_test
 
-tar: clean
-	tar -zcf program5.tgz Makefile program5.cpp program5.hpp program5.lpp program5.ypp ast/lib/*.cpp ast/include/*.hpp parser/include/*.hpp parser/lib/*.cpp
+build: clean
+	mkdir build
+	cp program5.* build/
+	cp Makefile build/
+	cp ast/lib/*.cpp build/
+	cp ast/include/*.hpp build/
+	cp parser/include/*.hpp build/
+	cp parser/lib/*.cpp build/
+
+tar:
+	tar -zcf program5.tgz *.cpp *.lpp *.ypp *.hpp
