@@ -25,11 +25,11 @@
 - [x] get 1_class.decaf working
 - [x] get 2_class.decaf working
 - [ ] get 3_many.decaf working
-- [ ] get 4_errors.decaf working
+- [x] get 4_errors.decaf working
 - [x] get 5_misc.decaf working
 - [x] get localvardecls put into symbol tables
-- [ ] get bracket types working
+- [x] get bracket types working
   - [x] only brackets
   - [x] only brackexps
-  - [ ] brackets and brackexps
+  - [x] brackets and brackexps
 - [ ] fix while statements

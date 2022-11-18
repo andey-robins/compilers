@@ -1,0 +1,7 @@
+class Foo {
+    Foo() {
+        while(x < 10) {
+            a = a +1;
+        }
+    }
+}

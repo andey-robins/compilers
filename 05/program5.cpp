@@ -26,7 +26,7 @@ extern int symbolIndentation;
 
 int main()
 {
-    yydebug = 1;
+    yydebug = 0;
     ast = 0;
     symbols = new SymbolTree();
     yyparse();

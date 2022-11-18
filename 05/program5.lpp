@@ -50,7 +50,7 @@ void yyerror(const char* err) {
 %}
 
 DIGIT [0-9]
-NUMBER [+-]?{DIGIT}+
+NUMBER {DIGIT}+
 KEYWORD int|void|class|new|print|read|return|this|else|if|while|null
 ID [a-zA-Z_][a-zA-Z0-9_]*
 RELATIONAL_OP "=="|">"|"<"|">="|"<="|"!="
