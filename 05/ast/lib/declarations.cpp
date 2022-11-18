@@ -35,8 +35,8 @@ void NClassDecl::print(ostream *out)
 
 void NClassDecl::addSymbols(SymbolTree *node)
 {
-    cout << "class decl" << endl;
-    cout << this->className->getSymbol() << endl;
+    // cout << "class decl" << endl;
+    // cout << this->className->getSymbol() << endl;
     // in this context, node == root
     node->registerSymbolWithValue(this->className->getSymbol(), "class_type");
     SymbolTree *child = new SymbolTree();

@@ -21,7 +21,7 @@ LEX=flex++
 LEXFLAGS=--warn
 
 BISON=bison
-BISONFLAGS=-d --debug
+BISONFLAGS=-d
 
 #########
 # BUILD #

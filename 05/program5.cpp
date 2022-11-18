@@ -26,29 +26,19 @@ extern int symbolIndentation;
 
 int main()
 {
-    yydebug = 1;
-    cout << "welcome to the program" << endl;
+    yydebug = 0;
     ast = 0;
     symbols = new SymbolTree();
     yyparse();
 
-    cout << "parsed" << endl;
-
-    // Two spaces to separate errors from parse tree
-    cout << endl
-         << endl;
     // ast->print(&cout);
     if (ast)
     {
         // ast->print(&cout);
         static_cast<NProgram *>(ast)->addSymbols(symbols);
     }
-
-    cout << endl
-         << endl;
-
+    cout << endl;
     symbols->print();
-
     cout << endl;
     return 0;
 }

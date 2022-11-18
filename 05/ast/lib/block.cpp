@@ -102,9 +102,9 @@ void NVarDecl::print(ostream *out)
 
 void NVarDecl::addSymbols(SymbolTree *node)
 {
-    cout << "nvardecl" << endl;
-    cout << this->id->getSymbol() << endl;
-    cout << "after" << endl;
+    // cout << "nvardecl" << endl;
+    // cout << this->id->getSymbol() << endl;
+    // cout << "after" << endl;
     node->registerSymbolWithValue(this->id->getSymbol(), this->type->getType());
     SymbolTree *child = new SymbolTree();
     node->setChild(child);

@@ -31,6 +31,5 @@ void NProgram::print(ostream *out)
 
 void NProgram::addSymbols(SymbolTree *node)
 {
-    cout << "program" << endl;
     this->classDeclaration->addSymbols(node);
 }
