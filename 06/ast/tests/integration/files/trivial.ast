@@ -1,0 +1,9 @@
+<program> -> <classdec>
+  <classdec> --> CLASS ID <classbody>
+    ID --> Foo
+    <classbody> --> { <vardecs> <consdecs> <methdecs> }
+      <consdecs> --> <consdecs> <consdec>
+        <consdec> --> ID () <block>
+          ID --> Foo
+          <block> --> { <localvardecs>* <statements>* }
+            <statement> --> RETURN

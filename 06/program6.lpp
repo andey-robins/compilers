@@ -1,0 +1,339 @@
+/*
+ * program6.lpp
+ * Andey Robins
+ * 12/2/22
+ * Compilers Program 6
+ *
+ * The flex input file for program6
+ */
+
+%option outfile="program5_lex.cpp"
+%option noyywrap
+%option yylineno
+/* %option reentrant */
+
+%x C_COMMENT
+
+%{
+using std::string;
+using std::cerr;
+using std::cout;
+using std::endl;
+#include "program6.hpp"
+#include "program6.tab.hpp"
+#include <iostream>
+
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
+class BaseNode;
+
+int col = 0;
+int lastTokenLen = 1;
+int type = 0;
+string token = "";
+string fullLine = "";
+
+void yyerror(const char* err) {
+    string errString = string(err);
+    if (errString[3] == ':')
+    {
+        cerr << yylloc.first_line 
+             << "."
+             << col
+             << ": "
+             << fullLine
+             << endl
+             << errString 
+             << endl;
+    }    
+}
+%}
+
+DIGIT [0-9]
+NUMBER {DIGIT}+
+KEYWORD int|void|class|new|print|read|return|this|else|if|while|null
+ID [a-zA-Z_][a-zA-Z0-9_]*
+RELATIONAL_OP "=="|">"|"<"|">="|"<="|"!="
+LOGIC_OP "&&"|"||"
+MATH_OP "+"|"-"|"*"|"/"|"%"
+ENCLOSING "{"|"}"|"["|"]"|"("|")"
+PUNCTUATION "."|","|";"|"!"|"="
+UNKNOWN [^a-zA-Z0-9_+*/%.,;!=<>]{-}[ \t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x2d]
+/* KNOWN [^a-zA-Z_+* /%!.,!=<>\t\n\x28\x29\x5b\x5d\x7b\x7d\x20\x3b\x21] */
+NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
+
+%%
+ /* 1 COMPARE_OP */
+{RELATIONAL_OP} {
+
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 2;
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+
+    if (text.compare(string("==")) == 0) {
+        token = "EQ";
+        return EQ;
+    } else if (text.compare(">") == 0) {
+        lastTokenLen = 1;
+        token = "GT";
+        return GT;
+    } else if (text.compare("<") == 0) {
+        lastTokenLen = 1;
+        token = "LT";
+        return LT;
+    } else if (text.compare(">=") == 0) {
+        token = "GEQ";
+        return GE;
+    } else if (text.compare("<=") == 0) {
+        token = "LEQ";
+        return LE;
+    } else {
+        token = "NEQ";
+        return NE;
+    }
+}
+
+ /* 2 LOGICAL_OP */
+{LOGIC_OP} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 2;
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+
+    if (text.compare(string("||")) == 0) {
+        token = "OR";
+        return OR;
+    } else {
+        token = "AND";
+        return AND;
+    }
+}
+
+ /* 3 MATH_OP */
+{MATH_OP} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 1;
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+
+    if (text.compare(string("+")) == 0) {
+        token = "PLUS";
+        return PLUS;
+    } else if (text.compare(string("-")) == 0) {
+        token = "MINUS";
+        return MINUS;
+    } else if (text.compare(string("*")) == 0) {
+        token = "TIMES";
+        return TIMES;
+    } else if (text.compare(string("/")) == 0) {
+        token = "DIV";
+        return DIV;
+    } else {
+        token = "MOD";
+        return MOD;
+    }
+}
+
+ /* 4 ENCLOSING_OP */
+{ENCLOSING} {
+    string text = string(yytext);
+    type = 4;
+    col += lastTokenLen;
+    lastTokenLen = 1;
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+
+    if (text.compare(string("{")) == 0) {
+        token = "LBRACE";
+        return LBRACE;
+    } else if (text.compare(string("}")) == 0) {
+        token = "RBRACE";
+        return RBRACE;
+    } else if (text.compare(string("[")) == 0) {
+        token = "LBRACK";
+        return LBRACKET;
+    } else if (text.compare(string("]")) == 0) {
+        token = "RBRACK";
+        return RBRACKET;
+    } else if (text.compare(string("(")) == 0) {
+        token = "LPAREN";
+        return LPAREN;
+    } else {
+        token = "RPAREN";
+        return RPAREN;
+    }
+}
+
+ /* 5 PUNCTUATION */
+{PUNCTUATION} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    lastTokenLen = 1;
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+
+    if (text.compare(string(".")) == 0) {
+        token = "DOT";
+        return DOT;
+    } else if (text.compare(string(",")) == 0) {
+        token = "COMMA";
+        return COMMA;
+    } else if (text.compare(string(";")) == 0) {
+        token = "SEMI";
+        return SEMI;
+    } else if (text.compare(string("!")) == 0) {
+        token = "NOT";
+        return NOT;
+    } else {
+        token = "ASSIGN";
+        return ASSIGN;
+    }
+}
+
+ /* 6 KEYWORD */
+{KEYWORD} {
+    string text = string(yytext);
+    col += lastTokenLen;
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+    
+    if (text.compare(string("int")) == 0) {
+        lastTokenLen = 3;
+        token = "KEY_INT";
+        return INT;
+    } else if (text.compare(string("this")) == 0) {
+        lastTokenLen = 4;
+        token = "THIS";
+        return THIS;
+    } else if (text.compare(string("if")) == 0) {
+        lastTokenLen = 2;
+        token = "IF";
+        return IF;
+    } else if (text.compare(string("else")) == 0) {
+        lastTokenLen = 4;
+        token = "ELSE";
+        return ELSE;
+    } else if (text.compare(string("void")) == 0) {
+        lastTokenLen = 4;
+        token = "VOID";
+        return VOID;
+    } else if (text.compare(string("class")) == 0) {
+        lastTokenLen = 5;
+        token = "CLASS";
+        return CLASS;
+    } else if (text.compare(string("new")) == 0) {
+        lastTokenLen = 3;
+        token = "NEW";
+        return NEW;
+    } else if (text.compare(string("print")) == 0) {
+        lastTokenLen = 5;
+        token = "PRINT";
+        return PRINT;
+    } else if (text.compare(string("read")) == 0) {
+        lastTokenLen = 4;
+        token = "READ";
+        return READ;
+    } else if (text.compare(string("return")) == 0) {
+        lastTokenLen = 6;
+        token = "RETURN";
+        return RETURN;
+    } else if (text.compare(string("null")) == 0) {
+        lastTokenLen = 4;
+        token = "NULLT";
+        return NULLT;
+    } else {
+        lastTokenLen = 5;
+        token = "WHILE";
+        return WHILE;
+    }
+}
+
+ /* 7 IDENTIFIER */
+{ID} {
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    token = "IDENT";
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+    return ID;
+}
+
+ /* 8 NUMBER */
+{NUMBER} {
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    token = "NUMBER";
+    yylval.ttype = new BaseNode;
+    yylval.ttype->setVal(yytext);
+    fullLine += yytext;
+    return NUMBER;
+}
+
+ /* 11 NEWLINE */
+[\n] {
+    col += lastTokenLen;
+    lastTokenLen = 1 - col;
+    token = "";
+    fullLine = "";
+    // return NEWLINE;
+}
+
+ /* 12 C-STYLE COMMENTS */
+ /* bless my man rici https://stackoverflow.com/questions/2130097/difficulty-getting-c-style-comments-in-flex-lex */
+"/*" { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL); }
+<C_COMMENT>\n { }
+<C_COMMENT>. {}
+
+ /* SLASH COMMENTS */
+"//"[^\n]*[\n] {
+    col = 0;
+    lastTokenLen = 1;
+    token = "COMMENT";
+    // per program2 instructions, no token is returned
+    // return COMMENT;
+}
+
+ /* SPACE */
+" " {
+    col++;
+    fullLine += yytext;
+    // we can add this return back in if we wish to consume space tokens in the future
+    // return SPACE;
+}
+
+"\t" {
+   col += lastTokenLen;
+   lastTokenLen = (col + 1) % 8;
+   fullLine += yytext;
+//    return TAB;
+}
+
+{UNKNOWN}{1} {
+    col += lastTokenLen;
+    lastTokenLen = 1;
+    token = "ER_CH";
+    fullLine += yytext;
+    return ER_CH;
+}
+
+{UNKNOWN}{1}{NON_ID}+ {
+    col += lastTokenLen;
+    lastTokenLen = string(yytext).length();
+    token = "ER_WD";
+    fullLine += yytext;
+    return ER_WD;
+}
+
+%%
