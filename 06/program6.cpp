@@ -29,6 +29,8 @@ int main()
     yydebug = 0;
     ast = 0;
     symbols = new SymbolTree();
+    symbols->registerSymbolWithValue("read", "method_type int <- void");
+    symbols->registerSymbolWithValue("print", "method_type void <- []");
     yyparse();
 
     // ast->print(&cout);
