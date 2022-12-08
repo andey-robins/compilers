@@ -7,7 +7,7 @@
  * The flex input file for program6
  */
 
-%option outfile="program5_lex.cpp"
+%option outfile="program6_lex.cpp"
 %option noyywrap
 %option yylineno
 /* %option reentrant */

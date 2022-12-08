@@ -5,7 +5,7 @@
  * Compilers Program 6
  *
  * a thin wrapper over std::map
- * 
+ *
  */
 
 #include "../include/symbol_table.hpp"
@@ -32,7 +32,7 @@ void SymbolTable::registerSymbolWithValue(string symbol, string val)
     (*this->symbols)[symbol] = val;
 }
 
-// Returns 0 if the symbol is not found. Allows for:
+// Returns an empty string if the symbol is not found. Allows for:
 // if (auto symb = table->lookupSymbol(symbol)) { // do something with symb; }
 string SymbolTable::lookupSymbol(string symbol)
 {
@@ -43,7 +43,7 @@ string SymbolTable::lookupSymbol(string symbol)
 
     // tail recursive lookup that moves through more general scopes until terminating when
     // the symbol is found or we hit the root node
-    return 0;
+    return "";
 }
 
 void SymbolTable::print()
@@ -55,7 +55,7 @@ void SymbolTable::print()
         for (auto it = (*this->symbols).begin(); it != (*this->symbols).end(); ++it)
         {
             cout << string(symbolIndentation * 2, ' ')
-                 << it->first 
+                 << it->first
                  << " "
                  << it->second
                  << endl;

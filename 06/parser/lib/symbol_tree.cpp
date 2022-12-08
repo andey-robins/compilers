@@ -8,12 +8,12 @@ SymbolTree::SymbolTree()
     this->table = new SymbolTable();
 }
 
-void SymbolTree::setParent(SymbolTree* parent)
+void SymbolTree::setParent(SymbolTree *parent)
 {
     this->parent = parent;
 }
 
-void SymbolTree::setChild(SymbolTree* child)
+void SymbolTree::setChild(SymbolTree *child)
 {
     (*this->children).push_back(child);
 }
@@ -30,8 +30,20 @@ void SymbolTree::registerSymbolWithValue(string symbol, string val)
 
 string SymbolTree::lookupSymbol(string symbol)
 {
-    // TODO big time
-    return 0;
+    if (this->table)
+    {
+        string val = this->table->lookupSymbol(symbol);
+        if (val != "")
+        {
+            return val;
+        }
+        // symbol isn't found in current scope, look in bigger scopes
+        else if (this->parent)
+        {
+            return this->parent->lookupSymbol(symbol);
+        }
+    }
+    return "";
 }
 
 void SymbolTree::print()

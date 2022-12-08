@@ -223,7 +223,7 @@ methDeclHeaderChoice:
     }
 |   ID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
         NId *id = new NId($2->getText());
-        NKeyword *key = new NKeyword("int");
+        NKeyword *key = new NKeyword($1->getText());
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
         NResultType *resType = new NResultType(type);
