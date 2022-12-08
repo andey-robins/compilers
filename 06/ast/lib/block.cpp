@@ -44,16 +44,16 @@ void NBlock::addSymbols(SymbolTree *node)
     if (this->next)
     {
         auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
-        // auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
+        auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
 
         if (derivedVar)
         {
             derivedVar->addSymbols(node);
         }
-        // else if (derivedStmt)
-        // {
-        //     derivedStmt->addSymbols(node);
-        // }
+        else if (derivedStmt)
+        {
+            derivedStmt->addSymbols(node);
+        }
     }
 }
 

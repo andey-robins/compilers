@@ -1,7 +1,13 @@
 # Program 6
 
 - [x] Verify only one main with return type of void or int and no args
-- [ ] Verify `this` is only at the beginning of a dotted name
+- [x] Verify `this` is only at the beginning of a dotted name
+  - [x] Prevent `this.this.this`
+  - [x] Prevent `this.a.this`
+  - [x] Prevent `a.this.this`
+  - [x] Prevent `a.this`
+  - [x] Prevent `a.a.this`
+- [x] Fix to allow multiple statements in a row being typechecked
 - [ ] Arithmetic operators all require int operands
   - [ ] This is including the >, <, >=, <= operators
 - [ ] Relational operators return (return where?) 1 if true and 0 if false

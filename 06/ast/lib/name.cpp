@@ -9,6 +9,57 @@
 
 #include "../include/nodes.hpp"
 
+void NName::addSymbols(SymbolTree *node)
+{
+    auto derivedThis = dynamic_cast<NNameThis *>(this);
+    auto derivedThisDot = dynamic_cast<NNameThisDot *>(this);
+    auto derivedId = dynamic_cast<NNameId *>(this);
+    auto derivedDotId = dynamic_cast<NNameDotId *>(this);
+
+    if (derivedThis)
+    {
+        derivedThis->addSymbols(node);
+    }
+    else if (derivedThisDot)
+    {
+        derivedThisDot->addSymbols(node);
+    }
+    else if (derivedId)
+    {
+        derivedId->addSymbols(node);
+    }
+    else if (derivedDotId)
+    {
+        derivedDotId->addSymbols(node);
+    }
+}
+
+string NName::getSupertype()
+{
+    auto derivedThis = dynamic_cast<NNameThis *>(this);
+    auto derivedThisDot = dynamic_cast<NNameThisDot *>(this);
+    auto derivedId = dynamic_cast<NNameId *>(this);
+    auto derivedDotId = dynamic_cast<NNameDotId *>(this);
+
+    if (derivedThis)
+    {
+        return "this";
+    }
+    else if (derivedThisDot)
+    {
+        return "this dot";
+    }
+    else if (derivedId)
+    {
+        return "id";
+    }
+    else if (derivedDotId)
+    {
+        return "dot id";
+    }
+    return "err";
+}
+
 NNameThis::NNameThis()
 {
     this->next = 0;
@@ -31,6 +82,10 @@ void NNameThis::print(ostream *out)
     }
 }
 
+void NNameThis::addSymbols(SymbolTree *node)
+{
+}
+
 NNameThisDot::NNameThisDot(NName *next)
 {
     this->next = next;
@@ -44,6 +99,22 @@ void NNameThisDot::print(ostream *out)
     indentation++;
     this->next->print(out);
     indentation--;
+}
+
+void NNameThisDot::addSymbols(SymbolTree *node)
+{
+    if (dynamic_cast<NName *>(this->next))
+    {
+        auto nextType = static_cast<NName *>(this->next)->getSupertype();
+        if (nextType == "this" || nextType == "this dot")
+        {
+            cout << "Semantic Error: keyword this may not follow keyword this" << endl;
+        }
+        else
+        {
+            static_cast<NName *>(this->next)->addSymbols(node);
+        }
+    }
 }
 
 NNameId::NNameId(NId *id)
@@ -82,6 +153,22 @@ void NNameId::print(ostream *out)
     indentation--;
 }
 
+void NNameId::addSymbols(SymbolTree *node)
+{
+    if (dynamic_cast<NName *>(this->next))
+    {
+        auto nextType = static_cast<NName *>(this->next)->getSupertype();
+        if (nextType == "this" || nextType == "this dot")
+        {
+            cout << "Semantic Error: keyword this may not follow anything" << endl;
+        }
+        else
+        {
+            static_cast<NName *>(this->next)->addSymbols(node);
+        }
+    }
+}
+
 NNameDotId::NNameDotId(NId *id, NName *n)
 {
     this->id = id;
@@ -98,4 +185,20 @@ void NNameDotId::print(ostream *out)
     *out << endl;
     this->next->print(out);
     indentation--;
+}
+
+void NNameDotId::addSymbols(SymbolTree *node)
+{
+    if (dynamic_cast<NName *>(this->next))
+    {
+        auto nextType = static_cast<NName *>(this->next)->getSupertype();
+        if (nextType == "this" || nextType == "this dot")
+        {
+            cout << "Semantic Error: keyword this may not follow anything" << endl;
+        }
+        else
+        {
+            static_cast<NName *>(this->next)->addSymbols(node);
+        }
+    }
 }

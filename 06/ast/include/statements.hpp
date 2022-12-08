@@ -27,6 +27,7 @@ public:
     NStateAssign(NName *n, NExp *e);
     ~NStateAssign();
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NName *name;
@@ -74,7 +75,7 @@ public:
     NStateBlock(NBlock *b);
     ~NStateBlock();
     virtual void print(ostream *out = 0);
-    void addSymbols();
+    void addSymbols(SymbolTree *node);
 
 private:
     NBlock *block;

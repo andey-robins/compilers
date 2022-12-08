@@ -24,6 +24,47 @@ void NStatement::print(ostream *out)
     }
 }
 
+void NStatement::addSymbols(SymbolTree *node)
+{
+    auto *derivedAssign = dynamic_cast<NStateAssign *>(this);
+    auto *derivedCall = dynamic_cast<NStateCall *>(this);
+    auto *derivedWhile = dynamic_cast<NStateWhile *>(this);
+    auto *derivedReturn = dynamic_cast<NStateReturn *>(this);
+    auto *derivedBlock = dynamic_cast<NStateBlock *>(this);
+    auto *derivedCond = dynamic_cast<NStateCond *>(this);
+
+    if (derivedAssign)
+    {
+        cout << "derived assign addsymbol" << endl;
+        derivedAssign->addSymbols(node);
+    }
+    else if (derivedCall)
+    {
+        cout << "derived call addsymbol" << endl;
+        derivedCall->addSymbols(node);
+    }
+    else if (derivedWhile)
+    {
+        cout << "derived while addsymbol" << endl;
+        derivedWhile->addSymbols(node);
+    }
+    else if (derivedReturn)
+    {
+        cout << "derived return addsymbol" << endl;
+        derivedReturn->addSymbols(node);
+    }
+    else if (derivedBlock)
+    {
+        cout << "derived block addsymbol" << endl;
+        derivedBlock->addSymbols(node);
+    }
+    else if (derivedCond)
+    {
+        cout << "derived cond addsymbol" << endl;
+        derivedCond->addSymbols(node);
+    }
+}
+
 NStateAssign::NStateAssign(NName *n, NExp *e)
 {
     this->name = n;
@@ -49,6 +90,16 @@ void NStateAssign::print(ostream *out)
     if (this->next)
     {
         this->next->print(out);
+    }
+}
+
+void NStateAssign::addSymbols(SymbolTree *node)
+{
+    this->name->addSymbols(node);
+    // this->exp->addSymbols(node);
+    if (dynamic_cast<NStatement *>(this->next))
+    {
+        static_cast<NStatement *>(this->next)->addSymbols(node);
     }
 }
 
@@ -163,6 +214,15 @@ void NStateBlock::print(ostream *out)
     if (this->next)
     {
         this->next->print(out);
+    }
+}
+
+void NStateBlock::addSymbols(SymbolTree *node)
+{
+    this->block->addSymbols(node);
+    if (dynamic_cast<NStatement *>(this->next))
+    {
+        static_cast<NStatement *>(this->next)->addSymbols(node);
     }
 }
 

@@ -1,0 +1,7 @@
+class foo {
+    int a;
+    void main() {
+        this = 6;
+        a.a.this = 5;
+    }
+}
