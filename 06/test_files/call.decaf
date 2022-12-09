@@ -1,0 +1,8 @@
+class foo {
+    int main() {
+        int a;
+        a = read();
+        a = a == read();
+        a = 1 == read();
+    }
+}

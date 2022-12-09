@@ -18,15 +18,16 @@
 - [ ] `new` can have arrays which are only filled in up to (but not including the last)
 - [x] array return types are valid
 - [ ] null is a reference type to an array or class. it cannot be compared to an integer
-- [ ] `read()` returns an integer
+- [x] `read()` returns an integer
   - [x] register in symbol table
-  - [ ] use for checking function call statements
-- [ ] `print()` has a void return type and takes any number of integers
+  - [x] use for checking function call statements
+- [x] `print()` has a void return type and takes any number of integers
   - [x] register in symbol table
-  - [ ] use for checking function call statements
+  - [x] use for checking function call statements
 - [ ] constructors may not be called directly
 - [x] a method may not return something if it is a constructor or has the `void` return type
 - [x] methods do not have to have a return statement (even if they have a return type (this is such an unbelievably bad idea, it pains me to allow it))
 - [ ] typecheck assignment statements
 - [ ] fix parsing for nested expressions
 - [ ] fix statements after if statement not working
+- [ ] fix segfaults in constructors
