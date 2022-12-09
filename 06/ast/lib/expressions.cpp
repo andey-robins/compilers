@@ -110,6 +110,19 @@ NInfixExp::NInfixExp(NOperator *o, NExp *left, NExp *right)
     this->right = right;
     this->op = o;
     this->next = 0;
+    if (left->annotation == right->annotation)
+    {
+        this->annotation = left->annotation;
+    }
+    else if (o->getText() == "==" && (left->annotation == "void" || right->annotation == "void"))
+    {
+        this->annotation = "int";
+    }
+    else
+    {
+        cout << "Syntax Error: mismatched types of " << left->annotation << " and " << right->annotation << endl;
+        this->annotation = "type error";
+    }
 }
 
 NInfixExp::~NInfixExp()
@@ -144,12 +157,14 @@ NOptExp::NOptExp()
 {
     this->e = 0;
     this->next = 0;
+    this->annotation = "void";
 }
 
 NOptExp::NOptExp(NExp *e)
 {
     this->e = e;
     this->next = 0;
+    this->annotation = e->annotation;
 }
 
 void NOptExp::print(ostream *out)
@@ -172,6 +187,7 @@ bool NOptExp::maybe()
 NExpNull::NExpNull()
 {
     this->next = 0;
+    this->annotation = "void";
 }
 
 void NExpNull::print(ostream *out)
@@ -189,6 +205,7 @@ NParenExp::NParenExp(NExp *inner)
 {
     this->in = inner;
     this->next = 0;
+    this->annotation = inner->annotation;
 }
 
 NParenExp::~NParenExp()
@@ -215,6 +232,7 @@ NExpCall::NExpCall(NName *n, NArg *a)
     this->name = n;
     this->args = a;
     this->next = 0;
+    this->annotation = n->annotation;
 }
 
 NExpCall::~NExpCall()
@@ -241,6 +259,7 @@ void NExpCall::print(ostream *out)
 NExpRead::NExpRead()
 {
     this->next = 0;
+    this->annotation = "int";
 }
 
 void NExpRead::print(ostream *out)
@@ -258,6 +277,9 @@ NExpNewExp::NExpNewExp(NNewExp *ne)
 {
     this->newExp = ne;
     this->next = 0;
+    // QUESTION is this actually the right type? do we want to return the memory address?
+    // what would be the appropriate type for a new expression expression
+    this->annotation = "int";
 }
 
 NExpNewExp::~NExpNewExp()
@@ -284,6 +306,7 @@ NPrefixExp::NPrefixExp(NOperator *o, NExp *e)
     this->op = o;
     this->exp = e;
     this->next = 0;
+    this->annotation = "int";
 }
 
 NPrefixExp::~NPrefixExp()
@@ -314,6 +337,7 @@ NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes, NBracks *bs)
     this->bes = bes;
     this->bs = bs;
     this->next = 0;
+    this->annotation = "array " + s->annotation;
 }
 
 NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes)
@@ -322,6 +346,7 @@ NNewExpType::NNewExpType(NSimpleType *s, NBrackExps *bes)
     this->bes = bes;
     this->bs = 0;
     this->next = 0;
+    this->annotation = "array " + s->annotation;
 }
 
 NNewExpType::NNewExpType(NSimpleType *s, NBracks *bs)
@@ -330,6 +355,7 @@ NNewExpType::NNewExpType(NSimpleType *s, NBracks *bs)
     this->bes = 0;
     this->bs = bs;
     this->next = 0;
+    this->annotation = "array " + s->annotation;
 }
 
 NNewExpType::NNewExpType(NSimpleType *s)
@@ -338,6 +364,7 @@ NNewExpType::NNewExpType(NSimpleType *s)
     this->bes = 0;
     this->bs = 0;
     this->next = 0;
+    this->annotation = s->annotation;
 }
 
 NNewExpType::~NNewExpType()
@@ -391,6 +418,7 @@ NNewExpIdArgs::NNewExpIdArgs(NId *i, NArg *a)
     this->id = i;
     this->args = a;
     this->next = 0;
+    this->annotation = i->annotation;
 }
 
 NNewExpIdArgs::~NNewExpIdArgs()

@@ -1,0 +1,12 @@
+class foo {
+    void main() {
+        int a;
+        a = foo + 1;
+        a = b == 1;
+        a = 1 > 1;
+        a = b < b;
+        a = 1 <= b;
+        a = 1 == read();
+        if (a == void) { }
+    }
+}

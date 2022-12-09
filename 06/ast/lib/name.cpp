@@ -63,6 +63,7 @@ string NName::getSupertype()
 NNameThis::NNameThis()
 {
     this->next = 0;
+    this->annotation = "this";
 }
 
 void NNameThis::print(ostream *out)
@@ -89,6 +90,7 @@ void NNameThis::addSymbols(SymbolTree *node)
 NNameThisDot::NNameThisDot(NName *next)
 {
     this->next = next;
+    this->annotation = "thisdot";
 }
 
 void NNameThisDot::print(ostream *out)
@@ -121,6 +123,7 @@ NNameId::NNameId(NId *id)
 {
     this->next = id;
     this->be = 0;
+    this->annotation = id->annotation;
 }
 
 NNameId::NNameId(NId *id, NBrackExps *be)
@@ -173,6 +176,7 @@ NNameDotId::NNameDotId(NId *id, NName *n)
 {
     this->id = id;
     this->next = n;
+    this->annotation = id->annotation + "." + n->annotation;
 }
 
 void NNameDotId::print(ostream *out)

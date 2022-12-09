@@ -14,6 +14,7 @@ NParam::NParam(NType *t, NId *id)
     this->type = t;
     this->id = id;
     this->next = 0;
+    this->annotation = t->annotation;
 }
 
 void NParam::print(ostream *out)
@@ -68,6 +69,7 @@ NArg::NArg(NExp *e)
 {
     this->e = e;
     this->next = 0;
+    this->annotation = e->annotation;
 }
 
 NArg::~NArg()
@@ -93,6 +95,7 @@ NBracks::NBracks(int count)
 {
     this->count = count;
     this->next = 0;
+    this->annotation = "brackets";
 }
 
 int NBracks::getCount()
@@ -117,6 +120,7 @@ NBrackExps::NBrackExps(NExp *e)
 {
     this->exp = e;
     this->next = 0;
+    this->annotation = "[" + e->annotation + "]";
 }
 
 NBrackExps::~NBrackExps()

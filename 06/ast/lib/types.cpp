@@ -15,6 +15,7 @@ NSimpleType::NSimpleType(NKeyword *k)
     this->next = k;
     this->isId = false;
     this->type = k->getText();
+    this->annotation = k->annotation;
 }
 
 NSimpleType::NSimpleType(NId *id)
@@ -77,6 +78,7 @@ NType::NType(NSimpleType *st)
     this->next = st;
     this->type = st->getType();
     this->brackCount = 0;
+    this->annotation = st->annotation;
 }
 
 NType::NType(NType *t, int bracks)
@@ -91,10 +93,12 @@ NType::NType(NType *t, int bracks)
             typeString += "[]";
         }
         type = typeString;
+        this->annotation = type;
     }
     else
     {
         type = "unknown";
+        this->annotation = t->annotation;
     }
 }
 
@@ -109,10 +113,12 @@ NType::NType(NType *t, NBrackExps *bes)
         bes->printType(&s);
         typeString += s.str();
         type = typeString;
+        this->annotation = type;
     }
     else
     {
         type = "unknown";
+        this->annotation = t->annotation;
     }
 }
 
@@ -138,12 +144,14 @@ NResultType::NResultType(NType *t)
 {
     this->type = t;
     this->voidType = 0;
+    this->annotation = t->annotation;
 }
 
 NResultType::NResultType(NKeyword *k)
 {
     this->voidType = k;
     this->type = 0;
+    this->annotation = k->annotation;
 }
 
 void NResultType::print(ostream *out)
@@ -177,6 +185,7 @@ string NResultType::getType()
 NEpsilon::NEpsilon()
 {
     this->setVal("epsilon");
+    this->annotation = "void";
 }
 
 string NEpsilon::getType()
