@@ -15,7 +15,7 @@
 - [ ] The equality operator is the major difference as it can compare any reference to null or another reference type
 - [ ] `new` allocates memory for an object (again, where is this alocated?). The type on the right must match the type of the variable on the left
 - [ ] `new` can have arrays which are only filled in up to (but not including the last)
-- [ ] array return types are valid
+- [x] array return types are valid
 - [ ] null is a reference type to an array or class. it cannot be compared to an integer
 - [ ] `read()` returns an integer
   - [x] register in symbol table
@@ -26,3 +26,4 @@
 - [ ] constructors may not be called directly
 - [x] a method may not return something if it is a constructor or has the `void` return type
 - [x] methods do not have to have a return statement (even if they have a return type (this is such an unbelievably bad idea, it pains me to allow it))
+- [ ] typecheck assignment statements

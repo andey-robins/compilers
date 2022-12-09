@@ -9,7 +9,10 @@
 
 #include "../include/nodes.hpp"
 
-BaseNode::BaseNode() {}
+BaseNode::BaseNode()
+{
+    this->annotation = "";
+}
 
 BaseNode::~BaseNode()
 {

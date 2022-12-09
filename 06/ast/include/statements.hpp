@@ -40,6 +40,7 @@ public:
     NStateCall(NName *n, NArg *a);
     ~NStateCall();
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NName *name;

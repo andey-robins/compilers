@@ -54,6 +54,7 @@ class NExp : public BaseNode
 {
 public:
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 };
 
 // A maybe monad adapted to hold an optional expression
@@ -138,6 +139,7 @@ public:
     NInfixExp(NOperator *o, NExp *left, NExp *right);
     ~NInfixExp();
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NOperator *op;

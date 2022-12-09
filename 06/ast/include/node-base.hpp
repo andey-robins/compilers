@@ -29,6 +29,7 @@ public:
     BaseNode *getNext();
     string getText();
     virtual void print(ostream *out = 0);
+    string annotation;
 
 protected:
     BaseNode *next;

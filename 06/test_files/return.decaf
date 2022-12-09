@@ -1,17 +1,25 @@
 class foo {
     foo() {
+        // return in constructor
         return 10;
     }
 
     void bar() {
+        // int return in void method
         return 1;
     }
 
     int baz() {
+        // empty return in method
         return;
     }
 
     void tux() {
+        // allowed, no error
+    }
 
+    int[] pic() {
+        // allow return type of array
+        return a;
     }
 }

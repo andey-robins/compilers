@@ -59,6 +59,51 @@ void NExp::print(ostream *out)
     }
 }
 
+void NExp::addSymbols(SymbolTree *node)
+{
+    auto *derivedInfix = dynamic_cast<NInfixExp *>(this);
+    auto *derivedOpt = dynamic_cast<NOptExp *>(this);
+    auto *derivedNull = dynamic_cast<NExpNull *>(this);
+    auto *derivedParen = dynamic_cast<NParenExp *>(this);
+    auto *derivedCall = dynamic_cast<NExpCall *>(this);
+    auto *derivedRead = dynamic_cast<NExpRead *>(this);
+    auto *derivedNew = dynamic_cast<NExpNewExp *>(this);
+    auto *derivedPrefix = dynamic_cast<NPrefixExp *>(this);
+
+    if (derivedInfix)
+    {
+        derivedInfix->addSymbols(node);
+    }
+    else if (derivedOpt)
+    {
+        derivedOpt->addSymbols(node);
+    }
+    else if (derivedNull)
+    {
+        derivedNull->addSymbols(node);
+    }
+    else if (derivedParen)
+    {
+        derivedParen->addSymbols(node);
+    }
+    else if (derivedCall)
+    {
+        derivedCall->addSymbols(node);
+    }
+    else if (derivedRead)
+    {
+        derivedRead->addSymbols(node);
+    }
+    else if (derivedNew)
+    {
+        derivedNew->addSymbols(node);
+    }
+    else if (derivedPrefix)
+    {
+        derivedPrefix->addSymbols(node);
+    }
+}
+
 NInfixExp::NInfixExp(NOperator *o, NExp *left, NExp *right)
 {
     this->left = left;
@@ -89,6 +134,10 @@ void NInfixExp::print(ostream *out)
     {
         this->next->print(out);
     }
+}
+
+void NInfixExp::addSymbols(SymbolTree *node)
+{
 }
 
 NOptExp::NOptExp()

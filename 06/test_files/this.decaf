@@ -3,5 +3,6 @@ class foo {
     void main() {
         this = 6;
         a.a.this = 5;
+        this.this = 7;
     }
 }

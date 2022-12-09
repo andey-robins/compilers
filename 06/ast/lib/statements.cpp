@@ -131,6 +131,10 @@ void NStateCall::print(ostream *out)
     }
 }
 
+void NStateCall::addSymbols(SymbolTree *node)
+{
+}
+
 NStateWhile::NStateWhile(NExp *e, NStatement *s)
 {
     this->e = e;
