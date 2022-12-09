@@ -39,7 +39,7 @@ void yyerror(const char* string);
 %precedence "shift"
 %precedence "reduce"
 
-%type<ttype> bracketOpts optBracks idWrap program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression newExpTypes bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
+%type<ttype> bracketOpts optBracks program classDeclarations classBody varDeclHeaderChoice constDeclHeaderChoice methDeclHeaderChoice type parameterList parameterListStar parameter localVarDeclaration statement name argList argListStar conditionalStatement expression newExpression newExpTypes bracks rterm term factor block blockHeadChoice blockStatementChoice brackExp
 
 %left<ttype> PLUS MINUS NOT OR
 %token<ttype> SEMI DOT COMMA
@@ -80,13 +80,15 @@ program:
 ;
 
 classDeclarations:
-    CLASS idWrap classBody classDeclarations {
-        NClassDecl *cls = new NClassDecl(static_cast<NId *>($2), static_cast<NClassBody *>($3));
+    CLASS ID classBody classDeclarations {
+        NId *id = new NId($2->getText());
+        NClassDecl *cls = new NClassDecl(id, static_cast<NClassBody *>($3));
         cls->setNext(static_cast<NClassDecl *>($4));
         $$ = cls;
     }
-|   CLASS idWrap classBody {
-        $$ = new NClassDecl(static_cast<NId *>($2), static_cast<NClassBody *>($3));
+|   CLASS ID classBody {
+        NId *id = new NId($2->getText());
+        $$ = new NClassDecl(id, static_cast<NClassBody *>($3));
     }
 ;
 
@@ -112,37 +114,41 @@ classBody:
 ;
 
 varDeclHeaderChoice:
-    INT bracks idWrap SEMI varDeclHeaderChoice {
+    INT bracks ID SEMI varDeclHeaderChoice {
         int bracks = static_cast<NType*>($2)->getBracks();
         NKeyword *key = new NKeyword($1->getText());
         NSimpleType *st = new NSimpleType(key);
         NType *stWrapper = new NType(st);
         NType *type = new NType(stWrapper, bracks);
-        NVarDecl *curr = new NVarDecl(type, static_cast<NId *>($3));
+        NVarDecl *curr = new NVarDecl(type, static_cast<NId*>($3));
         curr->setNext($5);
         $$ = curr;
     }
-|   idWrap bracks idWrap SEMI varDeclHeaderChoice {
+|   ID bracks ID SEMI varDeclHeaderChoice {
         int bracks = static_cast<NType*>($2)->getBracks();
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+        NId *id = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(id);
         NType *stWrapper = new NType(st);
         NType *type = new NType(stWrapper, bracks);
-        NVarDecl *curr = new NVarDecl(type, static_cast<NId *>($3));
+        NVarDecl *curr = new NVarDecl(type, static_cast<NId*>($3));
         curr->setNext($5);
         $$ = curr;
     }
-|   INT idWrap SEMI varDeclHeaderChoice {
+|   INT ID SEMI varDeclHeaderChoice {
         NKeyword *key = new NKeyword($1->getText());
+        NId *id = new NId($2->getText());
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
-        NVarDecl *curr = new NVarDecl(type, static_cast<NId *>($2));
+        NVarDecl *curr = new NVarDecl(type, id);
         curr->setNext($4);
         $$ = curr;
     }
-|   idWrap idWrap SEMI varDeclHeaderChoice {
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+|   ID ID SEMI varDeclHeaderChoice {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
         NType *type = new NType(st);
-        NVarDecl *curr = new NVarDecl(type, static_cast<NId *>($2));
+        NVarDecl *curr = new NVarDecl(type, idTwo);
         curr->setNext($4);
         $$ = curr;
     }
@@ -151,17 +157,18 @@ varDeclHeaderChoice:
 ;
 
 constDeclHeaderChoice:
-    idWrap LPAREN parameterList RPAREN block constDeclHeaderChoice {
+    ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($1->getText());
         NConstDecl *curr;
         if ($3->getText() == "epsilon") 
         {
             NParam *epsilon = new NParam(0, 0);
             epsilon->setVal("epsilon");
-            curr = new NConstDecl(static_cast<NId *>($1), epsilon, static_cast<NBlock *>($5));
+            curr = new NConstDecl(id, epsilon, static_cast<NBlock *>($5));
         }
         else 
         {
-            curr = new NConstDecl(static_cast<NId *>($1), static_cast<NParam *>($3), static_cast<NBlock *>($5));
+            curr = new NConstDecl(id, static_cast<NParam *>($3), static_cast<NBlock *>($5));
         }
         curr->setNext($6);
         $$ = curr;
@@ -170,50 +177,57 @@ constDeclHeaderChoice:
 ;
 
 methDeclHeaderChoice:
-    VOID idWrap LPAREN parameterList RPAREN block constDeclHeaderChoice {
+    VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("void");
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
         NResultType *resType = new NResultType(type);
-        NMethDecl *method = new NMethDecl(resType, static_cast<NId *>($2), static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
         method->setNext($7);
         $$ = method;
     }
-|   INT bracks idWrap LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
         int bracks = static_cast<NType*>($2)->getBracks();
+        NId *id = new NId($3->getText());
         NKeyword *intId = new NKeyword("int");
         NSimpleType *st = new NSimpleType(intId);
         NType *stWrapper = new NType(st);
         NType *type = new NType(stWrapper, bracks);
         NResultType *resType = new NResultType(type);
-        NMethDecl *method = new NMethDecl(resType, static_cast<NId *>($3), static_cast<NParam *>($5), static_cast<NBlock *>($7));
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($5), static_cast<NBlock *>($7));
         method->setNext($8);
         $$ = method;
     }
-|   idWrap bracks idWrap LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
         int bracks = static_cast<NType*>($2)->getBracks();
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+        NId *id = new NId($3->getText());
+        NId *intId = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(intId);
         NType *stWrapper = new NType(st);
         NType *type = new NType(stWrapper, bracks);
         NResultType *resType = new NResultType(type);
-        NMethDecl *method = new NMethDecl(resType, static_cast<NId *>($3), static_cast<NParam *>($5), static_cast<NBlock *>($7));
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($5), static_cast<NBlock *>($7));
         method->setNext($8);
         $$ = method;
     }
-|   INT idWrap LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   INT ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
         NResultType *resType = new NResultType(type);
-        NMethDecl *method = new NMethDecl(resType, static_cast<NId *>($2), static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
         method->setNext($7);
         $$ = method;
     }
-|   idWrap idWrap LPAREN parameterList RPAREN block constDeclHeaderChoice {
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+|   ID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+        NId *id = new NId($2->getText());
+        NKeyword *key = new NKeyword($1->getText());
+        NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
         NResultType *resType = new NResultType(type);
-        NMethDecl *method = new NMethDecl(resType, static_cast<NId *>($2), static_cast<NParam *>($4), static_cast<NBlock *>($6));
+        NMethDecl *method = new NMethDecl(resType, id, static_cast<NParam *>($4), static_cast<NBlock *>($6));
         method->setNext($7);
         $$ = method;
     }
@@ -231,9 +245,10 @@ type:
         NType *type = new NType(stWrapper, bracks);
         $$ = type;
     }
-|   idWrap bracks {
+|   ID bracks {
         int bracks = static_cast<NType*>($2)->getBracks();
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+        NId *id = new NId($1->getText());
+        NSimpleType *st = new NSimpleType(id);
         NType *stWrapper = new NType(st);
         NType *type = new NType(stWrapper, bracks);
         $$ = type;
@@ -267,21 +282,25 @@ parameterListStar:
     }
 
 parameter:
-    type idWrap {
-        NParam *param = new NParam(static_cast<NType *>($1), static_cast<NId *>($2));
+    type ID {
+        NId *id = new NId($2->getText());
+        NParam *param = new NParam(static_cast<NType *>($1), id);
         $<ttype>$ = param;
     }
-|   INT idWrap {
+|   INT ID {
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
-        NParam *param = new NParam(type, static_cast<NId *>($2));
+        NId *id = new NId($2->getText());
+        NParam *param = new NParam(type, id);
         $$ = param;
     }
-|   idWrap idWrap {
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+|   ID ID {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
         NType *type = new NType(st);
-        NParam *param = new NParam(type, static_cast<NId *>($2));
+        NParam *param = new NParam(type, idTwo);
         $$ = param;
     }
 ;
@@ -326,21 +345,25 @@ blockStatementChoice:
 ;
 
 localVarDeclaration:
-    type idWrap SEMI {
-        NVarDecl *var = new NVarDecl(static_cast<NType *>($1), static_cast<NId *>($2));
+    type ID SEMI {
+        NId *id = new NId($2->getText());
+        NVarDecl *var = new NVarDecl(static_cast<NType *>($1), id);
         $$ = new NLocalVarDecl(var);
     }
-|   INT idWrap SEMI {
+|   INT ID SEMI {
+        NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
         NType *type = new NType(st);
-        NVarDecl *var = new NVarDecl(type, static_cast<NId *>($2));
+        NVarDecl *var = new NVarDecl(type, id);
         $$ = new NLocalVarDecl(var);
     }
-|   idWrap idWrap SEMI {
-        NSimpleType *st = new NSimpleType(static_cast<NId *>($1));
+|   ID ID SEMI {
+        NId *idOne = new NId($1->getText());
+        NId *idTwo = new NId($2->getText());
+        NSimpleType *st = new NSimpleType(idOne);
         NType *type = new NType(st);
-        NVarDecl *var = new NVarDecl(type, static_cast<NId *>($2));
+        NVarDecl *var = new NVarDecl(type, idTwo);
         $$ = new NLocalVarDecl(var);
     }
 ;
@@ -383,14 +406,17 @@ statement:
 ;
 
 name:
-    idWrap %prec "reduce" {
-        $$ = new NNameId(static_cast<NId *>($1));
+    ID %prec "reduce" {
+        NId *id = new NId($1->getText());
+        $$ = new NNameId(id);
     }
-|   idWrap DOT name {
-        $$ = new NNameDotId(static_cast<NId *>($1), static_cast<NName *>($3));
+|   ID DOT name {
+        NId *id = new NId($1->getText());
+        $$ = new NNameDotId(id, static_cast<NName *>($3));
     }
-|   idWrap brackExp {
-        $$ = new NNameId(static_cast<NId *>($1), static_cast<NBrackExps *>($2));
+|   ID brackExp {
+        NId *id = new NId($1->getText());
+        $$ = new NNameId(id, static_cast<NBrackExps *>($2));
     }
 |   THIS DOT name {
         $$ = new NNameThisDot(static_cast<NName *>($3));
@@ -535,8 +561,9 @@ factor:
 ;
 
 newExpression:
-    NEW idWrap LPAREN argList RPAREN {
-        $$ = new NNewExpIdArgs(static_cast<NId *>($2), static_cast<NArg *>($4));
+    NEW ID LPAREN argList RPAREN {
+        NId *id = new NId($2->getText());
+        $$ = new NNewExpIdArgs(id, static_cast<NArg *>($4));
     }
 /* |   NEW newExpTypes bracks %prec "shift" {
         int bracks = static_cast<NType *>($3)->getBracks();
@@ -583,8 +610,9 @@ optBracks:
 ;
 
 newExpTypes:
-    idWrap %prec "reduce" {
-        $$ = new NSimpleType(static_cast<NId *>($1));
+    ID %prec "reduce" {
+        NId *id = new NId($1->getText());
+        $$ = new NSimpleType(id);
     }
 |   INT {
         NKeyword *intKey = new NKeyword("int");
@@ -612,11 +640,5 @@ bracks:
     }
 ;
 
-idWrap:
-    ID {
-        NId *curr = new NId($1->getText());
-        curr->annotation = $1->annotation;
-        $$ = curr;
-    }
 
 %%

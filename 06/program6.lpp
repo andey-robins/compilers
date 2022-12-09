@@ -265,7 +265,6 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     token = "IDENT";
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
-    yylval.ttype->annotation = string(yytext);
     fullLine += yytext;
     return ID;
 }

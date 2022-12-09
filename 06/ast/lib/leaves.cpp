@@ -13,6 +13,7 @@
 NId::NId(string id)
 {
     this->text = id;
+    this->annotation = id;
 }
 
 void NId::print(ostream *out)
@@ -36,6 +37,7 @@ string NId::getSymbol()
 NKeyword::NKeyword(string key)
 {
     this->text = key;
+    this->annotation = key;
 }
 
 string NKeyword::getText()
@@ -56,6 +58,7 @@ string NKeyword::getSymbol()
 NNumber::NNumber(int n)
 {
     this->num = n;
+    this->annotation = "int";
 }
 
 int NNumber::getVal()
@@ -79,6 +82,7 @@ string NNumber::getSymbol()
 NOperator::NOperator(string op)
 {
     this->op = op;
+    this->annotation = "int";
 }
 
 string NOperator::getOp()
