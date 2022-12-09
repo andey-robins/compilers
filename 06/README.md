@@ -17,7 +17,8 @@
 - [ ] `new` allocates memory for an object (again, where is this alocated?). The type on the right must match the type of the variable on the left
 - [ ] `new` can have arrays which are only filled in up to (but not including the last)
 - [x] array return types are valid
-- [ ] null is a reference type to an array or class. it cannot be compared to an integer
+- [x] null is a reference type to an array or class. it cannot be compared to an integer
+  - i believe i've got this working, but it might get broken depending on the solution for looking up Ids
 - [x] `read()` returns an integer
   - [x] register in symbol table
   - [x] use for checking function call statements

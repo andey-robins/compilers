@@ -114,7 +114,7 @@ NInfixExp::NInfixExp(NOperator *o, NExp *left, NExp *right)
     {
         this->annotation = left->annotation;
     }
-    else if (o->getText() == "==" && (left->annotation == "void" || right->annotation == "void"))
+    else if (o->getText() == "==" && !(left->annotation == "void" && right->annotation == "int") && !(right->annotation == "void" && left->annotation == "int"))
     {
         this->annotation = "int";
     }
