@@ -57,3 +57,8 @@ void SymbolTree::print()
     }
     symbolIndentation--;
 }
+
+SymbolTable *SymbolTree::getTable()
+{
+    return this->table;
+}

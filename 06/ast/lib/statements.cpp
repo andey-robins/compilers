@@ -35,32 +35,32 @@ void NStatement::addSymbols(SymbolTree *node)
 
     if (derivedAssign)
     {
-        cout << "derived assign addsymbol" << endl;
+        // cout << "derived assign addsymbol" << endl;
         derivedAssign->addSymbols(node);
     }
     else if (derivedCall)
     {
-        cout << "derived call addsymbol" << endl;
+        // cout << "derived call addsymbol" << endl;
         derivedCall->addSymbols(node);
     }
     else if (derivedWhile)
     {
-        cout << "derived while addsymbol" << endl;
+        // cout << "derived while addsymbol" << endl;
         derivedWhile->addSymbols(node);
     }
     else if (derivedReturn)
     {
-        cout << "derived return addsymbol" << endl;
+        // cout << "derived return addsymbol" << endl;
         derivedReturn->addSymbols(node);
     }
     else if (derivedBlock)
     {
-        cout << "derived block addsymbol" << endl;
+        // cout << "derived block addsymbol" << endl;
         derivedBlock->addSymbols(node);
     }
     else if (derivedCond)
     {
-        cout << "derived cond addsymbol" << endl;
+        // cout << "derived cond addsymbol" << endl;
         derivedCond->addSymbols(node);
     }
 }
@@ -190,6 +190,59 @@ void NStateReturn::print(ostream *out)
     if (this->next)
     {
         this->next->print(out);
+    }
+}
+
+void NStateReturn::addSymbols(SymbolTree *node)
+{
+    string funcRetType = node->getTable()->lookupSymbol("method_type");
+    if (funcRetType == "")
+    {
+        cout << "Semantic Error: invalid return statement"
+             << endl
+             << "---------------------"
+             << endl
+             << "| return was called outside of a method"
+             << endl
+             << "|"
+             << endl
+             << "| remove the statement in question and try again"
+             << endl
+             << "---------------------"
+             << endl
+             << endl;
+    }
+    else if (funcRetType == "void" && this->oe->maybe())
+    {
+        cout << "Semantic Error: invalid return statement"
+             << endl
+             << "---------------------"
+             << endl
+             << "| method has return type void but tries to return a value "
+             << endl
+             << "|"
+             << endl
+             << "| remove the value from the return or update the return type"
+             << endl
+             << "---------------------"
+             << endl
+             << endl;
+    }
+    else if (funcRetType != "void" && !this->oe->maybe())
+    {
+        cout << "Semantic Error: invalid return statement"
+             << endl
+             << "---------------------"
+             << endl
+             << "| function does not return a value,"
+             << endl
+             << "| has a return statement, "
+             << endl
+             << "| and is not declared void "
+             << endl
+             << "---------------------"
+             << endl
+             << endl;
     }
 }
 

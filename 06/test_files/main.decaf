@@ -1,0 +1,13 @@
+class foo {
+    void main(int a) {
+
+    }
+
+    foo main() {
+
+    }
+
+    int main() {
+        
+    }
+}

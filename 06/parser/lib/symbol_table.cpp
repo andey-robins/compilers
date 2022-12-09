@@ -54,11 +54,14 @@ void SymbolTable::print()
         // iterate through the keys in a map
         for (auto it = (*this->symbols).begin(); it != (*this->symbols).end(); ++it)
         {
-            cout << string(symbolIndentation * 2, ' ')
-                 << it->first
-                 << " "
-                 << it->second
-                 << endl;
+            if (it->first != "method_type" && it->first != "const_type")
+            {
+                cout << string(symbolIndentation * 2, ' ')
+                     << it->first
+                     << " "
+                     << it->second
+                     << endl;
+            }
         }
     }
 }

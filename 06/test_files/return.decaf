@@ -1,0 +1,17 @@
+class foo {
+    foo() {
+        return 10;
+    }
+
+    void bar() {
+        return 1;
+    }
+
+    int baz() {
+        return;
+    }
+
+    void tux() {
+
+    }
+}

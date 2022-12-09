@@ -24,5 +24,5 @@
   - [x] register in symbol table
   - [ ] use for checking function call statements
 - [ ] constructors may not be called directly
-- [ ] a method may not return something if it is a constructor or has the `void` return type
-- [ ] methods do not have to have a return statement (even if they have a return type (this is such an unbelievably bad idea, it pains me to allow it))
+- [x] a method may not return something if it is a constructor or has the `void` return type
+- [x] methods do not have to have a return statement (even if they have a return type (this is such an unbelievably bad idea, it pains me to allow it))

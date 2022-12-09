@@ -64,6 +64,7 @@ public:
     NStateReturn(NOptExp *oe);
     ~NStateReturn();
     virtual void print(ostream *out = 0);
+    void addSymbols(SymbolTree *node);
 
 private:
     NOptExp *oe;

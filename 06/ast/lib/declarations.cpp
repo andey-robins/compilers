@@ -312,6 +312,7 @@ void NMethDecl::addSymbols(SymbolTree *node)
     node->registerSymbolWithValue(this->id->getSymbol(), value);
     // create the sub-table for the method's internal scope
     SymbolTree *child = new SymbolTree();
+    child->getTable()->registerSymbolWithValue("method_type", this->resType->getType());
     node->setChild(child);
     child->setParent(node);
 
