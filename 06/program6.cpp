@@ -38,7 +38,7 @@ int main()
     if (ast)
     {
         // ast->print(&cout);
-        static_cast<NProgram *>(ast)->addSymbols(symbols);
+        static_cast<NProgram *>(ast)->typecheck(symbols);
     }
     cout << endl;
     symbols->print();

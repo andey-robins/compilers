@@ -53,7 +53,7 @@ string NParam::getMangling()
     return "void";
 }
 
-void NParam::addSymbols(SymbolTree *node)
+void NParam::typecheck(SymbolTree *node)
 {
     if (this->id && this->type)
     {
@@ -61,7 +61,7 @@ void NParam::addSymbols(SymbolTree *node)
     };
     if (this->next)
     {
-        static_cast<NParam *>(this->next)->addSymbols(node);
+        static_cast<NParam *>(this->next)->typecheck(node);
     }
 }
 

@@ -29,7 +29,7 @@ void NProgram::print(ostream *out)
     indentation = 0;
 }
 
-void NProgram::addSymbols(SymbolTree *node)
+void NProgram::typecheck(SymbolTree *node)
 {
-    this->classDeclaration->addSymbols(node);
+    this->classDeclaration->typecheck(node);
 }

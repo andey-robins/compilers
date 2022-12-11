@@ -39,7 +39,7 @@ void NBlock::print(ostream *out)
     indentation--;
 }
 
-void NBlock::addSymbols(SymbolTree *node)
+void NBlock::typecheck(SymbolTree *node)
 {
     if (this->next)
     {
@@ -48,11 +48,11 @@ void NBlock::addSymbols(SymbolTree *node)
 
         if (derivedVar)
         {
-            derivedVar->addSymbols(node);
+            derivedVar->typecheck(node);
         }
         else if (derivedStmt)
         {
-            derivedStmt->addSymbols(node);
+            derivedStmt->typecheck(node);
         }
     }
 }
@@ -100,7 +100,7 @@ void NVarDecl::print(ostream *out)
     }
 }
 
-void NVarDecl::addSymbols(SymbolTree *node)
+void NVarDecl::typecheck(SymbolTree *node)
 {
     // cout << "nvardecl" << endl;
     // cout << this->id->getSymbol() << endl;
@@ -118,15 +118,15 @@ void NVarDecl::addSymbols(SymbolTree *node)
 
         if (derivedVar)
         {
-            derivedVar->addSymbols(node);
+            derivedVar->typecheck(node);
         }
         else if (derivedCons)
         {
-            derivedCons->addSymbols(node);
+            derivedCons->typecheck(node);
         }
         else if (derivedMeth)
         {
-            derivedMeth->addSymbols(node);
+            derivedMeth->typecheck(node);
         }
     }
 }
@@ -150,18 +150,18 @@ void NLocalVarDecl::print(ostream *out)
     }
 }
 
-void NLocalVarDecl::addSymbols(SymbolTree *node)
+void NLocalVarDecl::typecheck(SymbolTree *node)
 {
-    this->vd->addSymbols(node);
+    this->vd->typecheck(node);
     auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
     auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
 
     if (derivedVar)
     {
-        derivedVar->addSymbols(node);
+        derivedVar->typecheck(node);
     }
     else if (derivedStmt)
     {
-        derivedStmt->addSymbols(node);
+        derivedStmt->typecheck(node);
     }
 }

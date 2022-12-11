@@ -18,7 +18,7 @@ class NStatement : public BaseNode
 {
 public:
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 };
 
 class NStateAssign : public NStatement
@@ -27,7 +27,7 @@ public:
     NStateAssign(NName *n, NExp *e);
     ~NStateAssign();
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 
 private:
     NName *name;
@@ -40,7 +40,7 @@ public:
     NStateCall(NName *n, NArg *a);
     ~NStateCall();
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 
 private:
     NName *name;
@@ -65,7 +65,7 @@ public:
     NStateReturn(NOptExp *oe);
     ~NStateReturn();
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 
 private:
     NOptExp *oe;
@@ -77,7 +77,7 @@ public:
     NStateBlock(NBlock *b);
     ~NStateBlock();
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 
 private:
     NBlock *block;

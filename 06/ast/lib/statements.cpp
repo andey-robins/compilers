@@ -30,7 +30,7 @@ void NStatement::print(ostream *out)
     }
 }
 
-void NStatement::addSymbols(SymbolTree *node)
+void NStatement::typecheck(SymbolTree *node)
 {
     auto *derivedAssign = dynamic_cast<NStateAssign *>(this);
     auto *derivedCall = dynamic_cast<NStateCall *>(this);
@@ -42,32 +42,32 @@ void NStatement::addSymbols(SymbolTree *node)
     if (derivedAssign)
     {
         // cout << "derived assign addsymbol" << endl;
-        derivedAssign->addSymbols(node);
+        derivedAssign->typecheck(node);
     }
     else if (derivedCall)
     {
         // cout << "derived call addsymbol" << endl;
-        derivedCall->addSymbols(node);
+        derivedCall->typecheck(node);
     }
     else if (derivedWhile)
     {
         // cout << "derived while addsymbol" << endl;
-        derivedWhile->addSymbols(node);
+        derivedWhile->typecheck(node);
     }
     else if (derivedReturn)
     {
         // cout << "derived return addsymbol" << endl;
-        derivedReturn->addSymbols(node);
+        derivedReturn->typecheck(node);
     }
     else if (derivedBlock)
     {
         // cout << "derived block addsymbol" << endl;
-        derivedBlock->addSymbols(node);
+        derivedBlock->typecheck(node);
     }
     else if (derivedCond)
     {
         // cout << "derived cond addsymbol" << endl;
-        derivedCond->addSymbols(node);
+        derivedCond->typecheck(node);
     }
 }
 
@@ -99,7 +99,7 @@ void NStateAssign::print(ostream *out)
     }
 }
 
-void NStateAssign::addSymbols(SymbolTree *node)
+void NStateAssign::typecheck(SymbolTree *node)
 {
     // check for assign statements of new expressions
     // cout << "NStateAssign" << endl;
@@ -150,11 +150,11 @@ void NStateAssign::addSymbols(SymbolTree *node)
         }
     }
 
-    this->name->addSymbols(node);
-    // this->exp->addSymbols(node);
+    this->name->typecheck(node);
+    // this->exp->typecheck(node);
     if (dynamic_cast<NStatement *>(this->next))
     {
-        static_cast<NStatement *>(this->next)->addSymbols(node);
+        static_cast<NStatement *>(this->next)->typecheck(node);
     }
 }
 
@@ -186,7 +186,7 @@ void NStateCall::print(ostream *out)
     }
 }
 
-void NStateCall::addSymbols(SymbolTree *node)
+void NStateCall::typecheck(SymbolTree *node)
 {
     string callType = node->lookupSymbol(this->name->annotation);
     if (callType.length() >= 16 && callType.substr(0, 16) == "constructor_type")
@@ -196,7 +196,7 @@ void NStateCall::addSymbols(SymbolTree *node)
 
     if (this->next)
     {
-        static_cast<NStatement *>(this->next)->addSymbols(node);
+        static_cast<NStatement *>(this->next)->typecheck(node);
     }
 }
 
@@ -262,7 +262,7 @@ void NStateReturn::print(ostream *out)
     }
 }
 
-void NStateReturn::addSymbols(SymbolTree *node)
+void NStateReturn::typecheck(SymbolTree *node)
 {
     string funcRetType = node->getTable()->lookupSymbol("method_type");
     if (funcRetType == "")
@@ -339,12 +339,12 @@ void NStateBlock::print(ostream *out)
     }
 }
 
-void NStateBlock::addSymbols(SymbolTree *node)
+void NStateBlock::typecheck(SymbolTree *node)
 {
-    this->block->addSymbols(node);
+    this->block->typecheck(node);
     if (dynamic_cast<NStatement *>(this->next))
     {
-        static_cast<NStatement *>(this->next)->addSymbols(node);
+        static_cast<NStatement *>(this->next)->typecheck(node);
     }
 }
 

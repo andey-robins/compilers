@@ -15,7 +15,7 @@
 class NName : public BaseNode
 {
 public:
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
     string getSupertype();
 };
 
@@ -24,7 +24,7 @@ class NNameThis : public NName
 public:
     NNameThis();
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 };
 
 class NNameThisDot : public NName
@@ -32,7 +32,7 @@ class NNameThisDot : public NName
 public:
     NNameThisDot(NName *next);
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 };
 
 class NNameId : public NName
@@ -42,7 +42,7 @@ public:
     NNameId(NId *id, NBrackExps *be);
     ~NNameId();
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 
 private:
     NBrackExps *be;
@@ -53,7 +53,7 @@ class NNameDotId : public NName
 public:
     NNameDotId(NId *id, NName *n);
     virtual void print(ostream *out = 0);
-    void addSymbols(SymbolTree *node);
+    void typecheck(SymbolTree *node);
 
 private:
     NId *id;

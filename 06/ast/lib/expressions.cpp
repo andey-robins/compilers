@@ -59,7 +59,7 @@ void NExp::print(ostream *out)
     }
 }
 
-void NExp::addSymbols(SymbolTree *node)
+void NExp::typecheck(SymbolTree *node)
 {
     auto *derivedInfix = dynamic_cast<NInfixExp *>(this);
     auto *derivedOpt = dynamic_cast<NOptExp *>(this);
@@ -72,35 +72,35 @@ void NExp::addSymbols(SymbolTree *node)
 
     if (derivedInfix)
     {
-        derivedInfix->addSymbols(node);
+        derivedInfix->typecheck(node);
     }
     else if (derivedOpt)
     {
-        derivedOpt->addSymbols(node);
+        derivedOpt->typecheck(node);
     }
     else if (derivedNull)
     {
-        derivedNull->addSymbols(node);
+        derivedNull->typecheck(node);
     }
     else if (derivedParen)
     {
-        derivedParen->addSymbols(node);
+        derivedParen->typecheck(node);
     }
     else if (derivedCall)
     {
-        derivedCall->addSymbols(node);
+        derivedCall->typecheck(node);
     }
     else if (derivedRead)
     {
-        derivedRead->addSymbols(node);
+        derivedRead->typecheck(node);
     }
     else if (derivedNew)
     {
-        derivedNew->addSymbols(node);
+        derivedNew->typecheck(node);
     }
     else if (derivedPrefix)
     {
-        derivedPrefix->addSymbols(node);
+        derivedPrefix->typecheck(node);
     }
 }
 
@@ -149,7 +149,7 @@ void NInfixExp::print(ostream *out)
     }
 }
 
-void NInfixExp::addSymbols(SymbolTree *node)
+void NInfixExp::typecheck(SymbolTree *node)
 {
 }
 

@@ -33,7 +33,7 @@ void NClassDecl::print(ostream *out)
     indentation--;
 }
 
-void NClassDecl::addSymbols(SymbolTree *node)
+void NClassDecl::typecheck(SymbolTree *node)
 {
     // cout << "class decl" << endl;
     // cout << this->className->getSymbol() << endl;
@@ -44,14 +44,14 @@ void NClassDecl::addSymbols(SymbolTree *node)
     child->setParent(node);
     if (this->classBody)
     {
-        this->classBody->addSymbols(child);
+        this->classBody->typecheck(child);
     }
 
     // continue to next class declaration
     auto *derivedNext = dynamic_cast<NClassDecl *>(this->next);
     if (derivedNext)
     {
-        static_cast<NClassDecl *>(this->next)->addSymbols(node);
+        static_cast<NClassDecl *>(this->next)->typecheck(node);
     }
 }
 
@@ -91,7 +91,7 @@ void NClassBody::print(ostream *out)
     indentation--;
 }
 
-void NClassBody::addSymbols(SymbolTree *node)
+void NClassBody::typecheck(SymbolTree *node)
 {
     if (this->next)
     {
@@ -101,15 +101,15 @@ void NClassBody::addSymbols(SymbolTree *node)
 
         if (derivedVar)
         {
-            derivedVar->addSymbols(node);
+            derivedVar->typecheck(node);
         }
         else if (derivedCons)
         {
-            derivedCons->addSymbols(node);
+            derivedCons->typecheck(node);
         }
         else if (derivedMeth)
         {
-            derivedMeth->addSymbols(node);
+            derivedMeth->typecheck(node);
         }
     }
 }
@@ -171,7 +171,7 @@ void NConstDecl::print(ostream *out)
     }
 }
 
-void NConstDecl::addSymbols(SymbolTree *node)
+void NConstDecl::typecheck(SymbolTree *node)
 {
     string value;
     if (this->params)
@@ -186,7 +186,7 @@ void NConstDecl::addSymbols(SymbolTree *node)
     SymbolTree *child = new SymbolTree();
     node->setChild(child);
     child->setParent(node);
-    this->block->addSymbols(child);
+    this->block->typecheck(child);
     if (this->next)
     {
         auto *derivedCons = dynamic_cast<NConstDecl *>(this->next);
@@ -194,11 +194,11 @@ void NConstDecl::addSymbols(SymbolTree *node)
 
         if (derivedCons)
         {
-            derivedCons->addSymbols(node);
+            derivedCons->typecheck(node);
         }
         else if (derivedMeth)
         {
-            derivedMeth->addSymbols(node);
+            derivedMeth->typecheck(node);
         }
     }
 }
@@ -255,7 +255,7 @@ void NMethDecl::print(ostream *out)
     }
 }
 
-void NMethDecl::addSymbols(SymbolTree *node)
+void NMethDecl::typecheck(SymbolTree *node)
 {
     // check if method is main for type checking
     if (this->id->getSymbol() == "main")
@@ -332,8 +332,8 @@ void NMethDecl::addSymbols(SymbolTree *node)
     node->setChild(child);
     child->setParent(node);
 
-    this->params->addSymbols(child);
-    this->block->addSymbols(child);
+    this->params->typecheck(child);
+    this->block->typecheck(child);
 
     // continue adding next set of symbols to the table
     if (this->next)
@@ -342,7 +342,7 @@ void NMethDecl::addSymbols(SymbolTree *node)
 
         if (derivedMeth)
         {
-            derivedMeth->addSymbols(node);
+            derivedMeth->typecheck(node);
         }
     }
 }

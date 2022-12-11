@@ -9,7 +9,7 @@
 
 #include "../include/nodes.hpp"
 
-void NName::addSymbols(SymbolTree *node)
+void NName::typecheck(SymbolTree *node)
 {
     auto derivedThis = dynamic_cast<NNameThis *>(this);
     auto derivedThisDot = dynamic_cast<NNameThisDot *>(this);
@@ -18,19 +18,19 @@ void NName::addSymbols(SymbolTree *node)
 
     if (derivedThis)
     {
-        derivedThis->addSymbols(node);
+        derivedThis->typecheck(node);
     }
     else if (derivedThisDot)
     {
-        derivedThisDot->addSymbols(node);
+        derivedThisDot->typecheck(node);
     }
     else if (derivedId)
     {
-        derivedId->addSymbols(node);
+        derivedId->typecheck(node);
     }
     else if (derivedDotId)
     {
-        derivedDotId->addSymbols(node);
+        derivedDotId->typecheck(node);
     }
 }
 
@@ -83,7 +83,7 @@ void NNameThis::print(ostream *out)
     }
 }
 
-void NNameThis::addSymbols(SymbolTree *node)
+void NNameThis::typecheck(SymbolTree *node)
 {
 }
 
@@ -103,7 +103,7 @@ void NNameThisDot::print(ostream *out)
     indentation--;
 }
 
-void NNameThisDot::addSymbols(SymbolTree *node)
+void NNameThisDot::typecheck(SymbolTree *node)
 {
     if (dynamic_cast<NName *>(this->next))
     {
@@ -114,7 +114,7 @@ void NNameThisDot::addSymbols(SymbolTree *node)
         }
         else
         {
-            static_cast<NName *>(this->next)->addSymbols(node);
+            static_cast<NName *>(this->next)->typecheck(node);
         }
     }
 }
@@ -156,7 +156,7 @@ void NNameId::print(ostream *out)
     indentation--;
 }
 
-void NNameId::addSymbols(SymbolTree *node)
+void NNameId::typecheck(SymbolTree *node)
 {
     if (dynamic_cast<NName *>(this->next))
     {
@@ -167,7 +167,7 @@ void NNameId::addSymbols(SymbolTree *node)
         }
         else
         {
-            static_cast<NName *>(this->next)->addSymbols(node);
+            static_cast<NName *>(this->next)->typecheck(node);
         }
     }
 }
@@ -191,7 +191,7 @@ void NNameDotId::print(ostream *out)
     indentation--;
 }
 
-void NNameDotId::addSymbols(SymbolTree *node)
+void NNameDotId::typecheck(SymbolTree *node)
 {
     if (dynamic_cast<NName *>(this->next))
     {
@@ -202,7 +202,7 @@ void NNameDotId::addSymbols(SymbolTree *node)
         }
         else
         {
-            static_cast<NName *>(this->next)->addSymbols(node);
+            static_cast<NName *>(this->next)->typecheck(node);
         }
     }
 }
