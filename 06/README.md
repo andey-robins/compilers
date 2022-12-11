@@ -25,10 +25,10 @@
 - [x] `print()` has a void return type and takes any number of integers
   - [x] register in symbol table
   - [x] use for checking function call statements
-- [ ] constructors may not be called directly
+- [x] constructors may not be called directly
 - [x] a method may not return something if it is a constructor or has the `void` return type
 - [x] methods do not have to have a return statement (even if they have a return type (this is such an unbelievably bad idea, it pains me to allow it))
 - [ ] typecheck assignment statements
 - [ ] fix parsing for nested expressions
 - [ ] fix statements after if statement not working
-- [ ] fix segfaults in constructors
+- [x] fix segfaults in constructors

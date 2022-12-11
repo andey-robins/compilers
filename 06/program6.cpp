@@ -32,6 +32,7 @@ int main()
     symbols->registerSymbolWithValue("read", "method_type int <- void");
     symbols->registerSymbolWithValue("print", "method_type void <- []");
     yyparse();
+    // cout << "done parsing" << endl;
 
     // ast->print(&cout);
     if (ast)

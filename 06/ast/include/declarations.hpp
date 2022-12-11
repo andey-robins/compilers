@@ -16,6 +16,7 @@ class NConstDecl : public BaseNode
 {
 public:
     NConstDecl(NId *id, NParam *p, NBlock *b);
+    NConstDecl(NId *id, NBlock *b);
     virtual void print(ostream *out = 0);
     void addSymbols(SymbolTree *node);
 

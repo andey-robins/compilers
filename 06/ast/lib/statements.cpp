@@ -120,7 +120,7 @@ void NStateAssign::addSymbols(SymbolTree *node)
         {
             // check that the left and right types match
             string targetType = node->lookupSymbol(node->lookupSymbol(this->name->annotation));
-            if (derivedNewExp->annotation == "int") 
+            if (derivedNewExp->annotation == "int")
             {
                 type = "int";
             }
@@ -188,6 +188,16 @@ void NStateCall::print(ostream *out)
 
 void NStateCall::addSymbols(SymbolTree *node)
 {
+    string callType = node->lookupSymbol(this->name->annotation);
+    if (callType.length() >= 16 && callType.substr(0, 16) == "constructor_type")
+    {
+        cout << "Semantic Error: calling constructors is disallowed" << endl;
+    }
+
+    if (this->next)
+    {
+        static_cast<NStatement *>(this->next)->addSymbols(node);
+    }
 }
 
 NStateWhile::NStateWhile(NExp *e, NStatement *s)

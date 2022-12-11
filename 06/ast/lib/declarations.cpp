@@ -119,6 +119,14 @@ NConstDecl::NConstDecl(NId *id, NParam *p, NBlock *b)
     this->id = id;
     this->params = p;
     this->block = b;
+    this->annotation = "constructor";
+}
+
+NConstDecl::NConstDecl(NId *id, NBlock *b)
+{
+    this->id = id;
+    this->block = b;
+    this->annotation = "constructor";
 }
 
 void NConstDecl::print(ostream *out)
@@ -165,7 +173,15 @@ void NConstDecl::print(ostream *out)
 
 void NConstDecl::addSymbols(SymbolTree *node)
 {
-    string value = "constructor_type <- " + this->params->getMangling();
+    string value;
+    if (this->params)
+    {
+        value = "constructor_type <- " + this->params->getMangling();
+    }
+    else
+    {
+        value = "constructor_type <-";
+    }
     node->registerSymbolWithValue(this->id->getSymbol(), value);
     SymbolTree *child = new SymbolTree();
     node->setChild(child);

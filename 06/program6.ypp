@@ -162,9 +162,7 @@ constDeclHeaderChoice:
         NConstDecl *curr;
         if ($3->getText() == "epsilon") 
         {
-            NParam *epsilon = new NParam(0, 0);
-            epsilon->setVal("epsilon");
-            curr = new NConstDecl(id, epsilon, static_cast<NBlock *>($5));
+            curr = new NConstDecl(id, static_cast<NBlock *>($5));
         }
         else 
         {
@@ -177,7 +175,7 @@ constDeclHeaderChoice:
 ;
 
 methDeclHeaderChoice:
-    VOID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+    VOID ID LPAREN parameterList RPAREN block methDeclHeaderChoice {
         NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("void");
         NSimpleType *st = new NSimpleType(key);
@@ -187,7 +185,7 @@ methDeclHeaderChoice:
         method->setNext($7);
         $$ = method;
     }
-|   INT bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   INT bracks ID LPAREN parameterList RPAREN block methDeclHeaderChoice {
         int bracks = static_cast<NType*>($2)->getBracks();
         NId *id = new NId($3->getText());
         NKeyword *intId = new NKeyword("int");
@@ -199,7 +197,7 @@ methDeclHeaderChoice:
         method->setNext($8);
         $$ = method;
     }
-|   ID bracks ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   ID bracks ID LPAREN parameterList RPAREN block methDeclHeaderChoice {
         int bracks = static_cast<NType*>($2)->getBracks();
         NId *id = new NId($3->getText());
         NId *intId = new NId($1->getText());
@@ -211,7 +209,7 @@ methDeclHeaderChoice:
         method->setNext($8);
         $$ = method;
     }
-|   INT ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   INT ID LPAREN parameterList RPAREN block methDeclHeaderChoice {
         NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword("int");
         NSimpleType *st = new NSimpleType(key);
@@ -221,7 +219,7 @@ methDeclHeaderChoice:
         method->setNext($7);
         $$ = method;
     }
-|   ID ID LPAREN parameterList RPAREN block constDeclHeaderChoice {
+|   ID ID LPAREN parameterList RPAREN block methDeclHeaderChoice {
         NId *id = new NId($2->getText());
         NKeyword *key = new NKeyword($1->getText());
         NSimpleType *st = new NSimpleType(key);
