@@ -23,6 +23,7 @@ NSimpleType::NSimpleType(NId *id)
     this->next = id;
     this->isId = true;
     this->type = id->getSymbol();
+    this->annotation = id->annotation;
 }
 
 string NSimpleType::getType()

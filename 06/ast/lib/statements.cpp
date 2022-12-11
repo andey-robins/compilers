@@ -13,14 +13,20 @@ void NStatement::print(ostream *out)
 {
     auto *derivedAssign = dynamic_cast<NStateAssign *>(this);
     auto *derivedCall = dynamic_cast<NStateCall *>(this);
-
+    // cout << "statement" << endl;
     if (derivedAssign)
     {
+        // cout << "derivedassign" << endl;
         derivedAssign->print(out);
     }
     else if (derivedCall)
     {
+        // cout << "derivedcall" << endl;
         derivedCall->print(out);
+    }
+    else
+    {
+        // cout << "derivedother" << endl;
     }
 }
 
@@ -95,6 +101,55 @@ void NStateAssign::print(ostream *out)
 
 void NStateAssign::addSymbols(SymbolTree *node)
 {
+    // check for assign statements of new expressions
+    // cout << "NStateAssign" << endl;
+    // cout << this->exp->annotation << endl;
+    auto derivedNewExp = dynamic_cast<NExpNewExp *>(this->exp);
+    if (derivedNewExp)
+    {
+        // check that the declared type exists
+        string type = node->lookupSymbol(derivedNewExp->annotation);
+        if (type == "" && derivedNewExp->annotation != "int")
+        {
+            cout << "Semantic Error: type "
+                 << derivedNewExp->annotation
+                 << " not found in symbol table"
+                 << endl;
+        }
+        else
+        {
+            // check that the left and right types match
+            string targetType = node->lookupSymbol(node->lookupSymbol(this->name->annotation));
+            if (derivedNewExp->annotation == "int") 
+            {
+                type = "int";
+            }
+            if (targetType == "" || targetType != type)
+            {
+
+                cout << "Semantic Error: mismatched types"
+                     << endl
+                     << "---------------------"
+                     << endl
+                     << "| Type of the left hand side does not match "
+                     << endl
+                     << "| the type of the right hand side"
+                     << endl
+                     << "|"
+                     << endl
+                     << "| left type -> "
+                     << ((targetType == "") ? "void" : targetType)
+                     << endl
+                     << "| right type -> "
+                     << ((type == "") ? "void" : type)
+                     << endl
+                     << "---------------------"
+                     << endl
+                     << endl;
+            }
+        }
+    }
+
     this->name->addSymbols(node);
     // this->exp->addSymbols(node);
     if (dynamic_cast<NStatement *>(this->next))

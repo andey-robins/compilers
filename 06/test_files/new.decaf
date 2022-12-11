@@ -1,0 +1,9 @@
+class foo {
+    void main() {
+        foo a;
+        foo b;
+        a = new foo;
+        a = new bar;
+        b = new int;
+    }
+}

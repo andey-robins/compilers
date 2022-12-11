@@ -277,9 +277,9 @@ NExpNewExp::NExpNewExp(NNewExp *ne)
 {
     this->newExp = ne;
     this->next = 0;
-    // QUESTION is this actually the right type? do we want to return the memory address?
-    // what would be the appropriate type for a new expression expression
-    this->annotation = "int";
+    // cout << "node exp new exp" << endl;
+    // cout << ne->annotation << endl;
+    this->annotation = ne->annotation;
 }
 
 NExpNewExp::~NExpNewExp()
@@ -364,6 +364,8 @@ NNewExpType::NNewExpType(NSimpleType *s)
     this->bes = 0;
     this->bs = 0;
     this->next = 0;
+    // cout << "NNewExpType" << endl;
+    // cout << s->annotation << endl;
     this->annotation = s->annotation;
 }
 
@@ -418,6 +420,8 @@ NNewExpIdArgs::NNewExpIdArgs(NId *i, NArg *a)
     this->id = i;
     this->args = a;
     this->next = 0;
+    // cout << "NNewExpIdArgs" << endl;
+    // cout << i->annotation << endl;
     this->annotation = i->annotation;
 }
 

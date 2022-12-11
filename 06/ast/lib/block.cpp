@@ -153,4 +153,15 @@ void NLocalVarDecl::print(ostream *out)
 void NLocalVarDecl::addSymbols(SymbolTree *node)
 {
     this->vd->addSymbols(node);
+    auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
+    auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
+
+    if (derivedVar)
+    {
+        derivedVar->addSymbols(node);
+    }
+    else if (derivedStmt)
+    {
+        derivedStmt->addSymbols(node);
+    }
 }
