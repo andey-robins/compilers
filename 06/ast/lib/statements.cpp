@@ -146,6 +146,9 @@ void NStateAssign::typecheck(SymbolTree *node)
 
         cout << "Semantic Error: mismatched types"
              << endl
+             << "Line "
+             << this->lineNumber
+             << endl
              << "---------------------"
              << endl
              << "| Type of the left hand side does not match "

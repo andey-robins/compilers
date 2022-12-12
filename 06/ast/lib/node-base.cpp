@@ -12,6 +12,8 @@
 BaseNode::BaseNode()
 {
     this->annotation = "";
+    this->line = "";
+    this->lineNumber = 0;
 }
 
 BaseNode::~BaseNode()

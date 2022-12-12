@@ -30,6 +30,8 @@ public:
     string getText();
     virtual void print(ostream *out = 0);
     string annotation;
+    int lineNumber;
+    string line;
 
 protected:
     BaseNode *next;
