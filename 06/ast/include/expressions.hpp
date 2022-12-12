@@ -108,6 +108,7 @@ class NExpRead : public NExp
 public:
     NExpRead();
     virtual void print(ostream *out = 0);
+    void typecheck(SymbolTree *node);
 };
 
 class NExpNewExp : public NExp

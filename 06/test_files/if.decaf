@@ -1,0 +1,12 @@
+class foo {
+    void main() {
+        foo a;
+        if (a == 1) {
+            int b;
+            a = 2;
+            b = 2;
+        }
+
+        print(a);
+    }
+}

@@ -86,15 +86,16 @@ private:
 class NCondition : public NStatement
 {
 public:
-    NCondition(NExp *e, NStatement *s);
-    NCondition(NExp *e, NStatement *trueStmt, NStatement *falseStmt);
+    NCondition(NExp *e, NBlock *s);
+    NCondition(NExp *e, NBlock *trueStmt, NBlock *falseStmt);
     ~NCondition();
     virtual void print(ostream *out = 0);
+    void typecheck(SymbolTree *node);
 
 protected:
     NExp *cond;
-    NStatement *trueBlock;
-    NStatement *falseBlock;
+    NBlock *trueBlock;
+    NBlock *falseBlock;
 };
 
 class NStateCond : public NStatement
@@ -103,6 +104,7 @@ public:
     NStateCond(NCondition *c);
     ~NStateCond();
     virtual void print(ostream *out = 0);
+    void typecheck(SymbolTree *node);
 
 private:
     NCondition *cond;

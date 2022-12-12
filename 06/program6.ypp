@@ -457,10 +457,10 @@ argListStar:
 
 conditionalStatement:
     IF LPAREN expression RPAREN statement {
-        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NStatement *>($5));
+        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NBlock *>($5));
     }
 |   IF LPAREN expression RPAREN statement ELSE statement {
-        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NStatement *>($5), static_cast<NStatement *>($7));
+        $$ = new NCondition(static_cast<NExp *>($3), static_cast<NBlock *>($5), static_cast<NBlock *>($7));
     }
 ;
 

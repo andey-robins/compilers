@@ -10,7 +10,7 @@
 - [x] Fix to allow multiple statements in a row being typechecked
 - [x] Arithmetic operators all require int operands
   - [x] This is including the >, <, >=, <= operators
-- [ ] Properly lookup/update declared var types
+- [x] Properly lookup/update declared var types
 - [x] Relational operators return (return where?) 1 if true and 0 if false
   - [x] && and || only take integers
 - [x] The equality operator is the major difference as it can compare any reference to null or another reference type
@@ -28,7 +28,7 @@
 - [x] constructors may not be called directly
 - [x] a method may not return something if it is a constructor or has the `void` return type
 - [x] methods do not have to have a return statement (even if they have a return type (this is such an unbelievably bad idea, it pains me to allow it))
-- [ ] typecheck assignment statements
+- [x] typecheck assignment statements
 - [ ] fix parsing for nested expressions
-- [ ] fix statements after if statement not working
+- [x] fix statements after if statement not working
 - [x] fix segfaults in constructors

@@ -70,36 +70,46 @@ void NExp::typecheck(SymbolTree *node)
     auto *derivedNew = dynamic_cast<NExpNewExp *>(this);
     auto *derivedPrefix = dynamic_cast<NPrefixExp *>(this);
 
+    // cout << "typechecking expression" << endl;
+
     if (derivedInfix)
     {
+        // cout << "derived infix" << endl;
         derivedInfix->typecheck(node);
     }
     else if (derivedOpt)
     {
+        // cout << "derived opt" << endl;
         derivedOpt->typecheck(node);
     }
     else if (derivedNull)
     {
+        // cout << "derived null" << endl;
         derivedNull->typecheck(node);
     }
     else if (derivedParen)
     {
+        // cout << "derived paren" << endl;
         derivedParen->typecheck(node);
     }
     else if (derivedCall)
     {
+        // cout << "derived call" << endl;
         derivedCall->typecheck(node);
     }
     else if (derivedRead)
     {
+        // cout << "derived read" << endl;
         derivedRead->typecheck(node);
     }
     else if (derivedNew)
     {
+        // cout << "derived new" << endl;
         derivedNew->typecheck(node);
     }
     else if (derivedPrefix)
     {
+        // cout << "derived prefix" << endl;
         derivedPrefix->typecheck(node);
     }
 }
@@ -120,7 +130,6 @@ NInfixExp::NInfixExp(NOperator *o, NExp *left, NExp *right)
     }
     else
     {
-        cout << "Syntax Error: mismatched types of " << left->annotation << " and " << right->annotation << endl;
         this->annotation = "type error";
     }
 }
@@ -151,6 +160,58 @@ void NInfixExp::print(ostream *out)
 
 void NInfixExp::typecheck(SymbolTree *node)
 {
+    string leftType, rightType;
+    // cout << "Annotations -> " << this->left->annotation << " : " << this->right->annotation << " <-" << endl;
+    leftType = (this->left->annotation == "int" || this->left->annotation == "void")
+                   ? this->left->annotation
+                   : node->lookupSymbol(this->left->annotation);
+    rightType = (this->right->annotation == "int" || this->right->annotation == "void")
+                    ? this->right->annotation
+                    : node->lookupSymbol(this->right->annotation);
+    // cout << "Infix types -> " << leftType << " : " << rightType << endl;
+
+    if (leftType == "" || rightType == "")
+    {
+        cout << "Semantic Error: type error"
+             << endl
+             << "---------------------"
+             << endl
+             << "| One or both of the arms of the infix expression"
+             << endl
+             << "| had no type. Please ensure all types are declared"
+             << endl
+             << "|"
+             << endl
+             << "| Left type => "
+             << leftType
+             << endl
+             << "| Right type => "
+             << rightType
+             << endl
+             << "---------------------"
+             << endl
+             << endl;
+    }
+    else if (leftType != rightType)
+    {
+        cout << "Semantic Error: type mismatch"
+             << endl
+             << "---------------------"
+             << endl
+             << "| Left and right of infix expression have mismatched types"
+             << endl
+             << "|"
+             << endl
+             << "| Left type => "
+             << leftType
+             << endl
+             << "| Right type => "
+             << rightType
+             << endl
+             << "---------------------"
+             << endl
+             << endl;
+    }
 }
 
 NOptExp::NOptExp()
@@ -271,6 +332,10 @@ void NExpRead::print(ostream *out)
     {
         this->next->print(out);
     }
+}
+
+void NExpRead::typecheck(SymbolTree *node)
+{
 }
 
 NExpNewExp::NExpNewExp(NNewExp *ne)

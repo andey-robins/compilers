@@ -8,6 +8,7 @@
  */
 
 #include "../include/nodes.hpp"
+#include <typeinfo>
 
 void NStatement::print(ostream *out)
 {
@@ -26,7 +27,7 @@ void NStatement::print(ostream *out)
     }
     else
     {
-        // cout << "derivedother" << endl;
+        cout << "derivedother print" << endl;
     }
 }
 
@@ -38,6 +39,8 @@ void NStatement::typecheck(SymbolTree *node)
     auto *derivedReturn = dynamic_cast<NStateReturn *>(this);
     auto *derivedBlock = dynamic_cast<NStateBlock *>(this);
     auto *derivedCond = dynamic_cast<NStateCond *>(this);
+
+    // cout << "typechecking statement" << endl;
 
     if (derivedAssign)
     {
@@ -68,6 +71,10 @@ void NStatement::typecheck(SymbolTree *node)
     {
         // cout << "derived cond addsymbol" << endl;
         derivedCond->typecheck(node);
+    }
+    else
+    {
+        cout << "derived no statement type" << endl;
     }
 }
 
@@ -104,11 +111,13 @@ void NStateAssign::typecheck(SymbolTree *node)
     // check for assign statements of new expressions
     // cout << "NStateAssign" << endl;
     // cout << this->exp->annotation << endl;
+    string type;
     auto derivedNewExp = dynamic_cast<NExpNewExp *>(this->exp);
+
     if (derivedNewExp)
     {
         // check that the declared type exists
-        string type = node->lookupSymbol(derivedNewExp->annotation);
+        type = node->lookupSymbol(derivedNewExp->annotation);
         if (type == "" && derivedNewExp->annotation != "int")
         {
             cout << "Semantic Error: type "
@@ -116,42 +125,49 @@ void NStateAssign::typecheck(SymbolTree *node)
                  << " not found in symbol table"
                  << endl;
         }
-        else
-        {
-            // check that the left and right types match
-            string targetType = node->lookupSymbol(node->lookupSymbol(this->name->annotation));
-            if (derivedNewExp->annotation == "int")
-            {
-                type = "int";
-            }
-            if (targetType == "" || targetType != type)
-            {
+    }
+    else
+    {
+        // cout << "alternative discovery of expression annotation" << endl;
+        type = (this->exp->annotation == "int" || this->exp->annotation == "void")
+                   ? this->exp->annotation
+                   : node->lookupSymbol(this->exp->annotation);
+    }
+    // cout << "done with type discovery" << endl;
+    // cout << type << endl;
 
-                cout << "Semantic Error: mismatched types"
-                     << endl
-                     << "---------------------"
-                     << endl
-                     << "| Type of the left hand side does not match "
-                     << endl
-                     << "| the type of the right hand side"
-                     << endl
-                     << "|"
-                     << endl
-                     << "| left type -> "
-                     << ((targetType == "") ? "void" : targetType)
-                     << endl
-                     << "| right type -> "
-                     << ((type == "") ? "void" : type)
-                     << endl
-                     << "---------------------"
-                     << endl
-                     << endl;
-            }
-        }
+    // check that the left and right types match
+    // cout << this->name->annotation << endl;
+    // cout << node->lookupSymbol(this->name->annotation) << endl;
+    string targetType = node->lookupSymbol(this->name->annotation);
+    // cout << targetType << endl;
+    if (targetType == "" || targetType != type)
+    {
+
+        cout << "Semantic Error: mismatched types"
+             << endl
+             << "---------------------"
+             << endl
+             << "| Type of the left hand side does not match "
+             << endl
+             << "| the type of the right hand side"
+             << endl
+             << "|"
+             << endl
+             << "| left type -> "
+             << ((targetType == "") ? "void" : targetType)
+             << endl
+             << "| right type -> "
+             << ((type == "") ? "void" : type)
+             << endl
+             << "---------------------"
+             << endl
+             << endl;
     }
 
     this->name->typecheck(node);
-    // this->exp->typecheck(node);
+    // cout << "going to typecheck exp" << endl;
+    this->exp->typecheck(node);
     if (dynamic_cast<NStatement *>(this->next))
     {
         static_cast<NStatement *>(this->next)->typecheck(node);
@@ -348,7 +364,7 @@ void NStateBlock::typecheck(SymbolTree *node)
     }
 }
 
-NCondition::NCondition(NExp *e, NStatement *s)
+NCondition::NCondition(NExp *e, NBlock *s)
 {
     this->cond = e;
     this->trueBlock = s;
@@ -356,7 +372,7 @@ NCondition::NCondition(NExp *e, NStatement *s)
     this->next = 0;
 }
 
-NCondition::NCondition(NExp *e, NStatement *t, NStatement *f)
+NCondition::NCondition(NExp *e, NBlock *t, NBlock *f)
 {
     this->cond = e;
     this->trueBlock = t;
@@ -403,6 +419,16 @@ void NCondition::print(ostream *out)
     }
 }
 
+void NCondition::typecheck(SymbolTree *node)
+{
+    this->cond->typecheck(node);
+    static_cast<NBlock *>(this->trueBlock)->typecheck(node);
+    if (dynamic_cast<NBlock *>(this->falseBlock))
+    {
+        static_cast<NBlock *>(this->falseBlock)->typecheck(node);
+    }
+}
+
 NStateCond::NStateCond(NCondition *c)
 {
     this->cond = c;
@@ -426,4 +452,10 @@ void NStateCond::print(ostream *out)
     {
         this->next->print(out);
     }
+}
+
+void NStateCond::typecheck(SymbolTree *node)
+{
+    this->cond->typecheck(node);
+    // cout << "typechecked condition" << endl;
 }

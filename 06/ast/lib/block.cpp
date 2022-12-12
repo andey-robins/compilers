@@ -41,6 +41,7 @@ void NBlock::print(ostream *out)
 
 void NBlock::typecheck(SymbolTree *node)
 {
+    // cout << "block typechecking" << endl;
     if (this->next)
     {
         auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
@@ -48,11 +49,17 @@ void NBlock::typecheck(SymbolTree *node)
 
         if (derivedVar)
         {
+            // cout << "block derived localvar" << endl;
             derivedVar->typecheck(node);
         }
         else if (derivedStmt)
         {
+            // cout << "block derived statement" << endl;
             derivedStmt->typecheck(node);
+        }
+        else
+        {
+            cout << "failed to derive next from block" << endl;
         }
     }
 }
