@@ -1,5 +1,5 @@
 // 5 errors expected in this file
-// CURRENTLY NOT WORKING
+// CURRENTLY SEGFAULTS
 
 class foo {
     foo() {

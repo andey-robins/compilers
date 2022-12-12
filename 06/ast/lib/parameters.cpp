@@ -36,7 +36,7 @@ void NParam::print(ostream *out)
 
 string NParam::getMangling()
 {
-    cout << "getting parameter mangling" << endl;
+    // cout << "getting parameter mangling" << endl;
     // cout << this->annotation << endl;
     // cout << this->type << endl;
     if (this->next)
