@@ -78,8 +78,11 @@ NType::NType(NSimpleType *st)
 {
     this->next = st;
     this->type = st->getType();
+    // cout << "ntype" << endl;
+    // cout << this->type << endl;
     this->brackCount = 0;
     this->annotation = st->annotation;
+    // cout << "ntype annotation  " << this->annotation << endl;
 }
 
 NType::NType(NType *t, int bracks)
@@ -109,16 +112,19 @@ NType::NType(NType *t, NBrackExps *bes)
     this->bracketExps = bes;
     if (t != 0)
     {
+        // cout << "t != 0 in ntype" << endl;
         string typeString = t->getType();
         std::stringstream s;
         bes->printType(&s);
         typeString += s.str();
-        type = typeString;
-        this->annotation = type;
+        this->type = typeString;
+        // cout << "typestring: " << typeString << endl;
+        this->annotation = this->type;
     }
     else
     {
-        type = "unknown";
+        this->type = "unknown";
+        // cout << "type: " << this->type << endl;
         this->annotation = t->annotation;
     }
 }
@@ -130,18 +136,22 @@ int NType::getBracks()
 
 string NType::getType()
 {
-    // cout << "ntype gettype" << endl;
-    string typeString;
-    // cout << this->type << endl;
-    typeString += this->type;
-    // cout << "this->type => " << this->type << endl;
+    string typeString = "";
+    // cout << "ntype::getType()" << endl;
+    // cout << "ntype annotation -> " << this->annotation << endl;
+    // cout << "this->type " << this->type << endl;
+    if (this->type != "")
+        typeString += this->type;
     return typeString;
 }
 
 void NType::print(ostream *out)
 {
     // Todo handle printing brackets
-    this->next->print(out);
+    if (!dynamic_cast<NEpsilon *>(this->next))
+    {
+        this->next->print(out);
+    }
 }
 
 NResultType::NResultType(NType *t)
@@ -189,7 +199,7 @@ string NResultType::getType()
 NEpsilon::NEpsilon()
 {
     this->setVal("epsilon");
-    this->type = "";
+    // this->type = "void";
     this->annotation = "void";
 }
 

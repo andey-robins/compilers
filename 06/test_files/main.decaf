@@ -1,4 +1,4 @@
-// 2 errors expected
+// 4 errors expected
 
 class foo {
     // no arguments allowed for main
@@ -6,11 +6,13 @@ class foo {
 
     }
 
+    // main already declared
     // wrong return type for main
     foo main() {
 
     }
 
+    // main already declared
     int main() {
         
     }
