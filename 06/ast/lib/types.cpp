@@ -130,8 +130,11 @@ int NType::getBracks()
 
 string NType::getType()
 {
+    // cout << "ntype gettype" << endl;
     string typeString;
+    // cout << this->type << endl;
     typeString += this->type;
+    // cout << "this->type => " << this->type << endl;
     return typeString;
 }
 
@@ -186,6 +189,7 @@ string NResultType::getType()
 NEpsilon::NEpsilon()
 {
     this->setVal("epsilon");
+    this->type = "";
     this->annotation = "void";
 }
 

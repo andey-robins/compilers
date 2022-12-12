@@ -27,6 +27,7 @@ extern int symbolIndentation;
 int main()
 {
     yydebug = 0;
+    int typecheckdebug = 0;
     ast = 0;
     symbols = new SymbolTree();
     symbols->registerSymbolWithValue("read", "method_type int <- void");
@@ -38,7 +39,13 @@ int main()
     if (ast)
     {
         // ast->print(&cout);
+        if (!typecheckdebug)
+            cout.setstate(std::ios_base::failbit);
+
         static_cast<NProgram *>(ast)->typecheck(symbols);
+
+        if (!typecheckdebug)
+            cout.clear();
     }
     cout << endl;
     symbols->print();

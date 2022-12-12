@@ -65,6 +65,9 @@ public:
     NEpsilon();
     string getType();
     virtual void print(ostream *out = 0);
+
+private:
+    string type;
 };
 
 #endif

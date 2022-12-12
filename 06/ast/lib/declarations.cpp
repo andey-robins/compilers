@@ -93,6 +93,7 @@ void NClassBody::print(ostream *out)
 
 void NClassBody::typecheck(SymbolTree *node)
 {
+    // cout << "class body typecheck" << endl;
     if (this->next)
     {
         auto *derivedVar = dynamic_cast<NVarDecl *>(this->next);
@@ -101,14 +102,17 @@ void NClassBody::typecheck(SymbolTree *node)
 
         if (derivedVar)
         {
+            // cout << "derived var in class body" << endl;
             derivedVar->typecheck(node);
         }
         else if (derivedCons)
         {
+            // cout << "derived constructor in class body" << endl;
             derivedCons->typecheck(node);
         }
         else if (derivedMeth)
         {
+            // cout << "derived method in class body" << endl;
             derivedMeth->typecheck(node);
         }
     }
@@ -257,6 +261,7 @@ void NMethDecl::print(ostream *out)
 
 void NMethDecl::typecheck(SymbolTree *node)
 {
+    // cout << "in method decl" << endl;
     // check if method is main for type checking
     if (this->id->getSymbol() == "main")
     {
@@ -282,6 +287,8 @@ void NMethDecl::typecheck(SymbolTree *node)
                  << endl;
         }
 
+        // cout << "checked for main already declared" << endl;
+
         if (!(this->resType->getType() == "void" || this->resType->getType() == "int"))
         {
             cout << endl
@@ -302,7 +309,10 @@ void NMethDecl::typecheck(SymbolTree *node)
                  << endl;
         }
 
-        if (this->params->getMangling() != "void")
+        // cout << "checked for valid return types" << endl;
+        // cout << this->params->getMangling() << endl;
+        // cout << "^^^ was the mangling" << endl;
+        if (this->params->getMangling() != "void" && this->params->getMangling() != "")
         {
             cout << endl
                  << "Semantic Error: function main takes no arguments"
@@ -322,6 +332,7 @@ void NMethDecl::typecheck(SymbolTree *node)
                  << endl;
         }
     }
+    // cout << "done typechecking for method" << endl;
 
     // put method in symbol table
     string value = "method_type " + this->resType->getType() + " <- " + this->params->getMangling();
@@ -332,7 +343,9 @@ void NMethDecl::typecheck(SymbolTree *node)
     node->setChild(child);
     child->setParent(node);
 
+    // cout << "moving to typecheck params" << endl;
     this->params->typecheck(child);
+    // cout << "moving to typecheck block" << endl;
     this->block->typecheck(child);
 
     // continue adding next set of symbols to the table
@@ -342,7 +355,15 @@ void NMethDecl::typecheck(SymbolTree *node)
 
         if (derivedMeth)
         {
+            // cout << "derived method as next from method" << endl;
             derivedMeth->typecheck(node);
+        }
+        else
+        {
+            // derives an epsilon as next when at the end
+            // cout << "failed to derive next" << endl;
+            // cout << typeid(this->next).name() << endl;
+            // cout << this->next->annotation << endl;
         }
     }
 }

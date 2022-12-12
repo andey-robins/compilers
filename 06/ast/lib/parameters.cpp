@@ -36,17 +36,21 @@ void NParam::print(ostream *out)
 
 string NParam::getMangling()
 {
+    // cout << "getting parameter mangling" << endl;
     if (this->next)
     {
         auto *derivedParam = dynamic_cast<NParam *>(this->next);
         if (derivedParam)
         {
+            // cout << "returning type x next params" << endl;
             return this->type->getType() + " x " + derivedParam->getMangling();
         }
     }
 
     if (this->type)
     {
+        // cout << "returning type" << endl;
+        // cout << this->type->getType() << endl;
         return this->type->getType();
     }
 

@@ -38,3 +38,5 @@
 - [ ] add in error checking for correct number of arguments
 - [ ] add in line numbers to output
 - [ ] cascade lines and line number up through types like we do with annotations
+- [x] fix block parsing as statements
+- [x] typecheck nested blocks

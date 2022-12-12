@@ -41,7 +41,7 @@ void NBlock::print(ostream *out)
 
 void NBlock::typecheck(SymbolTree *node)
 {
-    // cout << "block typechecking" << endl;
+    cout << "block typechecking" << endl;
     if (this->next)
     {
         auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
@@ -49,12 +49,12 @@ void NBlock::typecheck(SymbolTree *node)
 
         if (derivedVar)
         {
-            // cout << "block derived localvar" << endl;
+            cout << "block derived localvar" << endl;
             derivedVar->typecheck(node);
         }
         else if (derivedStmt)
         {
-            // cout << "block derived statement" << endl;
+            cout << "block derived statement" << endl;
             derivedStmt->typecheck(node);
         }
         else
@@ -109,7 +109,7 @@ void NVarDecl::print(ostream *out)
 
 void NVarDecl::typecheck(SymbolTree *node)
 {
-    // cout << "nvardecl" << endl;
+    cout << "nvardecl" << endl;
     // cout << this->id->getSymbol() << endl;
     // cout << "after" << endl;
     node->registerSymbolWithValue(this->id->getSymbol(), this->type->getType());
@@ -125,14 +125,17 @@ void NVarDecl::typecheck(SymbolTree *node)
 
         if (derivedVar)
         {
+            cout << "derived var after var decl" << endl;
             derivedVar->typecheck(node);
         }
         else if (derivedCons)
         {
+            cout << "derived constructor after var decl" << endl;
             derivedCons->typecheck(node);
         }
         else if (derivedMeth)
         {
+            cout << "derived method after var decl" << endl;
             derivedMeth->typecheck(node);
         }
     }
@@ -162,13 +165,30 @@ void NLocalVarDecl::typecheck(SymbolTree *node)
     this->vd->typecheck(node);
     auto *derivedVar = dynamic_cast<NLocalVarDecl *>(this->next);
     auto *derivedStmt = dynamic_cast<NStatement *>(this->next);
+    auto *derivedBlock = dynamic_cast<NBlock *>(this->next);
+
+    cout << "typechecked localvardecl" << endl;
 
     if (derivedVar)
     {
+        cout << "derived localvardecl after localvardecl" << endl;
         derivedVar->typecheck(node);
     }
     else if (derivedStmt)
     {
+        cout << "derived statement after localvardecl" << endl;
         derivedStmt->typecheck(node);
+    }
+    else if (derivedBlock)
+    {
+        cout << "derived block after localvardecl" << endl;
+        SymbolTree *child = new SymbolTree();
+        node->setChild(child);
+        child->setParent(node);
+        derivedBlock->typecheck(child);
+    }
+    else
+    {
+        cout << "failed to derive next in localvardecl" << endl;
     }
 }

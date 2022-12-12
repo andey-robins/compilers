@@ -37,40 +37,49 @@ void NStatement::typecheck(SymbolTree *node)
     auto *derivedCall = dynamic_cast<NStateCall *>(this);
     auto *derivedWhile = dynamic_cast<NStateWhile *>(this);
     auto *derivedReturn = dynamic_cast<NStateReturn *>(this);
-    auto *derivedBlock = dynamic_cast<NStateBlock *>(this);
+    auto *derivedBlockStmt = dynamic_cast<NStateBlock *>(this);
     auto *derivedCond = dynamic_cast<NStateCond *>(this);
+    auto *derivedBlock = dynamic_cast<NBlock *>(this);
 
-    // cout << "typechecking statement" << endl;
+    cout << "typechecking statement" << endl;
 
     if (derivedAssign)
     {
-        // cout << "derived assign addsymbol" << endl;
+        cout << "derived assign addsymbol" << endl;
         derivedAssign->typecheck(node);
     }
     else if (derivedCall)
     {
-        // cout << "derived call addsymbol" << endl;
+        cout << "derived call addsymbol" << endl;
         derivedCall->typecheck(node);
     }
     else if (derivedWhile)
     {
-        // cout << "derived while addsymbol" << endl;
+        cout << "derived while addsymbol" << endl;
         derivedWhile->typecheck(node);
     }
     else if (derivedReturn)
     {
-        // cout << "derived return addsymbol" << endl;
+        cout << "derived return addsymbol" << endl;
         derivedReturn->typecheck(node);
     }
-    else if (derivedBlock)
+    else if (derivedBlockStmt)
     {
-        // cout << "derived block addsymbol" << endl;
+        cout << "derived block statement addsymbol" << endl;
         derivedBlock->typecheck(node);
     }
     else if (derivedCond)
     {
-        // cout << "derived cond addsymbol" << endl;
+        cout << "derived cond addsymbol" << endl;
         derivedCond->typecheck(node);
+    }
+    else if (derivedBlock)
+    {
+        cout << "derived NBlock in statement" << endl;
+        SymbolTree *child = new SymbolTree();
+        node->setChild(child);
+        child->setParent(node);
+        derivedBlock->typecheck(child);
     }
     else
     {
