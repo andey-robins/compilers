@@ -32,3 +32,8 @@
 - [ ] fix parsing for nested expressions
 - [x] fix statements after if statement not working
 - [x] fix segfaults in constructors
+- [ ] fix segfault in return test cases
+- [ ] fix segfault in new test cases
+- [ ] fix segfault in main test cases
+- [ ] add in error checking for correct number of arguments
+- [ ] add in line numbers to output

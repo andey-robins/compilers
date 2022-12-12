@@ -1,8 +1,15 @@
+// 5 errors here
+
 class foo {
     int a;
     void main() {
+        // this can't be assigned an int
         this = 6;
+        // this can't follow stuff
+        // this can't be assigned an int
         a.a.this = 5;
+        // this can't be assigned an int
+        // no double this
         this.this = 7;
     }
 }

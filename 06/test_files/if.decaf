@@ -1,8 +1,12 @@
+// 2 errors expected
+
 class foo {
     void main() {
         foo a;
+        // can't compare foo to int
         if (a == 1) {
             int b;
+            // a is not type int
             a = 2;
             b = 2;
         }

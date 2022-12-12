@@ -1,8 +1,12 @@
+// 2 errors expected
+
 class foo {
+    // no arguments allowed for main
     void main(int a) {
 
     }
 
+    // wrong return type for main
     foo main() {
 
     }

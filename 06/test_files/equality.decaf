@@ -1,12 +1,20 @@
+// 5 or 6 errors here. 5 for sure, not sure about the 6th which is currently reported
+
 class foo {
     void main() {
         int a;
+        // can't add foo and 1
+        // can't assign to int
         a = foo + 1;
+        // b is undeclared
         a = b == 1;
         a = 1 > 1;
+        // b is undeclared
         a = 1 <= b;
         a = 1 == read();
         a = a == null;
+        // can't compare int and null
+        // can't lookup type for null? should this be an error here?
         a = 1 == null;
     }
 }

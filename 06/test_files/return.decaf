@@ -1,3 +1,6 @@
+// 5 errors expected in this file
+// CURRENTLY NOT WORKING
+
 class foo {
     foo() {
         // return in constructor

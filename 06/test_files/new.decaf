@@ -1,9 +1,14 @@
+// 2 error expected
+// CURRENTLY SEGFAULTS
+
 class foo {
     void main() {
         foo a;
         foo b;
         a = new foo;
+        // error, wrong type for a
         a = new bar;
+        // error wrong type for b;
         b = new int;
     }
 }

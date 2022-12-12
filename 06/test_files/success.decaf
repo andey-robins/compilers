@@ -1,5 +1,12 @@
+// no errors should appear in this file
+
 class foo {
     foo() {
         
+    }
+    void main() {
+        int a;
+        a = 1;
+        print(a);
     }
 }
