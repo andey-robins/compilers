@@ -117,6 +117,7 @@ public:
     NExpNewExp(NNewExp *ne);
     ~NExpNewExp();
     virtual void print(ostream *out = 0);
+    void typecheck(SymbolTree *node);
 
 private:
     NNewExp *newExp;

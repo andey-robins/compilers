@@ -152,34 +152,40 @@ void NStateAssign::typecheck(SymbolTree *node)
     // cout << targetType << endl;
     if (targetType == "" || targetType != type)
     {
-
-        cout << "Semantic Error: mismatched types"
-             << endl
-             << "Line "
-             << this->lineNumber
-             << endl
-             << "---------------------"
-             << endl
-             << "| Type of the left hand side does not match "
-             << endl
-             << "| the type of the right hand side"
-             << endl
-             << "|"
-             << endl
-             << "| left type -> "
-             << ((targetType == "") ? "void" : targetType)
-             << endl
-             << "| right type -> "
-             << ((type == "") ? "void" : type)
-             << endl
-             << "---------------------"
-             << endl
-             << endl;
+        targetType = node->lookupSymbol(targetType);
+        if (targetType != type)
+        {
+            cout << "Semantic Error: mismatched types"
+                 << endl
+                 << "Line "
+                 << this->lineNumber
+                 << endl
+                 << "---------------------"
+                 << endl
+                 << "| Type of the left hand side does not match "
+                 << endl
+                 << "| the type of the right hand side"
+                 << endl
+                 << "|"
+                 << endl
+                 << "| left type -> "
+                 << ((targetType == "") ? "void" : targetType)
+                 << endl
+                 << "| right type -> "
+                 << ((type == "") ? "void" : type)
+                 << endl
+                 << "---------------------"
+                 << endl
+                 << endl;
+        }
     }
 
-    this->name->typecheck(node);
+    if (this->name)
+        this->name->typecheck(node);
     // cout << "going to typecheck exp" << endl;
-    this->exp->typecheck(node);
+    if (this->exp)
+        this->exp->typecheck(node);
+    // cout << "going to next" << endl;
     if (dynamic_cast<NStatement *>(this->next))
     {
         static_cast<NStatement *>(this->next)->typecheck(node);

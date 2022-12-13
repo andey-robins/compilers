@@ -366,6 +366,10 @@ void NExpNewExp::print(ostream *out)
     }
 }
 
+void NExpNewExp::typecheck(SymbolTree *node)
+{
+}
+
 NPrefixExp::NPrefixExp(NOperator *o, NExp *e)
 {
     this->op = o;

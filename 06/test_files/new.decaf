@@ -1,5 +1,4 @@
 // 2 error expected
-// CURRENTLY SEGFAULTS
 
 class foo {
     void main() {
