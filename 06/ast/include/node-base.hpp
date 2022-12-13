@@ -30,6 +30,9 @@ public:
     string getText();
     void setLineNumber(int ln);
     virtual void print(ostream *out = 0);
+    void semanticError(string errType, string errText,
+                       string debugOne, string debugTwo);
+    void semanticError(string errType, string errText, string debugOne);
     string annotation;
     int lineNumber;
     string line;

@@ -71,3 +71,28 @@ void BaseNode::setLineNumber(int ln)
 void BaseNode::print(ostream *out)
 {
 }
+
+void BaseNode::semanticError(string errType, string errText, string debugOne, string debugTwo)
+{
+    cout << "Semantic Error: " << errType << endl
+         << "Line " << this->lineNumber << ": " << this->line << endl
+         << "---------------------" << endl
+         << "| " << errText << endl
+         << "|" << endl
+         << "| " << debugOne << endl
+         << "| " << debugTwo << endl
+         << "---------------------" << endl
+         << endl;
+}
+
+void BaseNode::semanticError(string errType, string errText, string debugOne)
+{
+    cout << "Semantic Error: " << errType << endl
+         << "Line " << this->lineNumber << ": " << this->line << endl
+         << "---------------------" << endl
+         << "| " << errText << endl
+         << "|" << endl
+         << "| " << debugOne << endl
+         << "---------------------" << endl
+         << endl;
+}

@@ -229,9 +229,7 @@ void NStateCall::typecheck(SymbolTree *node)
     string callType = node->lookupSymbol(this->name->annotation);
     if (callType.length() >= 16 && callType.substr(0, 16) == "constructor_type")
     {
-        cout << "Semantic Error: calling constructors is disallowed" << endl;
-        cout << "Line: " << this->lineNumber << endl;
-        cout << this->line << endl;
+        this->semanticError("calling constructor", "constructors may not be invoked", "check the name called and the declaration of the invoked code");
     }
 
     if (this->next)
@@ -309,19 +307,7 @@ void NStateReturn::typecheck(SymbolTree *node)
     string funcRetType = node->getTable()->lookupSymbol("method_type");
     if (funcRetType == "")
     {
-        cout << "Semantic Error: invalid return statement"
-             << endl
-             << "---------------------"
-             << endl
-             << "| return was called outside of a method"
-             << endl
-             << "|"
-             << endl
-             << "| remove the statement in question and try again"
-             << endl
-             << "---------------------"
-             << endl
-             << endl;
+        this->semanticError("invalid return statement", "return was called outside of a method", "remove the statement in question");
     }
     else if (funcRetType == "void" && this->oe->maybe())
     {

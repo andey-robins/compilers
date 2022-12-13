@@ -41,4 +41,6 @@
 - [x] fix block parsing as statements
 - [x] typecheck nested blocks
 - [ ] get array return types working again
+- [x] write error output prototype
+- [ ] integrate error output with all errors
 - [ ] augment all error messages with line and line number
