@@ -91,6 +91,8 @@ NNameThisDot::NNameThisDot(NName *next)
 {
     this->next = next;
     this->annotation = "thisdot";
+    this->line = next->line;
+    this->lineNumber = next->lineNumber;
 }
 
 void NNameThisDot::print(ostream *out)
@@ -124,6 +126,9 @@ NNameId::NNameId(NId *id)
     this->next = id;
     this->be = 0;
     this->annotation = id->annotation;
+    this->line = id->line;
+    // cout << this->lineNumber << endl;
+    this->lineNumber = id->lineNumber;
 }
 
 NNameId::NNameId(NId *id, NBrackExps *be)
@@ -177,6 +182,8 @@ NNameDotId::NNameDotId(NId *id, NName *n)
     this->id = id;
     this->next = n;
     this->annotation = id->annotation + "." + n->annotation;
+    this->line = n->line;
+    this->lineNumber = n->lineNumber;
 }
 
 void NNameDotId::print(ostream *out)

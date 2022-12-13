@@ -23,7 +23,7 @@ using std::endl;
 #include "program6.tab.hpp"
 #include <iostream>
 
-#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+// #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 
 class BaseNode;
 
@@ -72,7 +72,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
 
     if (text.compare(string("==")) == 0) {
@@ -106,7 +106,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
 
     if (text.compare(string("||")) == 0) {
@@ -126,7 +126,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
 
     if (text.compare(string("+")) == 0) {
@@ -156,7 +156,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
+    // cout << yylval.ttype->lineNumber << endl;
     yylval.ttype->line = fullLine;
 
     if (text.compare(string("{")) == 0) {
@@ -188,7 +189,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
 
     if (text.compare(string(".")) == 0) {
@@ -216,7 +217,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
     
     if (text.compare(string("int")) == 0) {
@@ -278,7 +279,8 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
+    // cout << yylval.ttype->lineNumber << endl;
     yylval.ttype->line = fullLine;
     return ID;
 }
@@ -291,7 +293,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype = new BaseNode;
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
     return NUMBER;
 }
@@ -341,7 +343,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = 1;
     token = "ER_CH";
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
     return ER_CH;
 }
@@ -351,7 +353,7 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     lastTokenLen = string(yytext).length();
     token = "ER_WD";
     fullLine += yytext;
-    yylval.ttype->lineNumber = yylineno;
+    yylval.ttype->setLineNumber(yylineno);
     yylval.ttype->line = fullLine;
     return ER_WD;
 }

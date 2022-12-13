@@ -28,6 +28,7 @@ public:
     void setVal(string s);
     BaseNode *getNext();
     string getText();
+    void setLineNumber(int ln);
     virtual void print(ostream *out = 0);
     string annotation;
     int lineNumber;

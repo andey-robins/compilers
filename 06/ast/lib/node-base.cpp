@@ -12,8 +12,6 @@
 BaseNode::BaseNode()
 {
     this->annotation = "";
-    this->line = "";
-    this->lineNumber = 0;
 }
 
 BaseNode::~BaseNode()
@@ -63,6 +61,11 @@ BaseNode *BaseNode::getNext()
 string BaseNode::getText()
 {
     return this->text;
+}
+
+void BaseNode::setLineNumber(int ln)
+{
+    this->lineNumber = ln;
 }
 
 void BaseNode::print(ostream *out)

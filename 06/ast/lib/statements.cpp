@@ -92,6 +92,8 @@ NStateAssign::NStateAssign(NName *n, NExp *e)
     this->name = n;
     this->exp = e;
     this->next = 0;
+    this->line = n->line + e->line;
+    this->lineNumber = n->lineNumber;
 }
 
 NStateAssign::~NStateAssign()
@@ -197,6 +199,8 @@ NStateCall::NStateCall(NName *n, NArg *a)
     this->name = n;
     this->args = a;
     this->next = 0;
+    this->line = n->line;
+    this->lineNumber = n->lineNumber;
 }
 
 NStateCall::~NStateCall()
@@ -226,6 +230,8 @@ void NStateCall::typecheck(SymbolTree *node)
     if (callType.length() >= 16 && callType.substr(0, 16) == "constructor_type")
     {
         cout << "Semantic Error: calling constructors is disallowed" << endl;
+        cout << "Line: " << this->lineNumber << endl;
+        cout << this->line << endl;
     }
 
     if (this->next)
@@ -266,6 +272,8 @@ NStateReturn::NStateReturn(NOptExp *oe)
 {
     this->oe = oe;
     this->next = 0;
+    this->line = oe->line;
+    this->lineNumber = oe->lineNumber;
 }
 
 NStateReturn::~NStateReturn()

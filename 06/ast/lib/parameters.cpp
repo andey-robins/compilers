@@ -15,6 +15,8 @@ NParam::NParam(NType *t, NId *id)
     this->id = id;
     this->next = 0;
     this->annotation = t->annotation;
+    this->line = t->line + " " + id->line;
+    this->lineNumber = t->lineNumber;
 }
 
 void NParam::print(ostream *out)
@@ -84,6 +86,8 @@ NArg::NArg(NExp *e)
     this->e = e;
     this->next = 0;
     this->annotation = e->annotation;
+    this->line = e->line;
+    this->lineNumber = e->lineNumber;
 }
 
 NArg::~NArg()
@@ -135,6 +139,8 @@ NBrackExps::NBrackExps(NExp *e)
     this->exp = e;
     this->next = 0;
     this->annotation = "[" + e->annotation + "]";
+    this->line = e->line;
+    this->lineNumber = e->lineNumber;
 }
 
 NBrackExps::~NBrackExps()

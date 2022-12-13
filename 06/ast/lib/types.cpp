@@ -16,6 +16,8 @@ NSimpleType::NSimpleType(NKeyword *k)
     this->isId = false;
     this->type = k->getText();
     this->annotation = k->annotation;
+    this->line = k->line;
+    this->lineNumber = k->lineNumber;
 }
 
 NSimpleType::NSimpleType(NId *id)
@@ -24,6 +26,8 @@ NSimpleType::NSimpleType(NId *id)
     this->isId = true;
     this->type = id->getSymbol();
     this->annotation = id->annotation;
+    this->line = id->line;
+    this->lineNumber = id->lineNumber;
 }
 
 string NSimpleType::getType()
@@ -82,6 +86,8 @@ NType::NType(NSimpleType *st)
     // cout << this->type << endl;
     this->brackCount = 0;
     this->annotation = st->annotation;
+    this->line = st->line;
+    this->lineNumber = st->lineNumber;
     // cout << "ntype annotation  " << this->annotation << endl;
 }
 
@@ -89,6 +95,8 @@ NType::NType(NType *t, int bracks)
 {
     this->brackCount = bracks;
     this->next = t;
+    this->line = t->line;
+    this->lineNumber = t->lineNumber;
     if (t != 0)
     {
         string typeString = t->getType();
@@ -110,6 +118,8 @@ NType::NType(NType *t, NBrackExps *bes)
 {
     this->brackCount = 0;
     this->bracketExps = bes;
+    this->line = t->line;
+    this->lineNumber = t->lineNumber;
     if (t != 0)
     {
         // cout << "t != 0 in ntype" << endl;
@@ -159,6 +169,8 @@ NResultType::NResultType(NType *t)
     this->type = t;
     this->voidType = 0;
     this->annotation = t->annotation;
+    this->line = t->line;
+    this->lineNumber = t->lineNumber;
 }
 
 NResultType::NResultType(NKeyword *k)
@@ -166,6 +178,8 @@ NResultType::NResultType(NKeyword *k)
     this->voidType = k;
     this->type = 0;
     this->annotation = k->annotation;
+    this->line = k->line;
+    this->lineNumber = k->lineNumber;
 }
 
 void NResultType::print(ostream *out)
