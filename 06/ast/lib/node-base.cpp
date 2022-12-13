@@ -9,6 +9,12 @@
 
 #include "../include/nodes.hpp"
 
+string leftTrim(string in)
+{
+    in.erase(0, in.find_first_not_of(" "));
+    return in;
+}
+
 BaseNode::BaseNode()
 {
     this->annotation = "";
@@ -75,7 +81,7 @@ void BaseNode::print(ostream *out)
 void BaseNode::semanticError(string errType, string errText, string debugOne, string debugTwo)
 {
     cout << "Semantic Error: " << errType << endl
-         << "Line " << this->lineNumber << ": " << this->line << endl
+         << "Line " << this->lineNumber << ": " << leftTrim(this->line) << endl
          << "---------------------" << endl
          << "| " << errText << endl
          << "|" << endl
@@ -88,7 +94,7 @@ void BaseNode::semanticError(string errType, string errText, string debugOne, st
 void BaseNode::semanticError(string errType, string errText, string debugOne)
 {
     cout << "Semantic Error: " << errType << endl
-         << "Line " << this->lineNumber << ": " << this->line << endl
+         << "Line " << this->lineNumber << ": " << leftTrim(this->line) << endl
          << "---------------------" << endl
          << "| " << errText << endl
          << "|" << endl
