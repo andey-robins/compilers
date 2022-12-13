@@ -172,45 +172,17 @@ void NInfixExp::typecheck(SymbolTree *node)
 
     if (leftType == "" || rightType == "")
     {
-        cout << "Semantic Error: type error"
-             << endl
-             << "---------------------"
-             << endl
-             << "| One or both of the arms of the infix expression"
-             << endl
-             << "| had no type. Please ensure all types are declared"
-             << endl
-             << "|"
-             << endl
-             << "| Left type => "
-             << leftType
-             << endl
-             << "| Right type => "
-             << rightType
-             << endl
-             << "---------------------"
-             << endl
-             << endl;
+        this->semanticError("type error",
+                            "One or both of the arms of the infix expression have no type",
+                            "Left type => " + leftType,
+                            "Right type => " + rightType);
     }
     else if (leftType != rightType)
     {
-        cout << "Semantic Error: type mismatch"
-             << endl
-             << "---------------------"
-             << endl
-             << "| Left and right of infix expression have mismatched types"
-             << endl
-             << "|"
-             << endl
-             << "| Left type => "
-             << leftType
-             << endl
-             << "| Right type => "
-             << rightType
-             << endl
-             << "---------------------"
-             << endl
-             << endl;
+        this->semanticError("type mismatch",
+                            "Left and right values have different types",
+                            "Left type => " + leftType,
+                            "Right type => " + rightType);
     }
 }
 

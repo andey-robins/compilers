@@ -131,10 +131,7 @@ void NStateAssign::typecheck(SymbolTree *node)
         type = node->lookupSymbol(derivedNewExp->annotation);
         if (type == "" && derivedNewExp->annotation != "int")
         {
-            cout << "Semantic Error: type "
-                 << derivedNewExp->annotation
-                 << " not found in symbol table"
-                 << endl;
+            this->semanticError("type not found", "check for declarations of the types in this line", "Unknown Type => " + derivedNewExp->annotation);
         }
     }
     else
@@ -157,28 +154,10 @@ void NStateAssign::typecheck(SymbolTree *node)
         targetType = node->lookupSymbol(targetType);
         if (targetType != type)
         {
-            cout << "Semantic Error: mismatched types"
-                 << endl
-                 << "Line "
-                 << this->lineNumber
-                 << endl
-                 << "---------------------"
-                 << endl
-                 << "| Type of the left hand side does not match "
-                 << endl
-                 << "| the type of the right hand side"
-                 << endl
-                 << "|"
-                 << endl
-                 << "| left type -> "
-                 << ((targetType == "") ? "void" : targetType)
-                 << endl
-                 << "| right type -> "
-                 << ((type == "") ? "void" : type)
-                 << endl
-                 << "---------------------"
-                 << endl
-                 << endl;
+            this->semanticError("mismatched types",
+                                "Type of the left hand side does not match the right",
+                                "Left type => " + ((targetType == "") ? "void" : targetType),
+                                "Right type => " + ((type == "") ? "void" : type));
         }
     }
 
@@ -229,7 +208,9 @@ void NStateCall::typecheck(SymbolTree *node)
     string callType = node->lookupSymbol(this->name->annotation);
     if (callType.length() >= 16 && callType.substr(0, 16) == "constructor_type")
     {
-        this->semanticError("calling constructor", "constructors may not be invoked", "check the name called and the declaration of the invoked code");
+        this->semanticError("calling constructor",
+                            "constructors may not be invoked",
+                            "check the name called and the declaration of the invoked code");
     }
 
     if (this->next)
@@ -307,39 +288,22 @@ void NStateReturn::typecheck(SymbolTree *node)
     string funcRetType = node->getTable()->lookupSymbol("method_type");
     if (funcRetType == "")
     {
-        this->semanticError("invalid return statement", "return was called outside of a method", "remove the statement in question");
+        this->semanticError("invalid return statement",
+                            "return was called outside of a method",
+                            "remove the statement in question");
     }
     else if (funcRetType == "void" && this->oe->maybe())
     {
-        cout << "Semantic Error: invalid return statement"
-             << endl
-             << "---------------------"
-             << endl
-             << "| method has return type void but tries to return a value "
-             << endl
-             << "|"
-             << endl
-             << "| remove the value from the return or update the return type"
-             << endl
-             << "---------------------"
-             << endl
-             << endl;
+        this->semanticError("invalid return statement",
+                            "method has return type void but tries to return a value",
+                            "remove the value from the return or update the return type");
     }
     else if (funcRetType != "void" && !this->oe->maybe())
     {
-        cout << "Semantic Error: invalid return statement"
-             << endl
-             << "---------------------"
-             << endl
-             << "| function does not return a value,"
-             << endl
-             << "| has a return statement, "
-             << endl
-             << "| and is not declared void "
-             << endl
-             << "---------------------"
-             << endl
-             << endl;
+        this->semanticError("invalid return statement",
+                            "function does not return a value,",
+                            "has a return statement,",
+                            "and is not declared void");
     }
 }
 

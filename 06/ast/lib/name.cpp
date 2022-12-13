@@ -112,7 +112,9 @@ void NNameThisDot::typecheck(SymbolTree *node)
         auto nextType = static_cast<NName *>(this->next)->getSupertype();
         if (nextType == "this" || nextType == "this dot")
         {
-            cout << "Semantic Error: keyword this may not follow keyword this" << endl;
+            this->semanticError("keyword this invalid",
+                                "keyword this may not follow keyword this",
+                                "this must be the initial element in a name");
         }
         else
         {
@@ -168,7 +170,9 @@ void NNameId::typecheck(SymbolTree *node)
         auto nextType = static_cast<NName *>(this->next)->getSupertype();
         if (nextType == "this" || nextType == "this dot")
         {
-            cout << "Semantic Error: keyword this may not follow anything" << endl;
+            this->semanticError("keyword this invalid",
+                                "keyword this may not follow anything",
+                                "this must be at the beginning of a name");
         }
         else
         {
@@ -205,7 +209,9 @@ void NNameDotId::typecheck(SymbolTree *node)
         auto nextType = static_cast<NName *>(this->next)->getSupertype();
         if (nextType == "this" || nextType == "this dot")
         {
-            cout << "Semantic Error: keyword this may not follow anything" << endl;
+            this->semanticError("keyword this invalid",
+                                "keyword this may not follow anything",
+                                "this must be at the beginning of a name");
         }
         else
         {

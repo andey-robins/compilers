@@ -267,46 +267,19 @@ void NMethDecl::typecheck(SymbolTree *node)
     {
         if (node->lookupSymbol("main") != "")
         {
-            cout << endl
-                 << "Semantic Error: main already declared"
-                 << endl
-                 << "---------------------"
-                 << endl
-                 << "| previous declaration has type: "
-                 << endl
-                 << "| "
-                 << node->lookupSymbol("main")
-                 << endl
-                 << "|"
-                 << endl
-                 << "| discarding previous declaration."
-                 << endl
-                 << "| if this is not the desired behavior, eliminate the latter declaration(s)."
-                 << endl
-                 << "---------------------"
-                 << endl;
+            this->semanticError("main already declared",
+                                "Previous declaration has type: " + node->lookupSymbol("main"),
+                                "Discarding previous declaration.",
+                                "If this is not the desired behavior, eliminate the latter declaration(s)");
         }
 
         // cout << "checked for main already declared" << endl;
 
         if (!(this->resType->getType() == "void" || this->resType->getType() == "int"))
         {
-            cout << endl
-                 << "Semantic Error: invalid return type for main"
-                 << endl
-                 << "---------------------"
-                 << endl
-                 << "| main has declared return type: "
-                 << endl
-                 << "| "
-                 << this->resType->getType()
-                 << endl
-                 << "|"
-                 << endl
-                 << "| expected type to be int or void"
-                 << endl
-                 << "---------------------"
-                 << endl;
+            this->semanticError("invalid return type for main",
+                                "Main has delcared return type: " + this->resType->getType(),
+                                "Expected type to be int or void");
         }
 
         // cout << "checked for valid return types" << endl;
@@ -314,22 +287,9 @@ void NMethDecl::typecheck(SymbolTree *node)
         // cout << "^^^ was the mangling" << endl;
         if (this->params->getMangling() != "void" && this->params->getMangling() != "")
         {
-            cout << endl
-                 << "Semantic Error: function main takes no arguments"
-                 << endl
-                 << "---------------------"
-                 << endl
-                 << "| main has declared parameter types: "
-                 << endl
-                 << "| "
-                 << this->params->getMangling()
-                 << endl
-                 << "|"
-                 << endl
-                 << "| expected no parameters"
-                 << endl
-                 << "---------------------"
-                 << endl;
+            this->semanticError("function main takes no arguments",
+                                "Main has declared parameter types: " + this->params->getMangling(),
+                                "Expected no parameters");
         }
     }
     // cout << "done typechecking for method" << endl;
