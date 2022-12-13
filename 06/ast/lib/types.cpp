@@ -95,8 +95,6 @@ NType::NType(NType *t, int bracks)
 {
     this->brackCount = bracks;
     this->next = t;
-    this->line = t->line;
-    this->lineNumber = t->lineNumber;
     if (t != 0)
     {
         string typeString = t->getType();
@@ -106,6 +104,8 @@ NType::NType(NType *t, int bracks)
         }
         type = typeString;
         this->annotation = type;
+        this->line = t->line;
+        this->lineNumber = t->lineNumber;
     }
     else
     {

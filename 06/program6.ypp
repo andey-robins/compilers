@@ -737,10 +737,12 @@ brackExp:
 
 bracks:
     LBRACKET RBRACKET bracks {
-        $$ = new NType(0, static_cast<NType *>($3)->getBracks()+1);
+        cout << "Making bracks" << endl;
+        $$ = new NBracks(static_cast<NBracks *>($3)->getCount()+1);
     }
 |   LBRACKET RBRACKET {
-        $$ = new NType(0, 1);
+
+        $$ = new NBracks(1);
     }
 ;
 

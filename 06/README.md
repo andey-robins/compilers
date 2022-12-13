@@ -16,7 +16,7 @@
 - [x] The equality operator is the major difference as it can compare any reference to null or another reference type
 - [x] `new` allocates memory for an object (again, where is this alocated?). The type on the right must match the type of the variable on the left
 - [ ] `new` can have arrays which are only filled in up to (but not including the last)
-- [ ] array return types are valid
+- [x] array return types are valid
 - [x] null is a reference type to an array or class. it cannot be compared to an integer
   - i believe i've got this working, but it might get broken depending on the solution for looking up Ids
 - [x] `read()` returns an integer
@@ -40,7 +40,7 @@
 - [x] cascade lines and line number up through types like we do with annotations
 - [x] fix block parsing as statements
 - [x] typecheck nested blocks
-- [ ] get array return types working again
+- [x] get array return types working again
 - [x] write error output prototype
 - [x] integrate error output with all errors
-- [ ] augment all error messages with line and line number
+- [x] augment all error messages with line and line number
