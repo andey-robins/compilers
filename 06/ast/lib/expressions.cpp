@@ -120,6 +120,8 @@ NInfixExp::NInfixExp(NOperator *o, NExp *left, NExp *right)
     this->right = right;
     this->op = o;
     this->next = 0;
+    this->lineNumber = left->lineNumber;
+    this->line = left->line + o->getOp() + right->line;
     if (left->annotation == right->annotation)
     {
         this->annotation = left->annotation;
@@ -239,6 +241,8 @@ NParenExp::NParenExp(NExp *inner)
     this->in = inner;
     this->next = 0;
     this->annotation = inner->annotation;
+    this->line = inner->line;
+    this->lineNumber = inner->lineNumber;
 }
 
 NParenExp::~NParenExp()
@@ -266,6 +270,8 @@ NExpCall::NExpCall(NName *n, NArg *a)
     this->args = a;
     this->next = 0;
     this->annotation = n->annotation;
+    this->line = n->line;
+    this->lineNumber = n->lineNumber;
 }
 
 NExpCall::~NExpCall()
@@ -317,6 +323,8 @@ NExpNewExp::NExpNewExp(NNewExp *ne)
     // cout << "node exp new exp" << endl;
     // cout << ne->annotation << endl;
     this->annotation = ne->annotation;
+    this->line = ne->line;
+    this->lineNumber = ne->lineNumber;
 }
 
 NExpNewExp::~NExpNewExp()

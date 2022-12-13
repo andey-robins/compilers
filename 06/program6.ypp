@@ -436,31 +436,48 @@ statement:
         $$ = static_cast<NBlock *>($1);
     }
 |   name ASSIGN expression SEMI {
-        $$ = new NStateAssign(static_cast<NName *>($1), static_cast<NExp *>($3));
+        NStateAssign *curr = new NStateAssign(static_cast<NName *>($1), static_cast<NExp *>($3));
+        curr->setLineNumber($1->lineNumber);
+        curr->line = $1->line + $3->line;
+        $$ = curr;
     }
 |   name LPAREN argList RPAREN SEMI {
-        $$ = new NStateCall(static_cast<NName *>($1), static_cast<NArg *>($3));
+        NStateCall *curr = new NStateCall(static_cast<NName *>($1), static_cast<NArg *>($3));
+        curr->setLineNumber($1->lineNumber);
+        curr->line = $1->line + "()";
+        $$ = curr;
     }
 |   PRINT LPAREN argList RPAREN SEMI {
         NId *printId = new NId("print");
         NNameId *print = new NNameId(printId);
+        print->setLineNumber($1->lineNumber);
+        print->line = $1->line;
         $$ = new NStateCall(print, static_cast<NArg *>($3));
     }
 |   conditionalStatement {
         $$ = new NStateCond(static_cast<NCondition *>($1));
     }
 |   WHILE LPAREN expression RPAREN statement {
-        std::stringstream s;
-        static_cast<NStatement *>($5)->print(&s);
-        $$ = new NStateWhile(static_cast<NExp *>($3), static_cast<NStatement *>($5));
+        // std::stringstream s;
+        // static_cast<NStatement *>($5)->print(&s);
+        NStateWhile *curr = new NStateWhile(static_cast<NExp *>($3), static_cast<NStatement *>($5));
+        curr->setLineNumber($1->lineNumber);
+        curr->line = $5->line;
+        $$ = curr;
     }
 |   RETURN expression SEMI {
         NOptExp *oe = new NOptExp(static_cast<NExp *>($2));
-        $$ = new NStateReturn(oe);
+        NStateReturn *curr = new NStateReturn(oe);
+        curr->setLineNumber($2->lineNumber);
+        curr->line = $2->line;
+        $$ = curr;
     }
 |   RETURN SEMI {
         NOptExp *oe = new NOptExp(); // None monad
-        $$ = new NStateReturn(oe);
+        NStateReturn *curr = new NStateReturn(oe);
+        curr->setLineNumber($2->lineNumber);
+        curr->line = $2->line;
+        $$ = curr;
     }
 
 ;
@@ -485,14 +502,22 @@ name:
         $$ = new NNameId(id, static_cast<NBrackExps *>($2));
     }
 |   THIS DOT name {
-        $$ = new NNameThisDot(static_cast<NName *>($3));
+        NNameThisDot *name = new NNameThisDot(static_cast<NName *>($3));
+        name->setLineNumber($1->lineNumber);
+        name->line = $1->line;
+        $$ = name;
     }
 |   THIS brackExp {
         NNameThis *name = new NNameThis();
         name->setNext(static_cast<NBrackExps *>($2));
+        name->setLineNumber($1->lineNumber);
+        name->line = $1->line;
         $$ = name;
     }
 |   THIS {
+        NNameThis *curr = new NNameThis();
+        curr->setLineNumber($1->lineNumber);
+        curr->line = $1->line;
         $$ = new NNameThis();
     }
 ;
@@ -619,7 +644,10 @@ factor:
         $$ = new NExpCall(static_cast<NName *>($1), static_cast<NArg *>($3));
     }
 |   READ LPAREN RPAREN {
-        $$ = new NExpRead();
+        NExpRead *curr = new NExpRead();
+        curr->setLineNumber($1->lineNumber);
+        curr->line = $1->line;
+        $$ = curr;
     }
 |   newExpression {
         $$ = new NExpNewExp(static_cast<NNewExp *>($1));

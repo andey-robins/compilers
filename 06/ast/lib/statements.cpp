@@ -224,6 +224,8 @@ NStateWhile::NStateWhile(NExp *e, NStatement *s)
     this->e = e;
     this->s = s;
     this->next = 0;
+    this->line = e->line;
+    this->lineNumber = e->lineNumber;
 }
 
 NStateWhile::~NStateWhile()
@@ -310,6 +312,8 @@ void NStateReturn::typecheck(SymbolTree *node)
 NStateBlock::NStateBlock(NBlock *b)
 {
     this->block = b;
+    this->line = b->line;
+    this->lineNumber = b->lineNumber;
 }
 
 NStateBlock::~NStateBlock()
@@ -346,6 +350,8 @@ NCondition::NCondition(NExp *e, NBlock *s)
     this->trueBlock = s;
     this->falseBlock = 0;
     this->next = 0;
+    this->lineNumber = e->lineNumber;
+    this->line = e->line;
 }
 
 NCondition::NCondition(NExp *e, NBlock *t, NBlock *f)
@@ -354,6 +360,8 @@ NCondition::NCondition(NExp *e, NBlock *t, NBlock *f)
     this->trueBlock = t;
     this->falseBlock = f;
     this->next = 0;
+    this->lineNumber = e->lineNumber;
+    this->line = e->line;
 }
 
 NCondition::~NCondition()
@@ -409,6 +417,8 @@ NStateCond::NStateCond(NCondition *c)
 {
     this->cond = c;
     this->next = 0;
+    this->line = c->line;
+    this->lineNumber = c->lineNumber;
 }
 
 NStateCond::~NStateCond()
