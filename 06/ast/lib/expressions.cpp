@@ -348,6 +348,7 @@ void NExpNewExp::print(ostream *out)
 
 void NExpNewExp::typecheck(SymbolTree *node)
 {
+    this->newExp->typecheck(node);
 }
 
 NPrefixExp::NPrefixExp(NOperator *o, NExp *e)
@@ -377,6 +378,21 @@ void NPrefixExp::print(ostream *out)
     if (this->next)
     {
         this->next->print(out);
+    }
+}
+
+void NNewExp::typecheck(SymbolTree *node)
+{
+    auto derivedType = dynamic_cast<NNewExpType *>(this);
+    auto derivedIdArgs = dynamic_cast<NNewExpIdArgs *>(this);
+
+    if (derivedType)
+    {
+        derivedType->typecheck(node);
+    }
+    else if (derivedIdArgs)
+    {
+        derivedIdArgs->typecheck(node);
     }
 }
 
@@ -464,6 +480,17 @@ void NNewExpType::print(ostream *out)
     indentation--;
 }
 
+void NNewExpType::typecheck(SymbolTree *node)
+{
+    if (this->bs && this->bs->getCount() > 1)
+    {
+        this->semanticError("array dimension error",
+                            "Array has more than one unfilled dimension",
+                            "Adjust the typing and declare necessary",
+                            "dimensions in the array.");
+    }
+}
+
 NNewExpIdArgs::NNewExpIdArgs(NId *i, NArg *a)
 {
     this->id = i;
@@ -494,4 +521,8 @@ void NNewExpIdArgs::print(ostream *out)
     {
         this->next->print(out);
     }
+}
+
+void NNewExpIdArgs::typecheck(SymbolTree *node)
+{
 }

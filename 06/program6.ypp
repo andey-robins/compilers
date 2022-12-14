@@ -525,11 +525,14 @@ name:
  // TODO for some reason not printing all args in an arglist
 argList:
     expression argListStar {
-        if ($2->getText() != "epsilon")
+        auto *args = dynamic_cast<NArg *>($2);
+        auto *epsilon = dynamic_cast<NEpsilon *>($2);
+        NArg *curr = new NArg(static_cast<NExp *>($1));
+        if (!epsilon)
         {
-            $1->setNext($2);
+            curr->setNext(args);
         }
-        $$ = static_cast<NArg *>($1);
+        $$ = curr;
     }
 |   /* epsilon */ {
         $$ = new NEpsilon();
@@ -538,11 +541,14 @@ argList:
 
 argListStar:
     COMMA expression argListStar {
-        if ($3->getText() != "epsilon")
+        auto *args = dynamic_cast<NArg *>($3);
+        auto *epsilon = dynamic_cast<NEpsilon *>($3);
+        NArg *curr = new NArg(static_cast<NExp *>($2));
+        if (!epsilon)
         {
-            $2->setNext($3);
+            curr->setNext(args);
         }
-        $$ = static_cast<NArg *>($2);
+        $$ = curr;
     }
 |   /* epsilon */ {
         $$ = new NEpsilon();
@@ -679,7 +685,7 @@ newExpression:
 |   NEW newExpTypes bracketOpts {
         auto *derivedBracks = dynamic_cast<NBracks *>($3);
         auto *derivedBrackExp = dynamic_cast<NBrackExps *>($3);
-
+        
         if (derivedBracks)
         {
             $$ = new NNewExpType(static_cast<NSimpleType *>($2), derivedBracks);
@@ -698,7 +704,10 @@ newExpression:
 
 bracketOpts:
     optBracks
-|   brackExp bracketOpts
+|   brackExp bracketOpts {
+    $1->setNext($2);
+    $$ = $1;
+}
 /* |   brackExp bracks {
     // TODO
     } */

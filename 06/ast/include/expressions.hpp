@@ -14,6 +14,8 @@
 
 class NNewExp : public BaseNode
 {
+public:
+    void typecheck(SymbolTree *node);
 };
 
 class NNewExpIdArgs : public NNewExp
@@ -22,6 +24,7 @@ public:
     NNewExpIdArgs(NId *i, NArg *a);
     ~NNewExpIdArgs();
     virtual void print(ostream *out = 0);
+    void typecheck(SymbolTree *node);
 
 private:
     NId *id;
@@ -37,6 +40,7 @@ public:
     NNewExpType(NSimpleType *s);
     ~NNewExpType();
     virtual void print(ostream *out = 0);
+    void typecheck(SymbolTree *node);
 
 private:
     NSimpleType *t;

@@ -9,6 +9,7 @@
 
 #include "../include/nodes.hpp"
 #include <typeinfo>
+#include <bits/stdc++.h>
 
 void NStatement::print(ostream *out)
 {
@@ -180,6 +181,18 @@ NStateCall::NStateCall(NName *n, NArg *a)
     this->next = 0;
     this->line = n->line;
     this->lineNumber = n->lineNumber;
+
+    if (a->getText() != "epsilon")
+    {
+        this->argCount++;
+        NArg *curr = dynamic_cast<NArg *>(a->getNext());
+        while (dynamic_cast<NArg *>(curr))
+        {
+            this->argCount++;
+            curr = static_cast<NArg *>(curr->getNext());
+        }
+        cout << this->argCount << endl;
+    }
 }
 
 NStateCall::~NStateCall()
@@ -211,6 +224,44 @@ void NStateCall::typecheck(SymbolTree *node)
         this->semanticError("calling constructor",
                             "constructors may not be invoked",
                             "check the name called and the declaration of the invoked code");
+    }
+
+    int idx = callType.find("<-");
+    string neededArgTypes = callType.substr(((idx + 3 > callType.length()) ? callType.length() : idx + 3), callType.length());
+
+    if (this->argCount == 0)
+    {
+        // zero arguments
+        if (neededArgTypes.length() >= 1)
+        {
+            this->semanticError("mismatched argument number",
+                                "Incorrect number of arguments provided",
+                                "Expected => " + neededArgTypes);
+        }
+    }
+    else
+    {
+        if (neededArgTypes.find("x") != string::npos)
+        {
+            cout << neededArgTypes.find("x") << endl;
+            cout << std::count(neededArgTypes.begin(), neededArgTypes.end(), 'x') + 1 << endl;
+            // multiple args in definition
+            if (std::count(neededArgTypes.begin(), neededArgTypes.end(), 'x') + 1 != this->argCount)
+            {
+                this->semanticError("mismatched argument number",
+                                    "Incorrect number of arguments provided",
+                                    "Expected => " + neededArgTypes);
+            }
+        }
+        else
+        {
+            if (this->argCount != 1)
+            {
+                this->semanticError("mismatched argument number",
+                                    "Incorrect number of arguments provided",
+                                    "Expected => " + neededArgTypes);
+            }
+        }
     }
 
     if (this->next)

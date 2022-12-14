@@ -35,7 +35,7 @@
 - [x] fix segfault in return test cases
 - [x] fix segfault in new test cases
 - [x] fix segfault in main test cases
-- [ ] add in error checking for correct number of arguments
+- [x] add in error checking for correct number of arguments
 - [x] add in line numbers to output
 - [x] cascade lines and line number up through types like we do with annotations
 - [x] fix block parsing as statements

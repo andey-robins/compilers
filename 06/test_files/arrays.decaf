@@ -5,6 +5,7 @@ class foo {
     }
 
     void main() {
-
+        foo[][] a;
+        a = new foo[1][][];
     }
 }

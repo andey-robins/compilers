@@ -45,6 +45,7 @@ public:
 private:
     NName *name;
     NArg *args;
+    int argCount;
 };
 
 class NStateWhile : public NStatement
