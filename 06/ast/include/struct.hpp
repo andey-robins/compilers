@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Declaration of the program class
  */
 
 #ifndef STRUCT_HPP

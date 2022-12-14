@@ -4,6 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
+ * Defines the SymbolTable class
  */
 
 #ifndef SYMBOL_TABLE_HPP

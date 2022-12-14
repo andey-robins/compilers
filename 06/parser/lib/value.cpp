@@ -4,6 +4,8 @@
  * 12/2/22
  * Compilers Program 6
  *
+ * A generic value which could be put into the symbol table
+ * Overridden with just strings to do things quickly for class
  */
 
 #include "../include/value.hpp"

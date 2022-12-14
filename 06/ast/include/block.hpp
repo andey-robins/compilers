@@ -1,3 +1,13 @@
+/*
+ * block.hpp
+ * Andey Robins
+ * 12/2/22
+ * Compilers Program 6
+ *
+ * Declarations for various block related structs
+ *
+ */
+
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 

@@ -1,3 +1,13 @@
+/*
+ * symbol_tree.cpp
+ * Andey Robins
+ * 12/2/22
+ * Compilers Program 6
+ *
+ * declares the SymbolTree class
+ *
+ */
+
 #include "../include/parser.hpp"
 
 SymbolTree::SymbolTree()

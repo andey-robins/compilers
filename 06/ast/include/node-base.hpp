@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Base node used for the AST. Inherited by everything
  */
 
 #include <iostream>

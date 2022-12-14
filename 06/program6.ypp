@@ -746,7 +746,6 @@ brackExp:
 
 bracks:
     LBRACKET RBRACKET bracks {
-        cout << "Making bracks" << endl;
         $$ = new NBracks(static_cast<NBracks *>($3)->getCount()+1);
     }
 |   LBRACKET RBRACKET {

@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Declarations for expression classes
  */
 
 #ifndef EXPRESSIONS_HPP

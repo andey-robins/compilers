@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Implementations for name classes
  */
 
 #include "../include/nodes.hpp"
@@ -129,7 +129,6 @@ NNameId::NNameId(NId *id)
     this->be = 0;
     this->annotation = id->annotation;
     this->line = id->line;
-    // cout << this->lineNumber << endl;
     this->lineNumber = id->lineNumber;
 }
 

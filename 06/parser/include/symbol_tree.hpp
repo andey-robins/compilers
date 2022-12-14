@@ -1,3 +1,12 @@
+/*
+ * symbol_tree.hpp
+ * Andey Robins
+ * 12/2/22
+ * Compilers Program 6
+ *
+ * Defines the SymbolTree class
+ */
+
 #include <list>
 
 class SymbolTree

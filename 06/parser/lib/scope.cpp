@@ -4,6 +4,8 @@
  * 12/2/22
  * Compilers Program 6
  *
+ * A generic scope wrapper which can create individual scopes.
+ * Overruled by the SymbolTree class
  */
 
 #include "../include/parser.hpp"
@@ -59,19 +61,13 @@ void Scope::registerSymbolWithValue(string symbol, Value *val)
     cout << "trying" << endl;
     cout << (*this->scopeStack).top() << endl;
     cout << (*this->scopeStack).top();
-    // (*this->scopeStack).top()->registerSymbolWithValue(symbol, val);
 }
 void Scope::registerGlobalSymbolWithValue(string symbol, Value *val)
 {
-    // (*this->scopeStack).top()->registerGlobalSymbolWithValue(symbol, val);
 }
-// Value *Scope::lookupSymbol(string symbol)
-// {
-//     return (*this->scopeStack).top()->lookupSymbol(symbol);
-// }
+
 void Scope::print()
 {
-    // TODO remove this
     cout << "scope print" << endl;
     if ((*this->scopeStack).top())
     {

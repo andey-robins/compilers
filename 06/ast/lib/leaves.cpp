@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Implementations for leaf nodes
  */
 
 #include "../include/nodes.hpp"

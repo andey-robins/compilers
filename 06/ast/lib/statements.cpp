@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Implementations of statement classes
  */
 
 #include "../include/nodes.hpp"
@@ -15,20 +15,14 @@ void NStatement::print(ostream *out)
 {
     auto *derivedAssign = dynamic_cast<NStateAssign *>(this);
     auto *derivedCall = dynamic_cast<NStateCall *>(this);
-    // cout << "statement" << endl;
+
     if (derivedAssign)
     {
-        // cout << "derivedassign" << endl;
         derivedAssign->print(out);
     }
     else if (derivedCall)
     {
-        // cout << "derivedcall" << endl;
         derivedCall->print(out);
-    }
-    else
-    {
-        // cout << "derivedother print" << endl;
     }
 }
 
@@ -42,49 +36,36 @@ void NStatement::typecheck(SymbolTree *node)
     auto *derivedCond = dynamic_cast<NStateCond *>(this);
     auto *derivedBlock = dynamic_cast<NBlock *>(this);
 
-    // cout << "typechecking statement" << endl;
-
     if (derivedAssign)
     {
-        // cout << "derived assign addsymbol" << endl;
         derivedAssign->typecheck(node);
     }
     else if (derivedCall)
     {
-        // cout << "derived call addsymbol" << endl;
         derivedCall->typecheck(node);
     }
     else if (derivedWhile)
     {
-        // cout << "derived while addsymbol" << endl;
         derivedWhile->typecheck(node);
     }
     else if (derivedReturn)
     {
-        // cout << "derived return addsymbol" << endl;
         derivedReturn->typecheck(node);
     }
     else if (derivedBlockStmt)
     {
-        // cout << "derived block statement addsymbol" << endl;
         derivedBlock->typecheck(node);
     }
     else if (derivedCond)
     {
-        // cout << "derived cond addsymbol" << endl;
         derivedCond->typecheck(node);
     }
     else if (derivedBlock)
     {
-        // cout << "derived NBlock in statement" << endl;
         SymbolTree *child = new SymbolTree();
         node->setChild(child);
         child->setParent(node);
         derivedBlock->typecheck(child);
-    }
-    else
-    {
-        // cout << "derived no statement type" << endl;
     }
 }
 
@@ -121,8 +102,6 @@ void NStateAssign::print(ostream *out)
 void NStateAssign::typecheck(SymbolTree *node)
 {
     // check for assign statements of new expressions
-    // cout << "NStateAssign" << endl;
-    // cout << this->exp->annotation << endl;
     string type;
     auto derivedNewExp = dynamic_cast<NExpNewExp *>(this->exp);
 
@@ -137,19 +116,13 @@ void NStateAssign::typecheck(SymbolTree *node)
     }
     else
     {
-        // cout << "alternative discovery of expression annotation" << endl;
         type = (this->exp->annotation == "int" || this->exp->annotation == "void")
                    ? this->exp->annotation
                    : node->lookupSymbol(this->exp->annotation);
     }
-    // cout << "done with type discovery" << endl;
-    // cout << type << endl;
 
     // check that the left and right types match
-    // cout << this->name->annotation << endl;
-    // cout << node->lookupSymbol(this->name->annotation) << endl;
     string targetType = node->lookupSymbol(this->name->annotation);
-    // cout << targetType << endl;
     if (targetType == "" || targetType != type)
     {
         targetType = node->lookupSymbol(targetType);
@@ -164,10 +137,8 @@ void NStateAssign::typecheck(SymbolTree *node)
 
     if (this->name)
         this->name->typecheck(node);
-    // cout << "going to typecheck exp" << endl;
     if (this->exp)
         this->exp->typecheck(node);
-    // cout << "going to next" << endl;
     if (dynamic_cast<NStatement *>(this->next))
     {
         static_cast<NStatement *>(this->next)->typecheck(node);
@@ -494,5 +465,4 @@ void NStateCond::print(ostream *out)
 void NStateCond::typecheck(SymbolTree *node)
 {
     this->cond->typecheck(node);
-    // cout << "typechecked condition" << endl;
 }

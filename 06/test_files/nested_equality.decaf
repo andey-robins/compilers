@@ -1,7 +1,0 @@
-// TODO: get this working
-class foo() {
-    foo() {
-        a = (1 < 1) == b;
-        a = 1 + 2 + 5;
-    }
-}

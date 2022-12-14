@@ -4,6 +4,8 @@
  * 12/2/22
  * Compilers Program 6
  *
+ * A generic scope wrapper which can create individual scopes.
+ * Overruled by the SymbolTree class
  */
 
 #ifndef SCOPE_HPP

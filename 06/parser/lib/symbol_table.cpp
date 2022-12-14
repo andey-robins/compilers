@@ -5,6 +5,7 @@
  * Compilers Program 6
  *
  * a thin wrapper over std::map
+ * declares the SymbolTable class
  *
  */
 

@@ -4,7 +4,7 @@
  * 12/2/22
  * Compilers Program 6
  *
- *
+ * Implementation of the AST base node, inherited by all
  */
 
 #include "../include/nodes.hpp"

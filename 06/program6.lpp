@@ -157,7 +157,6 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
     yylval.ttype->setLineNumber(yylineno);
-    // cout << yylval.ttype->lineNumber << endl;
     yylval.ttype->line = fullLine;
 
     if (text.compare(string("{")) == 0) {
@@ -280,7 +279,6 @@ NON_ID [^+*/%.,;!=<> \t\n]{-}[ ]
     yylval.ttype->setVal(yytext);
     fullLine += yytext;
     yylval.ttype->setLineNumber(yylineno);
-    // cout << yylval.ttype->lineNumber << endl;
     yylval.ttype->line = fullLine;
     return ID;
 }
